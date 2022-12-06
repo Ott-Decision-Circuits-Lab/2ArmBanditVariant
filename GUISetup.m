@@ -7,25 +7,26 @@ TaskParameters = BpodSystem.ProtocolSettings;
 
 if isempty(fieldnames(TaskParameters))
     % general
-    TaskParameters.GUI.SessionDescription = 'abc';
+    TaskParameters.GUI.SessionDescription = 'First 2ArmBandit';
     TaskParameters.GUIMeta.SessionDescription.Style = 'edittext';
     TaskParameters.GUI.Ports_LMR = '123';
-    TaskParameters.GUI.FI = 0.5; % (s)
-    TaskParameters.GUI.PreITI=1.5;
-    TaskParameters.GUI.VI = false;
+    TaskParameters.GUI.PreITI = 1.5; % before wait_Cin
+    TaskParameters.GUI.CenterWaitMax = 20;
+    TaskParameters.GUI.FI = 0.5; % end of trial ITI
+    TaskParameters.GUI.VI = false; % exprnd based on FI
+    TaskParameters.GUIMeta.VI.Style = 'checkbox';
     TaskParameters.GUI.DrinkingTime=0.3;
     TaskParameters.GUI.DrinkingGrace=0.05;
-    TaskParameters.GUIMeta.VI.Style = 'checkbox';
     TaskParameters.GUI.ChoiceDeadline = 10;
-    TaskParameters.GUI.LightGuided = 0;
+    TaskParameters.GUI.LightGuided = 1;
     TaskParameters.GUIMeta.LightGuided.Style = 'checkbox';
-    TaskParameters.GUIPanels.General = {'SessionDescription','Ports_LMR','FI','PreITI', 'VI', 'DrinkingTime'...
-        'DrinkingGrace','ChoiceDeadline','LightGuided'};
+    TaskParameters.GUIPanels.General = {'SessionDescription','Ports_LMR','PreITI','CenterWaitMax','FI', 'VI',...
+        'DrinkingTime','DrinkingGrace','ChoiceDeadline','LightGuided'};
     
     %"stimulus"
     TaskParameters.GUI.PlayStimulus = 1;
     TaskParameters.GUIMeta.PlayStimulus.Style = 'popupmenu';
-    TaskParameters.GUIMeta.PlayStimulus.String = {'No stim.','Click stim.','Freq. stim.'};
+    TaskParameters.GUIMeta.PlayStimulus.String = {'No stim.','Freq. stim.'};
     TaskParameters.GUI.MinSampleTime = 0.01;
     TaskParameters.GUI.MaxSampleTime = 0.6;
     TaskParameters.GUI.AutoIncrSample = true;
@@ -40,36 +41,64 @@ if isempty(fieldnames(TaskParameters))
     TaskParameters.GUIMeta.SampleTime.Style = 'text';
     TaskParameters.GUIPanels.Sampling = {'PlayStimulus','MinSampleTime','MaxSampleTime','AutoIncrSample','MinSampleIncr','MinSampleDecr','EarlyWithdrawalTimeOut','EarlyWithdrawalNoise','GracePeriod','SampleTime'};
     
-    %Reward
-    TaskParameters.GUI.rewardAmount = 25;
-    TaskParameters.GUI.CenterPortRewAmount = 10;
-    TaskParameters.GUI.CenterPortProb = 0.8;
-    TaskParameters.GUI.RewardProb = 1;
-    TaskParameters.GUI.Deplete = true;
-    TaskParameters.GUIMeta.Deplete.Style = 'checkbox';
-    TaskParameters.GUI.DepleteRateLeft = 0.8;
-    TaskParameters.GUI.DepleteRateRight = 0.8;
-    TaskParameters.GUI.RandomReward = false;
+    % FeedbackDelay, original named "Side Ports" ("waiting for feedback")
+    % TaskParameters.GUI.EarlySoutPenalty = 0;
+    TaskParameters.GUI.FeedbackDelaySelection = 1;
+    TaskParameters.GUIMeta.FeedbackDelaySelection.Style = 'popupmenu';
+    TaskParameters.GUIMeta.FeedbackDelaySelection.String = {'Fix','AutoIncr','TruncExp','Uniform'};
+    TaskParameters.GUI.FeedbackDelayMin = 0;
+    TaskParameters.GUI.FeedbackDelayMax = 0;
+    TaskParameters.GUI.FeedbackDelayIncr = 0.01;
+    TaskParameters.GUI.FeedbackDelayDecr = 0.01;
+    TaskParameters.GUI.FeedbackDelayTau = 0.05;
+    TaskParameters.GUI.FeedbackDelay = TaskParameters.GUI.FeedbackDelayMin;
+    TaskParameters.GUIMeta.FeedbackDelay.Style = 'text';
+    TaskParameters.GUI.FeedbackDelayGrace = 0;
+    TaskParameters.GUI.CatchError = false; % random ITI
+    TaskParameters.GUIMeta.CatchError.Style = 'checkbox';
     
-    TaskParameters.GUIMeta.RandomReward.Style = 'checkbox';
-    TaskParameters.GUI.RandomRewardProb = 0.1;
-    TaskParameters.GUI.RandomRewardMultiplier = 1;
+    TaskParameters.GUI.IncorrectChoiceFeedbackType = 2;
+    TaskParameters.GUIMeta.IncorrectChoiceFeedbackType.Style = 'popupmenu';
+    TaskParameters.GUIMeta.IncorrectChoiceFeedbackType.String = {'None','Tone','PortLED'};
+    TaskParameters.GUI.SkippedFeedbackFeedbackType = 2;
+    TaskParameters.GUIMeta.SkippedFeedbackFeedbackType.Style = 'popupmenu';
+    TaskParameters.GUIMeta.SkippedFeedbackFeedbackType.String = {'None','Tone','PortLED'};    
+    TaskParameters.GUIPanels.FeedbackDelay = {'EarlySoutPenalty','FeedbackDelaySelection','FeedbackDelayMin',...
+                                          'FeedbackDelayMax','FeedbackDelayIncr','FeedbackDelayDecr','FeedbackDelayTau',...
+                                          'FeedbackDelay','FeedbackDelayGrace','CatchError',...
+                                          'IncorrectChoiceFeddbackType','SkippedFeedbackFeedbackType'};
+                                      
+    %Reward and RewardProb
+    TaskParameters.GUI.RewardAmount = 30;
+%     TaskParameters.GUI.CenterPortRewAmount = 10;
+%     TaskParameters.GUI.CenterPortProb = 0.8;
+    TaskParameters.GUI.RewardProbType = 1;
+    TaskParameters.GUIMeta.RewardProbType.Style = 'popupmenu';
+    TaskParameters.GUIMeta.RewardProbType.String = {'Fix','Block','Cued','ExpectedValue'};
     
-    TaskParameters.GUI.Jackpot = 1;
-    TaskParameters.GUIMeta.Jackpot.Style = 'popupmenu';
-    TaskParameters.GUIMeta.Jackpot.String = {'No Jackpot','Fixed Jackpot','Decremental Jackpot','RewardCenterPort'};
-    TaskParameters.GUI.JackpotMin = 1;
-    TaskParameters.GUI.JackpotTime = 1;
-    TaskParameters.GUIMeta.JackpotTime.Style = 'text';
-    TaskParameters.GUIPanels.Reward = {'rewardAmount','CenterPortRewAmount','CenterPortProb','RewardProb',...
-        'Deplete','DepleteRateLeft','DepleteRateRight', 'RandomReward', 'RandomRewardProb', 'RandomRewardMultiplier',...
-        'Jackpot','JackpotMin','JackpotTime'};
-        
-    %Reward Dealy
-    TaskParameters.GUI.DelayMean = 0;
-    TaskParameters.GUI.DelaySigma=0;
-    TaskParameters.GUI.DelayGracePeriod=0;
-    TaskParameters.GUIPanels.RewardDelay = {'DelayMean','DelaySigma','DelayGracePeriod'};
+    TaskParameters.GUI.BlockLenMin = 100;
+    TaskParameters.GUI.BlockLenMax = 150;
+    TaskParameters.GUI.BlockLen = TaskParameters.GUI.BlockLenMin;
+    TaskParameters.GUIMeta.BlockLen.Style = 'text';
+    TaskParameters.GUI.NextBlockTrialNumber = TaskParameters.GUI.BlockLen;
+    TaskParameters.GUIMeta.BlockLen.Style = 'text';
+    
+    TaskParameters.GUI.ToneRiskTable.ToneStartFreq = [1 2 5 10 20 40]; % in kHz
+    TaskParameters.GUI.ToneRiskTable.ToneEndFreq = [1 2 5 10 20 40]; % features for sweep
+    TaskParameters.GUI.ToneRiskTable.ToneCuedRewardProbability = [30, 40, 50, 60, 70, 80]';
+    TaskParameters.GUIMeta.ToneRiskTable.Style = 'table';
+    TaskParameters.GUIMeta.ToneRiskTable.String = 'Tone cued reward probability';
+    TaskParameters.GUIMeta.ToneRiskTable.ColumnLabel = {'StartFreq','EndFreq','RewardProbability'};
+    
+    TaskParameters.GUI.RewardProbMax =  100; % 0-100% Highest reward probability
+    TaskParameters.GUI.RewardProbMin =  30; % 0-100% Lowest reward probability
+    TaskParameters.GUI.RewardProb = TaskParameters.GUI.RewardProbMax;
+    TaskParameters.GUIMeta.RewardProb.Style = 'text';
+
+    TaskParameters.GUIPanels.Reward = {'RewardAmount','RewardProbType','BlockLenMin',...
+                                       'BlockLenMax','BlockLen','NextBlockTrialNumber',...
+                                       'ToneRiskTable','RewardProbMax','RewardProbMin',...
+                                       'RewardProb'};
     
     %% Photometry
     %photometry general
@@ -139,7 +168,7 @@ if isempty(fieldnames(TaskParameters))
 
     TaskParameters.GUIPanels.PhotometryRig={'nidaqDev'};
     
-    TaskParameters.GUITabs.General = {'General','Sampling','Reward','RewardDelay'};
+    TaskParameters.GUITabs.General = {'General','Sampling','Reward','FeedbackDelay'};
     TaskParameters.GUITabs.Photometry = {'PhotometryRecording','PhotometryNidaq','PhotometryPlot','PhotometryRig'};
        
     TaskParameters.GUI = orderfields(TaskParameters.GUI);

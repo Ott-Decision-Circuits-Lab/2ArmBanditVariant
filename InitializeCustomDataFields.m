@@ -15,7 +15,7 @@ trial_data = BpodSystem.Data.Custom.TrialData;
 % Trial data
 trial_data.ChoiceLeft(iTrial) = NaN;
 trial_data.EarlyWithdrawal(iTrial) = false;
-trial_data.Jackpot(iTrial) = false;
+% trial_data.Jackpot(iTrial) = false;
 
 trial_data.sample_length(iTrial) = NaN; % old ST
 trial_data.move_time(iTrial) = NaN; % poke out from center to poke in at a side, old MT
@@ -24,8 +24,8 @@ trial_data.false_exits(1:50,iTrial) = NaN(50,1); % old GracePeriod
 
 trial_data.Rewarded(iTrial) = false;
 trial_data.LightLeft(iTrial) = rand(1,1)<0.5;
-trial_data.CenterPortRewarded(iTrial)  = false;
-trial_data.CenterPortRewAmount(iTrial) = TaskParameters.GUI.CenterPortRewAmount;
+% trial_data.CenterPortRewarded(iTrial)  = false;
+% trial_data.CenterPortRewAmount(iTrial) = TaskParameters.GUI.CenterPortRewAmount;
 trial_data.RewardAvailable(iTrial) = rand(1,1)<TaskParameters.GUI.RewardProb;
 
 if iTrial == 1

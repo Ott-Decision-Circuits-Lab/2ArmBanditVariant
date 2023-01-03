@@ -31,16 +31,10 @@ LeftValveTime  = GetValveTimes(TrialData.RewardMagnitude(iTrial,1), LeftPort);
 RightValveTime  = GetValveTimes(TrialData.RewardMagnitude(iTrial,2), RightPort);
 
 %% Sound Output action
-StimStart2Output = {};
-StimStopOutput = {};
 Incorrect_Action = {};
 if ~BpodSystem.EmulatorMode
     if TaskParameters.GUI.PlayStimulus == 2 %click
         SamplingAction = {'WavePlayer1', ['P' 3]}; %play the 4th profile 'HiFi1', ['P' 0]
-    % elseif TaskParameters.GUI.PlayStimulus == 3 %freq
-    %     StimStartOutput = {};
-    %     StimStopOutput = {};
-    %     StimStart2Output = {};
     end
 
     if TaskParameters.GUI.EarlyWithdrawalNoise
@@ -49,47 +43,6 @@ if ~BpodSystem.EmulatorMode
     
     if TaskParameters.GUI.LightGuided
         Incorrect_Action = {'WavePlayer1', ['P' 4]};
-    end
-end
-
-%% light guided task
-if TaskParameters.GUI.LightGuided 
-    if TrialData.LightLeft(iTrial)
-        RightLight = 0;
-    elseif ~TrialData.LightLeft(iTrial)
-        LeftLight = 0;
-    else
-        error('Light guided state matrix error');
-    end
-end
-
-%% reward available?
-% The followings variables are state names
-RightWaitAction = 'Incorrect_Choice';
-LeftWaitAction = 'Incorrect_Choice';
-
-DelayTime = 30;
-if TrialData.RewardAvailable(iTrial)
-    DelayTime = TrialData.RewardDelay(iTrial);
-    
-    if TaskParameters.GUI.LightGuided && TaskParameters.GUI.RandomReward %dummy state added for plotting
-            if TrialData.LightLeft(iTrial)
-                LeftWaitAction = 'RandomReward_water_L';
-            elseif ~TrialData.LightLeft(iTrial)
-                RightWaitAction = 'RandomReward_water_R';
-            end
-    elseif TaskParameters.GUI.LightGuided && ~TaskParameters.GUI.RandomReward
-            if TrialData.LightLeft(iTrial)
-                LeftWaitAction = 'water_L';
-            elseif ~TrialData.LightLeft(iTrial)
-                RightWaitAction = 'water_R';
-            end
-    elseif ~TaskParameters.GUI.LightGuided && TaskParameters.GUI.RandomReward
-        LeftWaitAction = 'RandomReward_water_L';
-        RightWaitAction = 'RandomReward_water_R';
-    elseif ~TaskParameters.GUI.LightGuided && ~TaskParameters.GUI.RandomReward
-        LeftWaitAction = 'water_L';
-        RightWaitAction = 'water_R';
     end
 end
 
@@ -156,16 +109,18 @@ if TaskParameters.GUI.StartNewTrial
     CenterLightValue = 255;
 end
 
-LInStateChange = 'StartLIn';
 LeftLightValue = 255;
-
-RInStateChange = 'StartRIn';
 RightLightValue = 255;
+if TrialData.LightLeft == true
+    RightLightValue = 0;
+elseif TrialData.LightLeft == false
+    LeftLightValue = 0;
+end
 
 sma = AddState(sma, 'Name', 'WaitSIn',...
     'Timer', TaskParameters.GUI.ChoiceDeadline,...
     'StateChangeConditions', {'GlobalTimer2_End', 'NoDecision', CenterPortIn, CInStateChange,...
-                              LeftPortIn, LInStateChange, RightPortIn, RInStateChange},...
+                              LeftPortIn, 'StartLIn', RightPortIn, 'StartRIn'},...
     'OutputActions', {LeftLight, LeftLightValue,...
                       RightLight, RightLightValue...
                       CenterLight, CenterLightValue});
@@ -188,24 +143,22 @@ sma = AddState(sma, 'Name', 'StartNewTrialTimOut',...
     'StateChangeConditions', {'Tup', 'ITI'},...
     'OutputActions', StartNewTrialAction);
 
-IncorrectChoiceAction = {};
-sma = AddState(sma, 'Name', 'IncorrectChoice',...
-    'Timer', TaskParameters.GUI.IncorrcetChoiceTimeOut,...
-    'StateChangeConditions', {'Tup', 'ITI'},...
-    'OutputActions', IncorrectChoiceAction);
-
 %%
 FeedbackDelay = 30;
 sma = SetGlobalTimer(sma, 3, FeedbackDelay); % used to track side poke grace period
 sma = AddState(sma, 'Name', 'StartLIn',... % dummy state for trigger GlobalTimer3
     'Timer', 0,...
     'StateChangeConditions', {'Tup', 'LIn'},...
-    'OutputActions',{'GlobalTimerTrig', 3, LeftLight, 255});
+    'OutputActions',{'GlobalTimerTrig', 3, LeftLight, LeftLightValue});
 
+LInStateChange = 'WaterL';
+if TrialData.LightLeft == false
+    LInStateChange = 'IncorrectChoice';
+end
 sma = AddState(sma, 'Name', 'LIn',...
     'Timer', FeedbackDelay,...
-    'StateChangeConditions', {'GlobalTimer3_End', WaterL, LeftPortOut,'LInGrace'},...
-    'OutputActions', {LeftLight, 255});
+    'StateChangeConditions', {'GlobalTimer3_End', LInStateChange, LeftPortOut,'LInGrace'},...
+    'OutputActions', {LeftLight, LeftLightValue});
 
 sma = AddState(sma, 'Name', 'WaterL',...
     'Timer', LeftValveTime,...
@@ -217,17 +170,21 @@ sma = AddState(sma, 'Name', 'LInGrace',...
     'StateChangeConditions', {LeftPortIn, 'LIn', 'Tup', 'SkippedFeedback',...
                               'GlobalTimer3_End', 'SkippedFeedback',...
                               CenterPortIn, 'SkippedFeedback', RightPortIn, 'SkippedFeedback'},...
-    'OutputActions', {LeftLight, 255});
+    'OutputActions', {LeftLight, LeftLightValue});
 
 sma = AddState(sma, 'Name', 'StartRIn',... % dummy state for trigger GlobalTimer3
     'Timer', 0,...
     'StateChangeConditions', {'Tup', 'RIn'},...
-    'OutputActions',{'GlobalTimerTrig', 3, RightLight, 255});
+    'OutputActions',{'GlobalTimerTrig', 3, RightLight, RightLightValue});
 
+RInStateChange = 'WaterR';
+if TrialData.LightLeft == true
+    RInStateChange = 'IncorrectChoice';
+end
 sma = AddState(sma, 'Name', 'RIn',...
     'Timer', FeedbackDelay,...
-    'StateChangeConditions', {'GlobalTimer3_End', WaterR, RightPortOut,'RInGrace'},...
-    'OutputActions', {RightLight, 255});
+    'StateChangeConditions', {'GlobalTimer3_End', RInStateChange, RightPortOut,'RInGrace'},...
+    'OutputActions', {RightLight, RightLightValue});
 
 sma = AddState(sma, 'Name', 'WaterR',...
     'Timer', RightValveTime,...
@@ -239,7 +196,13 @@ sma = AddState(sma, 'Name', 'RInGrace',...
     'StateChangeConditions', {RightPortIn, 'RIn', 'Tup', 'SkippedFeedback',...
                               'GlobalTimer3_End', 'SkippedFeedback',...
                               CenterPortIn, 'SkippedFeedback', LeftPortIn, 'SkippedFeedback'},...
-    'OutputActions', {RightLight, 255});
+    'OutputActions', {RightLight, RightLightValue});
+
+IncorrectChoiceAction = {};
+sma = AddState(sma, 'Name', 'IncorrectChoice',...
+    'Timer', TaskParameters.GUI.IncorrcetChoiceTimeOut,...
+    'StateChangeConditions', {'Tup', 'ITI'},...
+    'OutputActions', IncorrectChoiceAction);
 
 SkippedFeedbackAction = {};
 sma = AddState(sma, 'Name', 'SkippedFeedback',...

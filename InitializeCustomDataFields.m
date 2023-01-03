@@ -17,22 +17,37 @@ TrialData.NoTrialStart(iTrial) = true;
 
 TrialData.BrokeFixation(iTrial) = NaN; % True if BrokeFixation
 TrialData.StimDelay(iTrial) = TaskParameters.GUI.StimDelay;
-if TaskParameters.GUI.StimDelayAutoIncr && iTrial > 1
-    History = 50; % Rat: History = 50
-    Crit = 0.8; % Rat: Crit = 0.8
-    ConsiderTrials = max(1,iTrial-History):1:iTrial-1;
-    ConsiderTrials = ConsiderTrials(~isnan(TrialData.BrokeFixation(ConsiderTrials))); % exclude trials did not start
-    NotSkippedFeedbackRate = sum(~TrialData.BrokeFixation(ConsiderTrials))/length(ConsiderTrials);
+switch TaskParameters.GUIMeta.GUIMeta.StimDelayDistributionType.String{TaskParameters.GUI.StimDelayDistributionType}
+    case 'Fix'
+        % can still be adjusted by changing TaskParameters.GUI.StimDelayMin
+        
+    case 'AutoIncr'
+        if iTrial > 1
+            History = 50; % Rat: History = 50
+            Crit = 0.8; % Rat: Crit = 0.8
+            ConsiderTrials = max(1,iTrial-History):1:iTrial-1;
+            ConsiderTrials = ConsiderTrials(~isnan(TrialData.BrokeFixation(ConsiderTrials))); % exclude trials did not start
+            NotBrokeFixationRate = sum(~TrialData.BrokeFixation(ConsiderTrials))/length(ConsiderTrials);
+            
+            if NotBrokeFixationRate > Crit
+                if TrialData.BrokeFixation(iTrial-1) == false % If last trial is not BrokeFixation nor NaN (e.g. NoTrialStart)
+                    TrialData.StimDelay(iTrial) = TrialData.StimDelay(iTrial) + TaskParameters.GUI.StimDelayIncrStepSize; % StimulusDelay increased
+                end
+            elseif NotBrokeFixationRate < Crit/2
+                if TrialData.BrokeFixation(iTrial-1) == true % If last trial is Broke Fixation (and not NaN)
+                    TrialData.StimDelay(iTrial) = TrialData.StimDelay(iTrial) - TaskParameters.GUI.StimDelayDecrStepSize; % StimulusDelay decreased
+                end
+            end
+        end
+        
+    case 'TruncExp'
+        TrialData.StimDelay(iTrial) = TruncatedExponential(TaskParameters.GUI.StimDelayMin, TaskParameters.GUI.StimDelayMax, TaskParameters.GUI.StimDelayTau);
     
-    if NotSkippedFeedbackRate > Crit
-        if TrialData.BrokeFixation(iTrial-1) == false % If last trial is not Broken Fixation nor NaN (NoTrialStart)
-            TrialData.StimDelay(iTrial) = TrialData.StimDelay(iTrial) + TaskParameters.GUI.StimDelayIncrStepSize; % StimulusDelay increased
-        end
-    elseif NotSkippedFeedbackRate < Crit/2
-        if TrialData.BrokeFixation(iTrial-1) == true % If last trial is Broken Fixation (and not NaN (NoTrialStart)
-            TrialData.StimDelay(iTrial) = TrialData.StimDelay(iTrial) - TaskParameters.GUI.StimDelayDecrStepSize; % StimulusDelay decreased
-        end
-    end
+    case 'Uniform'
+        TrialData.StimDelay(iTrial) = TaskParameters.GUI.StimDelayMin + rand*(TaskParameters.GUI.StimDelayMax - TaskParameters.GUI.StimDelayMin);
+        
+    case 'Beta'
+        %% !!to be implemented!!
 end
 
 if TrialData.StimDelay(iTrial) > TaskParameters.GUI.StimDelayMax % allow adjustment even if StimDelayAutoIncr is off
@@ -56,7 +71,7 @@ end
 
 %% Peri-decision and pre-outcome
 TrialData.NoDecision(iTrial) = NaN; % True if no decision made
-TrialData.MoveTime(iTrial) = NaN; % from CenterPortOut to SidePortIn, old MT
+TrialData.MoveTime(iTrial) = NaN; % from CenterPortOut to SidePortIn(or re-CenterPortIn for StartNewTrial), old MT
 
 % TrialData.StartNewTrialEnabled(iTrial) = TaskParameters.GUI.StartNewTrial; % if false TaskParameters.GUI.StartNewTrial is off;
 TrialData.StartNewTrial(iTrial) = NaN; % only concern state 'StartNewTrial'
@@ -68,7 +83,8 @@ TrialData.IncorrectChoice(iTrial) = NaN; % True if the choice is incorrect (only
 TrialData.FeedbackDelay(iTrial) = TaskParameters.GUI.FeedbackDelay;
 switch TaskParameters.GUIMeta.GUIMeta.FeedbackDelayDistributionType.String{TaskParameters.GUI.FeedbackDelayDistributionType}
     case 'Fix'
-        TrialData.FeedbackDelay(iTrial) = TaskParameters.GUI.FeedbackDelay; % can still be adjusted by changing TaskParameters.GUI.FeedbackDelayMin
+        % can still be adjusted by changing TaskParameters.GUI.FeedbackDelayMin
+        
     case 'AutoIncr'
         if iTrial > 1
             History = 50; % Rat: History = 50
@@ -78,17 +94,19 @@ switch TaskParameters.GUIMeta.GUIMeta.FeedbackDelayDistributionType.String{TaskP
             NotSkippedFeedbackRate = sum(~TrialData.SkippedFeedback(ConsiderTrials))/length(ConsiderTrials);
             
             if NotSkippedFeedbackRate > Crit
-                if TrialData.SkippedFixation(iTrial-1) == false % If last trial is not SkippedFixation nor NaN (e.g. NoDecision)
-                    TrialData.FeedbackDelay(iTrial) = TrialData.FeedbackDelay(iTrial) + TaskParameters.GUI.FeedbackDelayIncrStepSize; % StimulusDelay increased
+                if TrialData.SkippedFeedback(iTrial-1) == false % If last trial is not Skipped Feedback nor NaN (e.g. NoDecision)
+                    TrialData.FeedbackDelay(iTrial) = TrialData.FeedbackDelay(iTrial) + TaskParameters.GUI.FeedbackDelayIncrStepSize; % FeedbackDelay increased
                 end
             elseif NotSkippedFeedbackRate < Crit/2
-                if TrialData.SkippedFixation(iTrial-1) == true % If last trial is Skipped Fixation (and not NaN)
-                    TrialData.FeedbackDelay(iTrial) = TrialData.FeedbackDelay(iTrial) - TaskParameters.GUI.StimDelayDecrStepSize; % StimulusDelay decreased
+                if TrialData.SkippedFeedback(iTrial-1) == true % If last trial is Skipped Feedback (and not NaN)
+                    TrialData.FeedbackDelay(iTrial) = TrialData.FeedbackDelay(iTrial) - TaskParameters.GUI.FeedbackDelayDecrStepSize; % FeedbackDelay decreased
                 end
             end
         end
+        
     case 'TruncExp'
         TrialData.FeedbackDelay(iTrial) = TruncatedExponential(TaskParameters.GUI.FeedbackDelayMin, TaskParameters.GUI.FeedbackDelayMax, TaskParameters.GUI.FeedbackDelayTau);
+        
     case 'Beta'
         %% !!to be implemented!!
 end
@@ -115,7 +133,7 @@ switch TaskParameters.GUIMeta.RiskType.String{TaskParameters.GUI.RiskType}
         TrialData.RewardProb(1,iTrial) = TaskParameters.GUI.RewardProbLeft;
         TrialData.RewardProb(2,iTrial) = TaskParameters.GUI.RewardProbRight;
         
-    case 'Block'
+    case 'BlockRand'
         if iTrial == 1
             TrialData.BlockNumber(iTrial) = 1;
             TrialData.BlockTrialNumber(iTrial) = 1;
@@ -132,6 +150,26 @@ switch TaskParameters.GUIMeta.RiskType.String{TaskParameters.GUI.RiskType}
                 TaskParameters.GUI.BlockLen = randi([TaskParameters.GUI.BlockLenMin,TaskParameters.GUI.BlockLenMax]);
                 TaskParameters.GUI.NextBlockTrialNumber = (iTrial-1) + TaskParameters.GUI.BlockLen;
                 TrialData.RewardProb(:,iTrial) = randi([TaskParameters.GUI.RewardProbMin,TaskParameters.GUI.RewardProbMax],2,1);
+            end
+        end
+        
+    case 'BlockFix'
+        if iTrial == 1
+            TrialData.BlockNumber(iTrial) = 1;
+            TrialData.BlockTrialNumber(iTrial) = 1;
+            TaskParameters.GUI.BlockLen = randi([TaskParameters.GUI.BlockLenMin,TaskParameters.GUI.BlockLenMax]);
+            TaskParameters.GUI.NextBlockTrialNumber = TaskParameters.GUI.BlockLen;
+            TrialData.RewardProb(:,iTrial) = [TaskParameters.GUI.RewardProbMin,TaskParameters.GUI.RewardProbMax]';
+        else
+            TrialData.BlockNumber(iTrial) = TrialData.BlockNumber(iTrial-1);
+            TrialData.BlockTrialNumber(iTrial) = TrialData.BlockTrialNumber(iTrial-1) + 1;
+            TrialData.RewardProb(:,iTrial) = TrialData.RewardProb(:,iTrial-1);
+            if TrialData.BlockTrialNumber(iTrial) > TaskParameters.GUI.BlockLen
+                TrialData.BlockNumber(iTrial) = TrialData.BlockNumber(iTrial-1) + 1;
+                TrialData.BlockTrialNumber(iTrial) = 1;
+                TaskParameters.GUI.BlockLen = randi([TaskParameters.GUI.BlockLenMin,TaskParameters.GUI.BlockLenMax]);
+                TaskParameters.GUI.NextBlockTrialNumber = (iTrial-1) + TaskParameters.GUI.BlockLen;
+                TrialData.RewardProb(:,iTrial) = flip(TrialData.RewardProb(:,iTrial-1));
             end
         end
         

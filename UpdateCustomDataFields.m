@@ -3,21 +3,19 @@ function UpdateCustomDataFields(iTrial)
 global BpodSystem
 global TaskParameters
 
-
 % data structure references
 RawData = BpodSystem.Data.RawData;
 RawEvents = BpodSystem.Data.RawEvents;
 TrialStates = RawEvents.Trial{iTrial}.States;
 TrialData = BpodSystem.Data.Custom.TrialData;
 
-BpodSystem.Data.TrialTypes(iTrial)=1;
+BpodSystem.Data.TrialTypes(iTrial) = 1; %??
 
 %% OutcomeRecord
-
 % Go through the states visited this trial and 
-idx_states_visited = RawData.OriginalStateData{iTrial};
-trial_state_names = RawData.OriginalStateNamesByNumber{iTrial};
-StatesThisTrial = trial_state_names(idx_states_visited);
+idxStatesVisited = RawData.OriginalStateData{iTrial};
+TrialStateNames = RawData.OriginalStateNamesByNumber{iTrial};
+StatesThisTrial = TrialStateNames(idxStatesVisited);
 
 %% Pre-stimulus delivery
 if any(strcmp('StartCIn',StatesThisTrial))
@@ -49,7 +47,7 @@ elseif any(strcmp('StillSampling',StatesThisTrial))
 end
 
 % Get total amount of time spent sampling
-if any(strcmp('Sampling',StatesThisTrial)) % !!OR From StimulusDelay!?
+if any(strcmp('Sampling',StatesThisTrial)) % Not From StimulusDelay
     SamplingBegin = TrialStates.Sampling(1,1);
     if any(strcmp('StillSampling',StatesThisTrial))
         SamplingEnd = TrialStates.StillSampling(1,2);
@@ -67,7 +65,7 @@ elseif any(strcmp('StartNewTrial',StatesThisTrial)) || any(strcmp('StartLIn',Sta
 end
 
 if any(strcmp('WaitSIn',StatesThisTrial))
-    TrialData.MoveTime(iTrial) = TrialStates.WaitSIn(1,2) - TrialStates.WaitSIn(1,1); % from CenterPortOut to SidePortIn, old MT
+    TrialData.MoveTime(iTrial) = TrialStates.WaitSIn(1,2) - TrialStates.WaitSIn(1,1); % from CenterPortOut to SidePortIn, old MT confirmed
 end
 
 % TrialData.StartNewTrialEnabled(iTrial) = TaskParameters.GUI.StartNewTrial; % if false TaskParameters.GUI.StartNewTrial is off;
@@ -112,9 +110,9 @@ end
 
 %% Peri-outcome
 
-if any(strncmp('WaterL',StatesThisTrial))
+if any(strcmp('WaterL',StatesThisTrial))
     TrialData.Rewarded(iTrial) = (TrialStates.WaterL(1,2) - TrialStates.WaterL(1,1)) > 0;
-elseif any(strncmp('WaterR',StatesThisTrial))
+elseif any(strcmp('WaterR',StatesThisTrial))
     TrialData.Rewarded(iTrial) = (TrialStates.WaterR(1,2) - TrialStates.WaterR(1,1)) > 0;
 end
 

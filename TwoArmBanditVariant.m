@@ -59,22 +59,15 @@ while RunSession
         UpdateCustomDataFields(iTrial);
         SaveBpodSessionData();
     end
+    
     % update figures
-    TwoArmBanditVariant_PlotSideOutcome(BpodSystem.GUIHandles.OutcomePlot,'update',iTrial);\
+    TwoArmBanditVariant_PlotSideOutcome(BpodSystem.GUIHandles.OutcomePlot,'update',iTrial);
     
     HandlePauseCondition; % Checks to see if the protocol is paused. If so, waits until user resumes.
-    
     if BpodSystem.Status.BeingUsed == 0
         return
     end
     iTrial = iTrial + 1;
     
 end % Main loop
-
-clear Player % release the serial port (done automatically when function returns)
-
-if TaskParameters.GUI.Photometry
-    CheckPhotometry(PhotoData, Photo2Data);
-end
-
 end % NosePoke()

@@ -11,7 +11,7 @@ if isempty(fieldnames(TaskParameters))
     TaskParameters.GUIMeta.SessionDescription.Style = 'edittext';
     
     TaskParameters.GUI.Ports_LMR = '123'; % bpod port number for poke connection
-    TaskParameters.GUI.PreITI = 1.5; % before wait_Cin
+    TaskParameters.GUI.PreITI = 0.5; % before wait_Cin
     TaskParameters.GUI.WaitCInMax = 20; % max waiting time for C_in before a new trial starts, useful to track progress
     TaskParameters.GUI.ChoiceDeadline = 10; % max waiting time for S_in after stimuli
     
@@ -29,7 +29,7 @@ if isempty(fieldnames(TaskParameters))
     TaskParameters.GUI.StartNewTrialTimeOut = 3; % (s), for the case where subject starts a new trial by choosing the centre poke after stimulus
     %{it may need an extra GracePeriod for the decision of starting a new task}
     
-    TaskParameters.GUI.ITI = 0.5; % end of trial ITI
+    TaskParameters.GUI.ITI = 5; % end of trial ITI
     TaskParameters.GUI.VI = false; % exprnd based on ITI
     TaskParameters.GUIMeta.VI.Style = 'checkbox';
     
@@ -39,20 +39,25 @@ if isempty(fieldnames(TaskParameters))
                                         'StartNewTrialSound','StartNewTrialTimeOut','ITI', 'VI'};
     
     %% StimDelay
-    TaskParameters.GUI.StimDelayMin = 0; % lower boundary for autoincrementing stimulus delay time
+    TaskParameters.GUI.StimDelayMin = 0; % lower boundary for autoincrementing stimulus delay time, for all
     TaskParameters.GUI.StimDelayMax = 0; % upper boundary for autoincrementing stimulus delay time
     
     TaskParameters.GUI.StimDelay = TaskParameters.GUI.StimDelayMin; % current stimulus delay time
     TaskParameters.GUIMeta.StimDelay.Style = 'text';
     
-    TaskParameters.GUI.StimDelayAutoIncr = 0; % check if autoincrementing stimulus delay time
-    TaskParameters.GUIMeta.StimDelayAutoIncr.Style = 'checkbox';
+    TaskParameters.GUI.StimDelayDistributionType = 1;
+    TaskParameters.GUIMeta.StimDelayDistributionType.Style = 'popupmenu';
+    TaskParameters.GUIMeta.StimDelayDistributionType.String = {'Fix','AutoIncr','TruncExp','Uniform','Beta'}; % Fix = fix time; AutoIncr = incremental along session; TruncExp = random drawn within a range with prob distribution based on TrucExp; Beta = like TruncExp, but with beta distribution
     
-    TaskParameters.GUI.StimDelayIncrStepSize = 0.01; % step size for autoincrementing stimulus delay time
+    TaskParameters.GUI.StimDelayIncrStepSize = 0.01; % step size for autoincrementing stimulus delay time, for AutoIncr only
     TaskParameters.GUI.StimDelayDecrStepSize = 0.01;
+    TaskParameters.GUI.StimDelayTau = 0.05; % step size for StimDelay, only for TruncExp
+    TaskParameters.GUI.StimDelayAlpha = 0.05; % step size for StimDelay, only for Beta
+    TaskParameters.GUI.StimDelayBeta = 0.05; % step size for StimDelay, only for Beta
+    
     TaskParameters.GUI.BrokeFixationTimeOut = 2; % (s), penalty for C_out before stimulus starts
     TaskParameters.GUI.BrokeFixationNoise = true; % sound feedback for BrokeFixation
-    TaskParameters.GUIMeta.BrokeFixationNoise.Style='checkbox';
+    TaskParameters.GUIMeta.BrokeFixationNoise.Style = 'checkbox';
     
     TaskParameters.GUI.PlayStimulus = 1; % stimulus type
     TaskParameters.GUIMeta.PlayStimulus.Style = 'popupmenu';
@@ -63,10 +68,11 @@ if isempty(fieldnames(TaskParameters))
     TaskParameters.GUI.SamplingGrace = 0; % allowance for brief C_out and then C_in, for flickering action/device
     TaskParameters.GUI.EarlyWithdrawalTimeOut = 1; % penalty for C_out before stimulus delivery ends
     TaskParameters.GUI.EarlyWithdrawalNoise = true; % sound feedback for EarlyWithdrawal
-    TaskParameters.GUIMeta.EarlyWithdrawalNoise.Style='checkbox';
+    TaskParameters.GUIMeta.EarlyWithdrawalNoise.Style = 'checkbox';
 
-    TaskParameters.GUIPanels.Sampling = {'StimDelay','StimDelayAutoIncr','StimDelayMin','StimDelayMax',...
-                                         'StimDelayIncrStepSize','StimDelayDecrStepSize','BrokeFixationTimeOut',...
+    TaskParameters.GUIPanels.Sampling = {'StimDelay','StimDelayDistributionType','StimDelayMin','StimDelayMax',...
+                                         'StimDelayIncrStepSize','StimDelayDecrStepSize','StimDelayTau',...
+                                         'StimDelayAlpha','StimDelayBeta','BrokeFixationTimeOut',...
                                          'BrokeFixationNoise','PlayStimulus','StimulusTime',...
                                          'SamplingGrace','EarlyWithdrawalTimeOut','EarlyWithdrawalNoise'};
                                      
@@ -107,14 +113,14 @@ if isempty(fieldnames(TaskParameters))
     
     TaskParameters.GUI.RiskType = 1;
     TaskParameters.GUIMeta.RiskType.Style = 'popupmenu';
-    TaskParameters.GUIMeta.RiskType.String = {'Fix','Block','Cued'}; % decide how reward probability is expressed
-        
+    TaskParameters.GUIMeta.RiskType.String = {'Fix','BlockRand','BlockFix','Cued'}; % decide how reward probability is expressed: Fix, based on RewardProbLeft value to express fix RewardProb; BlockRand, randomly draw a value between Min and Max and assign; BlockFix, based on Max and Min and reverse L-R value; Cue, cued by Tone
+    
     TaskParameters.GUI.RewardProbLeft = 50; % Reward Probability of Left Poke, only for Fix in RiskType
     TaskParameters.GUI.RewardProbRight = 50; % Reward Probability of Left Poke, only for Fix in RiskType
     
     TaskParameters.GUI.BlockLenMin = 100; % lower boundart of BlockLen, only for Block in RiskType
     TaskParameters.GUI.BlockLenMax = 150; % upper boundart of BlockLen, only for Block in RiskType
-    TaskParameters.GUI.BlockLen = TaskParameters.GUI.BlockLenMin; % draw from the range confined as above
+    TaskParameters.GUI.BlockLen = TaskParameters.GUI.BlockLenMin; % draw from the range confined as above, uniform distribution
     TaskParameters.GUIMeta.BlockLen.Style = 'text';
     TaskParameters.GUI.NextBlockTrialNumber = TaskParameters.GUI.BlockLen; % the trial, where the next block starts
     TaskParameters.GUIMeta.NextBlockTrialNumber.Style = 'text';

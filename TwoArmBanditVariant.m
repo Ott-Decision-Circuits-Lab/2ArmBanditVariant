@@ -1,5 +1,8 @@
-function NosePoke()
-% Learning to Nose Poke side ports
+function TwoArmBanditVariant()
+% Protocol focusing on reward probability, either block-style or
+% cued-style, of either 1-arm or 2-arm bandit setting.
+% Developed by Antonio Lee @ BCCN Humboldt-Universität zu Berlin
+% V1.0 release in Jan 2023
 
 global BpodSystem
 global TaskParameters
@@ -8,13 +11,13 @@ TaskParameters = GUISetup();  % Set experiment parameters in GUISetup.m
 InitializePlots();
 
 if ~BpodSystem.EmulatorMode
-    [Player, fs]=SetupWavePlayer(25000); % 25kHz =sampling rate of 8Ch with 8Ch fully on
+    [Player, fs] = SetupWavePlayer(25000); % 25kHz =sampling rate of 8Ch with 8Ch fully on
     LoadIndependentWaveform(Player);
     LoadTriggerProfileMatrix(Player);
 end
     
 if TaskParameters.GUI.Photometry
-    [FigNidaq1,FigNidaq2]=InitializeNidaq();
+    [FigNidaq1,FigNidaq2] = InitializeNidaq();
 end
 
 % --------------------------Main loop------------------------------ %
@@ -26,7 +29,7 @@ while RunSession
     TaskParameters = BpodParameterGUI('sync', TaskParameters);
     
     if ~BpodSystem.EmulatorMode
-        LoadTrialDependentWaveform(Player, iTrial, 5, 2); % Load white noise, stimuli trains, and error sound to wave player if not EmulatorMode
+        LoadTrialDependentWaveform(Player, iTrial, 5, 2); % Load stimuli trains to wave player if not EmulatorMode
     end
     
     % NIDAQ Get nidaq ready to start
@@ -57,7 +60,7 @@ while RunSession
         SaveBpodSessionData();
     end
     % update figures
-    NosePoke_PlotSideOutcome(BpodSystem.GUIHandles.OutcomePlot,'update',iTrial);\
+    TwoArmBanditVariant_PlotSideOutcome(BpodSystem.GUIHandles.OutcomePlot,'update',iTrial);\
     
     HandlePauseCondition; % Checks to see if the protocol is paused. If so, waits until user resumes.
     

@@ -1,4 +1,4 @@
-function MouseNosePoke_PlotSideOutcome(AxesHandles, Action, varargin)
+function TwoArmBanditVariant_PlotSideOutcome(AxesHandles, Action, varargin)
 global nTrialsToShow %this is for convenience
 global BpodSystem
 global TaskParameters

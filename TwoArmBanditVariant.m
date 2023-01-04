@@ -70,4 +70,4 @@ while RunSession
     iTrial = iTrial + 1;
     
 end % Main loop
-end % NosePoke()
+end % Protocol

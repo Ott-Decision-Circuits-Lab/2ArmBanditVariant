@@ -116,7 +116,5 @@ elseif any(strcmp('WaterR',StatesThisTrial))
     TrialData.Rewarded(iTrial) = (TrialStates.WaterR(1,2) - TrialStates.WaterR(1,1)) > 0;
 end
 
-TrialData.CatchError(iTrial) = NaN; % rate of non-SkippedFeedback amongst CorrectDecision
-
 BpodSystem.Data.Custom.TrialData = TrialData;
 end

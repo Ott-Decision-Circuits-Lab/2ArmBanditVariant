@@ -121,6 +121,13 @@ TaskParameters.GUI.FeedbackDelay = TrialData.FeedbackDelay(iTrial);
 TrialData.FeedbackGrace(1,trial) = NaN; % first index for the number of time the state is entered
 TrialData.SkippedFeedback(iTrial) = NaN; % True if SkippedFeedback
 
+TrialData.CatchTrial(iTrial) = rand < TaskParameters.GUI.CatchTrialPercentage; % determine whether a trial is a CatchTrial
+if TrialData.CatchTrial(iTrial)
+    TaskParameters.GUI.CatchTrial = 'true';
+else
+    TaskParameters.GUI.CatchTrial = 'false';
+end
+
 %% Peri-outcome
 TrialData.RewardProb(:,iTrial) = [NaN, NaN]';
 TrialData.BlockNumber(iTrial) = NaN; % only adjust if RiskType is Block
@@ -206,9 +213,9 @@ else
     TrialData.RewardMagnitude = TrialData.RewardMagnitude.* (rand(2,1) < TrialData.RewardProb);
 end
 
-TrialData.Rewarded(iTrial) = NaN;
-TrialData.CatchError(iTrial) = NaN; % rate of non-SkippedFeedback amongst CorrectDecision
+TrialData.Rewarded(iTrial) = NaN; % true if a non-zero reward is delivered
 
+%%
 BpodSystem.Data.Custom.TrialData = TrialData;
 
 end

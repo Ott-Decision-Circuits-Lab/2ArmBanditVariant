@@ -235,7 +235,7 @@ if isempty(fieldnames(TaskParameters))
     TaskParameters.GUITabs.Photometry = {'PhotometryRecording','PhotometryNidaq','PhotometryPlot','PhotometryRig'};
        
     TaskParameters.GUI = orderfields(TaskParameters.GUI);
-    TaskParameters.Figures.OutcomePlot.Position = [100, 900, 1000, 800];
+    TaskParameters.Figures.OutcomePlot.Position = [100, 100, 1000, 800];
 end
 BpodParameterGUI('init', TaskParameters);
 

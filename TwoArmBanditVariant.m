@@ -27,6 +27,7 @@ iTrial = 1;
 while RunSession
     InitializeCustomDataFields(iTrial); % Initialize data (trial type) vectors and first values, potentially updated TaskParameters
     TaskParameters = BpodParameterGUI('sync', TaskParameters);
+    TwoArmBanditVariant_PlotSideOutcome(BpodSystem.GUIHandles.OutcomePlot,'UpdateTrial',iTrial);
     
     if ~BpodSystem.EmulatorMode
         LoadTrialDependentWaveform(Player, iTrial, 5, 2); % Load stimuli trains to wave player if not EmulatorMode
@@ -61,7 +62,7 @@ while RunSession
     end
     
     % update figures
-    TwoArmBanditVariant_PlotSideOutcome(BpodSystem.GUIHandles.OutcomePlot,'update',iTrial);
+    TwoArmBanditVariant_PlotSideOutcome(BpodSystem.GUIHandles.OutcomePlot,'UpdateResult',iTrial);
     
     HandlePauseCondition; % Checks to see if the protocol is paused. If so, waits until user resumes.
     if BpodSystem.Status.BeingUsed == 0

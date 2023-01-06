@@ -57,11 +57,12 @@ elseif TrialData.StimDelay(iTrial) < TaskParameters.GUI.StimDelayMin
 end
 
 TaskParameters.GUI.StimDelay = TrialData.StimDelay(iTrial);
+TrialData.StimWaitingTime(iTrial) = NaN; % Time that stayed CenterPortIn for StimDelay
 
 %% Peri-stimulus delivery and Pre-decision
 TrialData.SamplingGrace(1,trial) = NaN; % old GracePeriod, row is for the n-th time the state is entered, column is for the time in this State
 TrialData.EarlyWithdrawal(iTrial) = NaN; % True if early withdrawal
-TrialData.SampleTime(iTrial) = NaN; % Time that stayed CenterPortIn for sampling
+TrialData.SampleTime(iTrial) = NaN; % Time that stayed CenterPortIn for sampling, from stimulus starts
 
 % TrialData.SingleSidePokeEnabled(iTrial) = TaskParameters.GUI.SingleSidePoke;
 TrialData.LightLeft(iTrial) = NaN; % if true, 1-arm bandit with left poke being correct
@@ -78,7 +79,9 @@ TrialData.StartNewTrial(iTrial) = NaN; % only concern state 'StartNewTrial'
 TrialData.StartNewTrialSuccessful(iTrial) = NaN; % concern state 'StartNewTrialTimeOut'
 
 TrialData.ChoiceLeft(iTrial) = NaN; % True if a choice is made to the left poke (also include incorrect choice)
-TrialData.IncorrectChoice(iTrial) = NaN; % True if the choice is incorrect (only for 1-arm bandit/GUI.SingleSidePoke); basically = LigthLeft & ChoiceLeft
+TrialData.IncorrectChoice(iTrial) = NaN; % True if the choice is incorrect (only for 1-arm bandit/GUI.SingleSidePoke);
+% basically = LigthLeft & ChoiceLeft; doesn't necessary in the state of
+% IncorrectChoice (may end up in SkippedFeedback first)
 
 TrialData.FeedbackDelay(iTrial) = TaskParameters.GUI.FeedbackDelay;
 switch TaskParameters.GUIMeta.GUIMeta.FeedbackDelayDistributionType.String{TaskParameters.GUI.FeedbackDelayDistributionType}
@@ -119,6 +122,7 @@ end
 TaskParameters.GUI.FeedbackDelay = TrialData.FeedbackDelay(iTrial);
 
 TrialData.FeedbackGrace(1,trial) = NaN; % first index for the number of time the state is entered
+TrialData.FeedbackWaitingTime(iTrial) = NaN; % Time spend to wait for feedback
 TrialData.SkippedFeedback(iTrial) = NaN; % True if SkippedFeedback
 
 TrialData.CatchTrial(iTrial) = rand < TaskParameters.GUI.CatchTrialPercentage; % determine whether a trial is a CatchTrial

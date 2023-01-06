@@ -14,6 +14,10 @@ if isempty(fieldnames(TaskParameters))
     TaskParameters.GUI.PreITI = 0.5; % before wait_Cin
     TaskParameters.GUI.WaitCInMax = 20; % max waiting time for C_in before a new trial starts, useful to track progress
     TaskParameters.GUI.ChoiceDeadline = 10; % max waiting time for S_in after stimuli
+    TaskParameters.GUI.NoDecisionTimeOut = 1; % (s) where subject chooses the side poke without light
+    TaskParameters.GUI.NoDecisionFeedbackType = 1; % feedback for NoDecision
+    TaskParameters.GUIMeta.NoDecisionFeedbackType.Style = 'popupmenu';
+    TaskParameters.GUIMeta.NoDecisionFeedbackType.String = {'None','WhiteNoise'};
     
     TaskParameters.GUI.SingleSidePoke = false;
     TaskParameters.GUIMeta.SingleSidePoke.Style = 'checkbox'; % old light-guided
@@ -36,9 +40,10 @@ if isempty(fieldnames(TaskParameters))
     TaskParameters.GUIMeta.VI.Style = 'checkbox';
     
     TaskParameters.GUIPanels.General = {'SessionDescription','Ports_LMR','PreITI','Wait_Cin_Max',...
-                                        'ChoiceDeadline','SingleSidePoke','IncorrectChoiceTimeOut',...
-                                        'IncorrectChoiceFeedbackType','StartNewTrial','StartNewTrialHoldingTime',...
-                                        'StartNewTrialFeedbackType','StartNewTrialTimeOut','ITI', 'VI'};
+                                        'ChoiceDeadline','NoDecisionTimeOut','NoDecisionFeedbackType',...
+                                        'SingleSidePoke','IncorrectChoiceTimeOut','IncorrectChoiceFeedbackType',...
+                                        'StartNewTrial','StartNewTrialHoldingTime','StartNewTrialFeedbackType',...
+                                        'StartNewTrialTimeOut','ITI', 'VI'};
     
     %% StimDelay
     TaskParameters.GUI.StimDelayMin = 0; % lower boundary for autoincrementing stimulus delay time, for all

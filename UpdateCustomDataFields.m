@@ -28,6 +28,13 @@ elseif any(strcmp('Sampling',StatesThisTrial))
     TrialData.BrokeFixation(iTrial) = false;
 end
 
+% Get total amount of time spent waiting for stimulus
+if any(strcmp('StimulusDelay',StatesThisTrial))
+    WaitBegin = TrialStates.StimulusDelay(1,1);
+    WaitEnd = TrialStates.StimulusDelay(1,2); 
+    TrialData.StimWaitingTime(iTrial) = WaitEnd - WaitBegin;
+end
+
 %% Peri-stimulus delivery and Pre-decision
 % Compute length of SamplingGrace, i.e. Grace Period for Center pokes
 if any(strcmp('SamplingGrace', StatesThisTrial))
@@ -86,10 +93,10 @@ elseif any(strcmp('StartRIn',StatesThisTrial))
     TrialData.ChoiceLeft(iTrial) = false; % True if a choice is made to the left poke (also include incorrect choice)
 end
 
-if any(strcmp('IncorrectChoice',StatesThisTrial))
-    TrialData.IncorrectChoice(iTrial) = true; % True if the choice is incorrect (only for 1-arm bandit/GUI.SingleSidePoke); basically = LigthLeft & ChoiceLeft
-elseif any(strcmp('LIn',StatesThisTrial)) || any(strcmp('LIn',StatesThisTrial))
-   TrialData.IncorrectChoice(iTrial) = false; % True if the choice is incorrect (only for 1-arm bandit/GUI.SingleSidePoke); basically = LigthLeft & ChoiceLeft 
+if ~isnan(TrialData.LightLeft(iTrial))
+    if any(strcmp('StartLIn',StatesThisTrial)) || any(strcmp('StartRIn',StatesThisTrial))
+        TrialData.IncorrectChoice(iTrial) = TrialData.ChoiceLeft(iTrial)~=TrialData.LightLeft(iTrial); % True if the choice is incorrect (only for 1-arm bandit/GUI.SingleSidePoke); basically = LigthLeft & ChoiceLeft
+    end
 end
 
 if any(strcmp('FeedbackGrace',StatesThisTrial))
@@ -102,14 +109,23 @@ if any(strcmp('FeedbackGrace',StatesThisTrial))
     end
 end
 
+if any(strcmp('LIn',StatesThisTrial))
+    WaitBegin = TrialStates.LIn(1,1);
+    WaitEnd = TrialStates.LIn(1,2); 
+    TrialData.FeedbackWaitingTime(iTrial) = WaitEnd - WaitBegin;
+elseif any(strcmp('LIn',StatesThisTrial))
+    WaitBegin = TrialStates.LIn(1,1);
+    WaitEnd = TrialStates.LIn(1,2); 
+    TrialData.FeedbackWaitingTime(iTrial) = WaitEnd - WaitBegin;
+end
+
 if any(strcmp('SkippedFeedback',StatesThisTrial))
     TrialData.SkippedFeedback(iTrial) = true; % True if SkippedFeedback
-elseif (strcmp('WaterL',StatesThisTrial)) || any(strcmp('WaterR',StatesThisTrial))
+elseif (strcmp('WaterL',StatesThisTrial)) || any(strcmp('WaterR',StatesThisTrial)) || any(strcmp('IncorrectChoice',StatesThisTrial))
    TrialData.SkippedFeedback(iTrial) = false;
 end
 
 %% Peri-outcome
-
 if any(strcmp('WaterL',StatesThisTrial))
     TrialData.Rewarded(iTrial) = (TrialStates.WaterL(1,2) - TrialStates.WaterL(1,1)) > 0;
 elseif any(strcmp('WaterR',StatesThisTrial))

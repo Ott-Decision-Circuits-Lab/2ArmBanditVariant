@@ -22,7 +22,7 @@ if any(strcmp('StartCIn',StatesThisTrial))
     TrialData.NoTrialStart(iTrial) = false;
 end
 
-if any(strcmp('BrokenFixation',StatesThisTrial))
+if any(strcmp('BrokeFixation',StatesThisTrial))
     TrialData.BrokeFixation(iTrial) = true;
 elseif any(strcmp('Sampling',StatesThisTrial))
     TrialData.BrokeFixation(iTrial) = false;

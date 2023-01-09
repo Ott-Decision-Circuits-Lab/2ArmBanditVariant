@@ -63,9 +63,10 @@ switch Action
         %% Trial rate
         hold(AxesHandles.HandleTrialRate,'on')
         BpodSystem.GUIHandles.OutcomePlot.TrialRate = line(AxesHandles.HandleTrialRate,-1,0,'LineStyle','-','Color','k','Visible','off');
+        BpodSystem.GUIHandles.OutcomePlot.NoStartP = text(AxesHandles.HandleTrialRate,0,1,'NoStartP = 0%','FontSize',8,'Units','normalized','Visible','off');
         AxesHandles.HandleTrialRate.XLabel.String = 'Time (min)'; % FIGURE OUT UNIT
         AxesHandles.HandleTrialRate.YLabel.String = 'Trial Counts';
-        AxesHandles.HandleTrialRate.Title.String = 'Trial rate';
+        AxesHandles.HandleTrialRate.Title.String = 'Trial Rate';
 
         %% StimeDelay histogram
         hold(AxesHandles.HandleStimDelay,'on')
@@ -77,22 +78,22 @@ switch Action
         hold(AxesHandles.HandleSampleTime,'on')
         AxesHandles.HandleSampleTime.XLabel.String = 'Time (ms)'; % FIGURE OUT UNIT
         AxesHandles.HandleSampleTime.YLabel.String = 'Trial Counts';
-        AxesHandles.HandleSampleTime.Title.String = 'Sample time';
+        AxesHandles.HandleSampleTime.Title.String = 'Sample Time';
         
         %% MoveTime histogram
         hold(AxesHandles.HandleMoveTime,'on')
         AxesHandles.HandleMoveTime.XLabel.String = 'Time (ms)'; % FIGURE OUT UNIT
         AxesHandles.HandleMoveTime.YLabel.String = 'Trial Counts';
-        AxesHandles.HandleMoveTime.Title.String = 'Movement time';
+        AxesHandles.HandleMoveTime.Title.String = 'Movement Time';
         
         %% FeedbackDelay histogram
         hold(AxesHandles.HandleFeedback,'on')
         AxesHandles.HandleFeedback.XLabel.String = 'Time (s)';
-        AxesHandles.HandleMoveTime.YLabel.String = 'Trial Counts';
-        AxesHandles.HandleMoveTime.Title.String = 'FeedbackDelay';
+        AxesHandles.HandleFeedback.YLabel.String = 'Trial Counts';
+        AxesHandles.HandleFeedback.Title.String = 'Feedback Delay';
         set(AxesHandles.HandleFeedback,'TickDir','out','XLim',[0,35],'XTick',[0,10,20,30],'FontSize',13);
         
-        %% Vevaiometric histogram
+        %% Vevaiometric
         hold(AxesHandles.HandleVevaiometric,'on')
         BpodSystem.GUIHandles.OutcomePlot.VevaiometricPointsIncorrect = line(AxesHandles.HandleVevaiometric,-1,0, 'LineStyle','none','Marker','.','MarkerEdge',scarlet,'MarkerFace','none', 'MarkerSize',6);
         BpodSystem.GUIHandles.OutcomePlot.VevaiometricPointsCorrect = line(AxesHandles.HandleVevaiometric,-1,0, 'LineStyle','none','Marker','.','MarkerEdge',azure,'MarkerFace','none', 'MarkerSize',6);
@@ -246,14 +247,15 @@ switch Action
         set(get(BpodSystem.GUIHandles.OutcomePlot.HandleTrialRate,'Children'),'Visible','on');
         BpodSystem.GUIHandles.OutcomePlot.TrialRate.XData = (BpodSystem.Data.TrialStartTimestamp-min(BpodSystem.Data.TrialStartTimestamp))/60;
         BpodSystem.GUIHandles.OutcomePlot.TrialRate.YData = 1:numel(ChoiceLeft(1:end));
-        NoTrialStartP = sum(NoTrialStart==1)/iTrial;
-        cornertext(AxesHandles.HandleTrialRate,sprintf('P=%1.2f',NoTrialStartP)) %percentage of No Trial Started
+        NoTrialStartP = 100*sum(NoTrialStart==1)/iTrial;
+        set(BpodSystem.GUIHandles.OutcomePlot.NoStartP, 'string', ['NoStartP = ' sprintf('%1.1f',NoTrialStartP) '%']);
+%         cornertext(AxesHandles.HandleTrialRate,sprintf('NoStartP=%1.2f',NoTrialStartP)) %percentage of No Trial Started
         
         %% Stimulus Delay
-        BpodSystem.GUIHandles.OutcomePlot.HandleStimDelay.Visible = 'on';
-        set(get(BpodSystem.GUIHandles.OutcomePlot.HandleStimDelay,'Children'),'Visible','on');
-        cla(AxesHandles.HandleStimDelay)
         if NoTrialStart(iTrial) == 0
+            BpodSystem.GUIHandles.OutcomePlot.HandleStimDelay.Visible = 'on';
+            set(get(BpodSystem.GUIHandles.OutcomePlot.HandleStimDelay,'Children'),'Visible','on');
+            cla(AxesHandles.HandleStimDelay)
             BpodSystem.GUIHandles.OutcomePlot.HistBrokeFixation = histogram(AxesHandles.HandleStimDelay,StimWaitingTime(BrokeFixation==1)*1000);
             BpodSystem.GUIHandles.OutcomePlot.HistBrokeFixation.BinWidth = 50;
             BpodSystem.GUIHandles.OutcomePlot.HistBrokeFixation.FaceColor = scarlet;
@@ -262,15 +264,17 @@ switch Action
             BpodSystem.GUIHandles.OutcomePlot.HistNBrokeFixation.BinWidth = 50;
             BpodSystem.GUIHandles.OutcomePlot.HistNBrokeFixation.FaceColor = azure;
             BpodSystem.GUIHandles.OutcomePlot.HistNBrokeFixation.EdgeColor = 'none';
-            BrokenFixationP = sum(BrokeFixation==1)/sum(NoTrialStart==0);
-            cornertext(AxesHandles.HandleStimDelay,sprintf('P=%1.2f',BrokenFixationP)) %percentage of BrokeFixation with Trial Started
+            BrokeFixationP = 100*sum(BrokeFixation==1)/sum(NoTrialStart==0);
+            BpodSystem.GUIHandles.OutcomePlot.BrokeFixP = text(AxesHandles.HandleStimDelay,0,1,['BrokeFixP = ' sprintf('%1.1f',BrokeFixationP) '%'],...
+                'FontSize',8,'Units','normalized');
+%             cornertext(AxesHandles.HandleStimDelay,sprintf('BrokeFixP=%1.2f',BrokeFixationP)) %percentage of BrokeFixation with Trial Started
         end
         
         %% Sample Time
-        BpodSystem.GUIHandles.OutcomePlot.HandleSampleTime.Visible = 'on';
-        set(get(BpodSystem.GUIHandles.OutcomePlot.HandleSampleTime,'Children'),'Visible','on');
-        cla(AxesHandles.HandleSampleTime)
         if BrokeFixation(iTrial) == 0
+            BpodSystem.GUIHandles.OutcomePlot.HandleSampleTime.Visible = 'on';
+            set(get(BpodSystem.GUIHandles.OutcomePlot.HandleSampleTime,'Children'),'Visible','on');
+            cla(AxesHandles.HandleSampleTime)
             BpodSystem.GUIHandles.OutcomePlot.HistSTEarly = histogram(AxesHandles.HandleSampleTime,SampleTime(EarlyWithdrawal==1)*1000);
             BpodSystem.GUIHandles.OutcomePlot.HistSTEarly.BinWidth = 50;
             BpodSystem.GUIHandles.OutcomePlot.HistSTEarly.FaceColor = scarlet;
@@ -279,15 +283,17 @@ switch Action
             BpodSystem.GUIHandles.OutcomePlot.HistST.BinWidth = 50;
             BpodSystem.GUIHandles.OutcomePlot.HistST.FaceColor = azure;
             BpodSystem.GUIHandles.OutcomePlot.HistST.EdgeColor = 'none';
-            EarlyP = sum(EarlyWithdrawal==1)/sum(BrokeFixation==0);
-            cornertext(AxesHandles.HandleSampleTime,sprintf('P=%1.2f',EarlyP))
+            EarlyP = 100*sum(EarlyWithdrawal==1)/sum(BrokeFixation==0);
+            BpodSystem.GUIHandles.OutcomePlot.EarlyP = text(AxesHandles.HandleSampleTime,0,1,['EarlyP = ' sprintf('%1.1f',EarlyP) '%'],...
+                'FontSize',8,'Units','normalized');
+%             cornertext(AxesHandles.HandleSampleTime,sprintf('EarlyP=%1.2f',EarlyP))
         end
         
         %% MoveTime
-        BpodSystem.GUIHandles.OutcomePlot.HandleMoveTime.Visible = 'on';
-        set(get(BpodSystem.GUIHandles.OutcomePlot.HandleMoveTime,'Children'),'Visible','on');
-        cla(AxesHandles.HandleMoveTime)
         if NoDecision(iTrial) == 0 % no need to update if no choice made
+            BpodSystem.GUIHandles.OutcomePlot.HandleMoveTime.Visible = 'on';
+            set(get(BpodSystem.GUIHandles.OutcomePlot.HandleMoveTime,'Children'),'Visible','on');
+            cla(AxesHandles.HandleMoveTime)
             BpodSystem.GUIHandles.OutcomePlot.HistMTLeft = histogram(AxesHandles.HandleMoveTime,MoveTime(ChoiceLeft==1)*1000);
             BpodSystem.GUIHandles.OutcomePlot.HistMTLeft.BinWidth = 50;
             BpodSystem.GUIHandles.OutcomePlot.HistMTLeft.FaceColor = azure;
@@ -300,21 +306,31 @@ switch Action
             BpodSystem.GUIHandles.OutcomePlot.HistMTStartNew.BinWidth = 50;
             BpodSystem.GUIHandles.OutcomePlot.HistMTStartNew.FaceColor = 'none';
             BpodSystem.GUIHandles.OutcomePlot.HistMTStartNew.EdgeColor = denim;
-            LeftP = sum(ChoiceLeft==1)/sum(EarlyWithdrawal==0);
-            RightP = sum(ChoiceLeft==0)/sum(EarlyWithdrawal==0);
-            StartNewP = sum(StartNewTrialSuccessful==1)/sum(EarlyWithdrawal==0);
-            NoDeciP = sum(NoDecision==1)/sum(EarlyWithdrawal==0);
-            IncorrectP = sum(IncorrectChoice==1)/sum(~isnan(ChoiceLeft));
-            cornertext(AxesHandles.HandleMoveTime,{sprintf('LeftP=%1.2f',LeftP),sprintf('RightP=%1.2f',RightP),...
-                                                   sprintf('StartNewP=%1.2f',StartNewP),sprintf('NoDeciP=%1.2f',NoDeciP),...
-                                                   sprintf('IncorrectP=%1.2f',IncorrectP)})
+            LeftP = 100*sum(ChoiceLeft==1)/sum(EarlyWithdrawal==0);
+            RightP = 100*sum(ChoiceLeft==0)/sum(EarlyWithdrawal==0);
+            StartNewP = 100*sum(StartNewTrialSuccessful==1)/sum(EarlyWithdrawal==0);
+            NoDeciP = 100*sum(NoDecision==1)/sum(EarlyWithdrawal==0);
+            IncorrectP = 100*sum(IncorrectChoice==1)/sum(~isnan(ChoiceLeft));
+            BpodSystem.GUIHandles.OutcomePlot.LeftP = text(AxesHandles.HandleMoveTime,0,1.00,['LeftP = ' sprintf('%1.1f',LeftP) '%'],...
+                'FontSize',8,'Units','normalized');
+            BpodSystem.GUIHandles.OutcomePlot.RightP = text(AxesHandles.HandleMoveTime,0,0.95,['RightP = ' sprintf('%1.1f',RightP) '%'],...
+                'FontSize',8,'Units','normalized');
+            BpodSystem.GUIHandles.OutcomePlot.StartNewP = text(AxesHandles.HandleMoveTime,0,0.90,['StartNewP = ' sprintf('%1.1f',StartNewP) '%'],...
+                'FontSize',8,'Units','normalized');
+            BpodSystem.GUIHandles.OutcomePlot.NoDeciP = text(AxesHandles.HandleMoveTime,0,0.85,['NoDeciP = ' sprintf('%1.1f',NoDeciP) '%'],...
+                'FontSize',8,'Units','normalized');
+            BpodSystem.GUIHandles.OutcomePlot.IncorrectP = text(AxesHandles.HandleMoveTime,0,0.80,['IncorrectP = ' sprintf('%1.1f',IncorrectP) '%'],...
+                'FontSize',8,'Units','normalized');
+%             cornertext(AxesHandles.HandleMoveTime,{sprintf('LeftP=%1.2f',LeftP),sprintf('RightP=%1.2f',RightP),...
+%                                                    sprintf('StartNewP=%1.2f',StartNewP),sprintf('NoDeciP=%1.2f',NoDeciP),...
+%                                                    sprintf('IncorrectP=%1.2f',IncorrectP)})
         end
         
         %% Feedback Delay
-        BpodSystem.GUIHandles.OutcomePlot.HandleFeedback.Visible = 'on';
-        set(get(BpodSystem.GUIHandles.OutcomePlot.HandleFeedback,'Children'),'Visible','on');
-        cla(AxesHandles.HandleFeedback)
         if ~isnan(SkippedFeedback(iTrial)) % no need to update if no new SkippedFeedback
+            BpodSystem.GUIHandles.OutcomePlot.HandleFeedback.Visible = 'on';
+            set(get(BpodSystem.GUIHandles.OutcomePlot.HandleFeedback,'Children'),'Visible','on');
+            cla(AxesHandles.HandleFeedback)
             BpodSystem.GUIHandles.OutcomePlot.HistSFLeft = histogram(AxesHandles.HandleFeedback,FeedbackWaitingTime(SkippedFeedback==1 & ChoiceLeft==1));
             BpodSystem.GUIHandles.OutcomePlot.HistSFLeft.BinWidth = 1;
             BpodSystem.GUIHandles.OutcomePlot.HistSFLeft.FaceColor = scarlet;
@@ -335,13 +351,20 @@ switch Action
             BpodSystem.GUIHandles.OutcomePlot.HistRFRight.FaceColor = 'none';
             BpodSystem.GUIHandles.OutcomePlot.HistRFRight.EdgeColor = azure;
 
-            SFLeftP = sum(SkippedFeedback==1 & ChoiceLeft==1)/sum(~isnan(ChoiceLeft)); % skipped feedback left
-            SFRightP = sum(SkippedFeedback==1 & ChoiceLeft==0)/sum(~isnan(ChoiceLeft));
-            RFLeftP = sum(SkippedFeedback==0 & ChoiceLeft==1)/sum(~isnan(ChoiceLeft)); % received feedback left (incl. IncorrectChoice)
-            RFRightP = sum(SkippedFeedback==0 & ChoiceLeft==0)/sum(~isnan(ChoiceLeft));
-
-            cornertext(AxesHandles.HandleFeedback,{sprintf('SFLeftP=%1.2f',SFLeftP),sprintf('SFRightP=%1.2f',SFRightP),...
-                                                   sprintf('RFLeftP=%1.2f',RFLeftP),sprintf('RFRightP=%1.2f',RFRightP)})
+            SFLeftP = 100*sum(SkippedFeedback==1 & ChoiceLeft==1)/sum(~isnan(ChoiceLeft)); % skipped feedback left
+            SFRightP = 100*sum(SkippedFeedback==1 & ChoiceLeft==0)/sum(~isnan(ChoiceLeft));
+            RFLeftP = 100*sum(SkippedFeedback==0 & ChoiceLeft==1)/sum(~isnan(ChoiceLeft)); % received feedback left (incl. IncorrectChoice)
+            RFRightP = 100*sum(SkippedFeedback==0 & ChoiceLeft==0)/sum(~isnan(ChoiceLeft));
+            BpodSystem.GUIHandles.OutcomePlot.SFLeftP = text(AxesHandles.HandleFeedback,0,1.00,['SkippedLeftP = ' sprintf('%1.1f',SFLeftP) '%'],...
+                'FontSize',8,'Units','normalized');
+            BpodSystem.GUIHandles.OutcomePlot.SFRightP = text(AxesHandles.HandleFeedback,0,0.95,['SkippedRightP = ' sprintf('%1.1f',SFRightP) '%'],...
+                'FontSize',8,'Units','normalized');
+            BpodSystem.GUIHandles.OutcomePlot.RFLeftP = text(AxesHandles.HandleFeedback,0,0.90,['ReceivedLeftP = ' sprintf('%1.1f',RFLeftP) '%'],...
+                'FontSize',8,'Units','normalized');
+            BpodSystem.GUIHandles.OutcomePlot.RFRightP = text(AxesHandles.HandleFeedback,0,0.85,['ReceivedRightP = ' sprintf('%1.1f',RFRightP) '%'],...
+                'FontSize',8,'Units','normalized');
+%             cornertext(AxesHandles.HandleFeedback,{sprintf('SFLeftP=%1.2f',SFLeftP),sprintf('SFRightP=%1.2f',SFRightP),...
+%                                                    sprintf('RFLeftP=%1.2f',RFLeftP),sprintf('RFRightP=%1.2f',RFRightP)})
         end
         
         %% Vevaiometric

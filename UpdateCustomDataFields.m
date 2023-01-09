@@ -121,7 +121,7 @@ end
 
 if any(strcmp('SkippedFeedback',StatesThisTrial))
     TrialData.SkippedFeedback(iTrial) = true; % True if SkippedFeedback
-elseif (strcmp('WaterL',StatesThisTrial)) || any(strcmp('WaterR',StatesThisTrial)) || any(strcmp('IncorrectChoice',StatesThisTrial))
+elseif any(strcmp('WaterL',StatesThisTrial)) || any(strcmp('WaterR',StatesThisTrial)) || any(strcmp('IncorrectChoice',StatesThisTrial))
    TrialData.SkippedFeedback(iTrial) = false;
 end
 

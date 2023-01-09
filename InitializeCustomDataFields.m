@@ -17,7 +17,7 @@ TrialData.NoTrialStart(iTrial) = true;
 
 TrialData.BrokeFixation(iTrial) = NaN; % True if BrokeFixation
 TrialData.StimDelay(iTrial) = TaskParameters.GUI.StimDelay;
-switch TaskParameters.GUIMeta.GUIMeta.StimDelayDistributionType.String{TaskParameters.GUI.StimDelayDistributionType}
+switch TaskParameters.GUIMeta.StimDelayDistribution.String{TaskParameters.GUI.StimDelayDistribution}
     case 'Fix'
         % can still be adjusted by changing TaskParameters.GUI.StimDelayMin
         
@@ -60,7 +60,7 @@ TaskParameters.GUI.StimDelay = TrialData.StimDelay(iTrial);
 TrialData.StimWaitingTime(iTrial) = NaN; % Time that stayed CenterPortIn for StimDelay
 
 %% Peri-stimulus delivery and Pre-decision
-TrialData.SamplingGrace(1,trial) = NaN; % old GracePeriod, row is for the n-th time the state is entered, column is for the time in this State
+TrialData.SamplingGrace(1,iTrial) = NaN; % old GracePeriod, row is for the n-th time the state is entered, column is for the time in this State
 TrialData.EarlyWithdrawal(iTrial) = NaN; % True if early withdrawal
 TrialData.SampleTime(iTrial) = NaN; % Time that stayed CenterPortIn for sampling, from stimulus starts
 
@@ -84,7 +84,7 @@ TrialData.IncorrectChoice(iTrial) = NaN; % True if the choice is incorrect (only
 % IncorrectChoice (may end up in SkippedFeedback first)
 
 TrialData.FeedbackDelay(iTrial) = TaskParameters.GUI.FeedbackDelay;
-switch TaskParameters.GUIMeta.GUIMeta.FeedbackDelayDistributionType.String{TaskParameters.GUI.FeedbackDelayDistributionType}
+switch TaskParameters.GUIMeta.FeedbackDelayDistribution.String{TaskParameters.GUI.FeedbackDelayDistribution}
     case 'Fix'
         % can still be adjusted by changing TaskParameters.GUI.FeedbackDelayMin
         
@@ -121,7 +121,7 @@ elseif TrialData.FeedbackDelay(iTrial) < TaskParameters.GUI.FeedbackDelayMin
 end
 TaskParameters.GUI.FeedbackDelay = TrialData.FeedbackDelay(iTrial);
 
-TrialData.FeedbackGrace(1,trial) = NaN; % first index for the number of time the state is entered
+TrialData.FeedbackGrace(1,iTrial) = NaN; % first index for the number of time the state is entered
 TrialData.FeedbackWaitingTime(iTrial) = NaN; % Time spend to wait for feedback
 TrialData.SkippedFeedback(iTrial) = NaN; % True if SkippedFeedback
 
@@ -212,9 +212,9 @@ elseif TrialData.LightLeft(iTrial) == 0
 end
 
 if TaskParameters.GUI.ExpressedAsExpectedValue
-    TrialData.RewardMagnitude = TrialData.RewardProb .* TrialData.RewardMagnitude;
+    TrialData.RewardMagnitude(:,iTrial) = TrialData.RewardMagnitude(:,iTrial).* TrialData.RewardProb(:,iTrial);
 else
-    TrialData.RewardMagnitude = TrialData.RewardMagnitude.* (rand(2,1) < TrialData.RewardProb);
+    TrialData.RewardMagnitude(:,iTrial) = TrialData.RewardMagnitude(:,iTrial).* (rand(2,1) < TrialData.RewardProb(:,iTrial));
 end
 
 TrialData.Rewarded(iTrial) = NaN; % true if a non-zero reward is delivered

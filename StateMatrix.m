@@ -27,8 +27,8 @@ CenterValve = 2^(CenterPort-1);
 RightValve = 2^(RightPort-1);
 
 %% Calculate value time for ports in different situations
-LeftValveTime  = GetValveTimes(TrialData.RewardMagnitude(iTrial,1), LeftPort);
-RightValveTime  = GetValveTimes(TrialData.RewardMagnitude(iTrial,2), RightPort);
+LeftValveTime  = GetValveTimes(TrialData.RewardMagnitude(1,iTrial), LeftPort);
+RightValveTime  = GetValveTimes(TrialData.RewardMagnitude(2,iTrial), RightPort);
 
 %% Set up state matrix    
 sma = NewStateMatrix();
@@ -47,16 +47,16 @@ sma = AddState(sma, 'Name', 'WaitCIn',...
 sma = SetGlobalTimer(sma, 1, TaskParameters.GUI.StimulusTime + TaskParameters.GUI.StimDelay); % used to track centre poke grace period
 sma = AddState(sma, 'Name', 'StartCIn',... % dummy state for trigger GlobalTimer1
     'Timer', 0,...
-    'StateChangeConditions', {'Tup', 'StimulusDelay'},...
+    'StateChangeConditions', {'Tup', 'StimulusDelay', 'GlobalTimer1_End', 'StillSampling'},...
     'OutputActions', {'GlobalTimerTrig', 1, CenterLight, 255});
 
 sma = AddState(sma, 'Name', 'StimulusDelay',...
     'Timer', TaskParameters.GUI.StimDelay,...
-    'StateChangeConditions', {'Tup', 'Sampling', CenterPortOut, 'BrokeFixation'},...
+    'StateChangeConditions', {'Tup', 'Sampling', CenterPortOut, 'BrokeFixation', 'GlobalTimer1_End', 'StillSampling'},...
     'OutputActions', {CenterLight, 255});
 
 BrokeFixationAction = {};
-switch TaskParameters.GUIMeta.BrokeFixationFeedbackType.String{TaskParameters.GUI.BrokeFixationFeedbackType}
+switch TaskParameters.GUIMeta.BrokeFixationFeedback.String{TaskParameters.GUI.BrokeFixationFeedback}
     case 'None' % no adjustmnet needed
         
     case 'WhiteNoise'
@@ -105,7 +105,7 @@ sma = AddState(sma, 'Name', 'SamplingGrace',...
     'OutputActions', {CenterLight, 255});
 
 EarlyWithdrawalAction = {};
-switch TaskParameters.GUIMeta.EarlyWithdrawalFeedbackType.String{TaskParameters.GUI.EarlyWithdrawalFeedbackType}
+switch TaskParameters.GUIMeta.EarlyWithdrawalFeedback.String{TaskParameters.GUI.EarlyWithdrawalFeedback}
     case 'None' % no adjustmnet needed
         
     case 'WhiteNoise'
@@ -156,7 +156,7 @@ sma = AddState(sma, 'Name', 'WaitSIn',...
                   
 %%
 NoDecisionAction = {};
-switch TaskParameters.GUIMeta.NoDecisionFeedbackType.String{TaskParameters.GUI.NoDecisionFeedbackType}
+switch TaskParameters.GUIMeta.NoDecisionFeedback.String{TaskParameters.GUI.NoDecisionFeedback}
     case 'None' % no adjustmnet needed
         
     case 'WhiteNoise'
@@ -182,7 +182,7 @@ sma = AddState(sma, 'Name', 'StartNewTrial',...
     'OutputActions', {CenterLight, 255});
 
 StartNewTrialAction = {};
-switch TaskParameters.GUIMeta.StartNewTrialFeedbackType.String{TaskParameters.GUI.StartNewTrialFeedbackType}
+switch TaskParameters.GUIMeta.StartNewTrialFeedback.String{TaskParameters.GUI.StartNewTrialFeedback}
     case 'None' % no adjustmnet needed
         
     case 'WhiteNoise'
@@ -197,26 +197,27 @@ switch TaskParameters.GUIMeta.StartNewTrialFeedbackType.String{TaskParameters.GU
         end
         
 end
-sma = AddState(sma, 'Name', 'StartNewTrialTimOut',...
+sma = AddState(sma, 'Name', 'StartNewTrialTimeOut',...
     'Timer', TaskParameters.GUI.StartNewTrialTimeOut,...
     'StateChangeConditions', {'Tup', 'ITI'},...
     'OutputActions', StartNewTrialAction);
 
 %%
 FeedbackDelay = TrialData.FeedbackDelay(iTrial);
-if TrialData.CatchTrial(iTrial)
+if TrialData.CatchTrial(iTrial) == 1
     FeedbackDelay = 20; % hard-code?
 end
 sma = SetGlobalTimer(sma, 3, FeedbackDelay); % used to track side poke grace period
-sma = AddState(sma, 'Name', 'StartLIn',... % dummy state for trigger GlobalTimer3
-    'Timer', 0,...
-    'StateChangeConditions', {'Tup', 'LIn'},...
-    'OutputActions',{'GlobalTimerTrig', 3, LeftLight, LeftLightValue});
 
 LInStateChange = 'WaterL';
-if TrialData.LightLeft == false
+if TrialData.LightLeft(iTrial) == false
     LInStateChange = 'IncorrectChoice';
 end
+sma = AddState(sma, 'Name', 'StartLIn',... % dummy state for trigger GlobalTimer3
+    'Timer', 0,...
+    'StateChangeConditions', {'Tup', 'LIn', 'GlobalTimer3_End', LInStateChange},...
+    'OutputActions',{'GlobalTimerTrig', 3, LeftLight, LeftLightValue});
+
 sma = AddState(sma, 'Name', 'LIn',...
     'Timer', FeedbackDelay,...
     'StateChangeConditions', {'GlobalTimer3_End', LInStateChange, LeftPortOut,'LInGrace'},...
@@ -234,15 +235,15 @@ sma = AddState(sma, 'Name', 'LInGrace',...
                               CenterPortIn, 'SkippedFeedback', RightPortIn, 'SkippedFeedback'},...
     'OutputActions', {LeftLight, LeftLightValue});
 
-sma = AddState(sma, 'Name', 'StartRIn',... % dummy state for trigger GlobalTimer3
-    'Timer', 0,...
-    'StateChangeConditions', {'Tup', 'RIn'},...
-    'OutputActions',{'GlobalTimerTrig', 3, RightLight, RightLightValue});
-
 RInStateChange = 'WaterR';
-if TrialData.LightLeft == true
+if TrialData.LightLeft(iTrial) == true
     RInStateChange = 'IncorrectChoice';
 end
+sma = AddState(sma, 'Name', 'StartRIn',... % dummy state for trigger GlobalTimer3
+    'Timer', 0,...
+    'StateChangeConditions', {'Tup', 'RIn', 'GlobalTimer3_End', RInStateChange},...
+    'OutputActions',{'GlobalTimerTrig', 3, RightLight, RightLightValue});
+
 sma = AddState(sma, 'Name', 'RIn',...
     'Timer', FeedbackDelay,...
     'StateChangeConditions', {'GlobalTimer3_End', RInStateChange, RightPortOut,'RInGrace'},...
@@ -261,7 +262,7 @@ sma = AddState(sma, 'Name', 'RInGrace',...
     'OutputActions', {RightLight, RightLightValue});
 
 IncorrectChoiceAction = {};
-switch TaskParameters.GUIMeta.IncorrectChoiceFeedbackType.String{TaskParameters.GUI.IncorrectChoiceFeedbackType}
+switch TaskParameters.GUIMeta.IncorrectChoiceFeedback.String{TaskParameters.GUI.IncorrectChoiceFeedback}
     case 'None' % no adjustmnet needed
         
     case 'WhiteNoise'
@@ -277,12 +278,12 @@ switch TaskParameters.GUIMeta.IncorrectChoiceFeedbackType.String{TaskParameters.
         
 end
 sma = AddState(sma, 'Name', 'IncorrectChoice',...
-    'Timer', TaskParameters.GUI.IncorrcetChoiceTimeOut,...
+    'Timer', TaskParameters.GUI.IncorrectChoiceTimeOut,...
     'StateChangeConditions', {'Tup', 'ITI'},...
     'OutputActions', IncorrectChoiceAction);
 
 SkippedFeedbackAction = {};
-switch TaskParameters.GUIMeta.SkippedFeedbackFeedbackType.String{TaskParameters.GUI.SkippedFeedbackFeedbackType}
+switch TaskParameters.GUIMeta.SkippedFeedbackFeedback.String{TaskParameters.GUI.SkippedFeedbackFeedback}
     case 'None' % no adjustmnet needed
         
     case 'WhiteNoise'

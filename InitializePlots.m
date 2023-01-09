@@ -3,7 +3,7 @@ function InitializePlots()
 global BpodSystem
 global TaskParameters
 
-BpodSystem.ProtocolFigures.SideOutcomePlotFig = figure('Position',TaskParameters.Figures.OutcomePlot.Position + [100, 400, 300, -300],...
+BpodSystem.ProtocolFigures.SideOutcomePlotFig = figure('Position',TaskParameters.Figures.OutcomePlot.Position + [100, 400, 800, -100],...
                                                        'name','OutcomePlot','numbertitle','off','MenuBar','none','Resize','off');
 BpodSystem.GUIHandles.OutcomePlot.HandleOutcome = axes('Position',     [  .05          .15  .9  .3]);
 BpodSystem.GUIHandles.OutcomePlot.HandleTrialRate = axes('Position',   [1*.05 + 0*.1   .65  .1  .3],'Visible','off');

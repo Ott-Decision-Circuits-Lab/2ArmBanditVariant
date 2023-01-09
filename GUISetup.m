@@ -15,34 +15,34 @@ if isempty(fieldnames(TaskParameters))
     TaskParameters.GUI.WaitCInMax = 20; % max waiting time for C_in before a new trial starts, useful to track progress
     TaskParameters.GUI.ChoiceDeadline = 10; % max waiting time for S_in after stimuli
     TaskParameters.GUI.NoDecisionTimeOut = 1; % (s) where subject chooses the side poke without light
-    TaskParameters.GUI.NoDecisionFeedbackType = 1; % feedback for NoDecision
-    TaskParameters.GUIMeta.NoDecisionFeedbackType.Style = 'popupmenu';
-    TaskParameters.GUIMeta.NoDecisionFeedbackType.String = {'None','WhiteNoise'};
+    TaskParameters.GUI.NoDecisionFeedback = 1; % feedback for NoDecision
+    TaskParameters.GUIMeta.NoDecisionFeedback.Style = 'popupmenu';
+    TaskParameters.GUIMeta.NoDecisionFeedback.String = {'None','WhiteNoise'};
     
     TaskParameters.GUI.SingleSidePoke = false;
     TaskParameters.GUIMeta.SingleSidePoke.Style = 'checkbox'; % old light-guided
     TaskParameters.GUI.IncorrectChoiceTimeOut = 1; % (s), for single-side poke settings only, where subject chooses the side poke without light
-    TaskParameters.GUI.IncorrectChoiceFeedbackType = 1; % feedback for IncorrectChoice
-    TaskParameters.GUIMeta.IncorrectChoiceFeedbackType.Style = 'popupmenu';
-    TaskParameters.GUIMeta.IncorrectChoiceFeedbackType.String = {'None','WhiteNoise'};
+    TaskParameters.GUI.IncorrectChoiceFeedback = 1; % feedback for IncorrectChoice
+    TaskParameters.GUIMeta.IncorrectChoiceFeedback.Style = 'popupmenu';
+    TaskParameters.GUIMeta.IncorrectChoiceFeedback.String = {'None','WhiteNoise'};
   
     TaskParameters.GUI.StartNewTrial = false; % check if starting a new trial by C_in after stimulus
     TaskParameters.GUIMeta.StartNewTrial.Style = 'checkbox';
     TaskParameters.GUI.StartNewTrialHoldingTime = 0.35; % time required to trigger starting a new trial
-    TaskParameters.GUI.StartNewTrialFeedbackType = 1; % feedback for successful StartNewTrial
-    TaskParameters.GUIMeta.StartNewTrialFeedbackType.Style = 'popupmenu';
-    TaskParameters.GUIMeta.StartNewTrialFeedbackType.String = {'None','WhiteNoise'};
+    TaskParameters.GUI.StartNewTrialFeedback = 1; % feedback for successful StartNewTrial
+    TaskParameters.GUIMeta.StartNewTrialFeedback.Style = 'popupmenu';
+    TaskParameters.GUIMeta.StartNewTrialFeedback.String = {'None','WhiteNoise'};
     TaskParameters.GUI.StartNewTrialTimeOut = 3; % (s), for the case where subject starts a new trial by choosing the centre poke after stimulus
     %{it may need an extra GracePeriod for the decision of starting a new task}
     
-    TaskParameters.GUI.ITI = 5; % end of trial ITI
+    TaskParameters.GUI.ITI = 3; % end of trial ITI
     TaskParameters.GUI.VI = false; % exprnd based on ITI
     TaskParameters.GUIMeta.VI.Style = 'checkbox';
     
-    TaskParameters.GUIPanels.General = {'SessionDescription','Ports_LMR','PreITI','Wait_Cin_Max',...
-                                        'ChoiceDeadline','NoDecisionTimeOut','NoDecisionFeedbackType',...
-                                        'SingleSidePoke','IncorrectChoiceTimeOut','IncorrectChoiceFeedbackType',...
-                                        'StartNewTrial','StartNewTrialHoldingTime','StartNewTrialFeedbackType',...
+    TaskParameters.GUIPanels.General = {'SessionDescription','Ports_LMR','PreITI','WaitCInMax',...
+                                        'ChoiceDeadline','NoDecisionTimeOut','NoDecisionFeedback',...
+                                        'SingleSidePoke','IncorrectChoiceTimeOut','IncorrectChoiceFeedback',...
+                                        'StartNewTrial','StartNewTrialHoldingTime','StartNewTrialFeedback',...
                                         'StartNewTrialTimeOut','ITI', 'VI'};
     
     %% StimDelay
@@ -52,9 +52,9 @@ if isempty(fieldnames(TaskParameters))
     TaskParameters.GUI.StimDelay = TaskParameters.GUI.StimDelayMin; % current stimulus delay time
     TaskParameters.GUIMeta.StimDelay.Style = 'text';
     
-    TaskParameters.GUI.StimDelayDistributionType = 1;
-    TaskParameters.GUIMeta.StimDelayDistributionType.Style = 'popupmenu';
-    TaskParameters.GUIMeta.StimDelayDistributionType.String = {'Fix','AutoIncr','TruncExp','Uniform','Beta'}; % Fix = fix time; AutoIncr = incremental along session; TruncExp = random drawn within a range with prob distribution based on TrucExp; Beta = like TruncExp, but with beta distribution
+    TaskParameters.GUI.StimDelayDistribution = 1;
+    TaskParameters.GUIMeta.StimDelayDistribution.Style = 'popupmenu';
+    TaskParameters.GUIMeta.StimDelayDistribution.String = {'Fix','AutoIncr','TruncExp','Uniform','Beta'}; % Fix = fix time; AutoIncr = incremental along session; TruncExp = random drawn within a range with prob distribution based on TrucExp; Beta = like TruncExp, but with beta distribution
     
     TaskParameters.GUI.StimDelayIncrStepSize = 0.01; % step size for autoincrementing stimulus delay time, for AutoIncr only
     TaskParameters.GUI.StimDelayDecrStepSize = 0.01;
@@ -63,9 +63,9 @@ if isempty(fieldnames(TaskParameters))
     TaskParameters.GUI.StimDelayBeta = 0.05; % step size for StimDelay, only for Beta
     
     TaskParameters.GUI.BrokeFixationTimeOut = 2; % (s), penalty for C_out before stimulus starts
-    TaskParameters.GUI.BrokeFixationFeedbackType = 1; % feedback for BrokeFixation
-    TaskParameters.GUIMeta.BrokeFixationFeedbackType.Style = 'popupmenu';
-    TaskParameters.GUIMeta.BrokeFixationFeedbackType.String = {'None','WhiteNoise'};
+    TaskParameters.GUI.BrokeFixationFeedback = 1; % feedback for BrokeFixation
+    TaskParameters.GUIMeta.BrokeFixationFeedback.Style = 'popupmenu';
+    TaskParameters.GUIMeta.BrokeFixationFeedback.String = {'None','WhiteNoise'};
     
     TaskParameters.GUI.PlayStimulus = 1; % stimulus type
     TaskParameters.GUIMeta.PlayStimulus.Style = 'popupmenu';
@@ -75,20 +75,20 @@ if isempty(fieldnames(TaskParameters))
     
     TaskParameters.GUI.SamplingGrace = 0; % allowance for brief C_out and then C_in, for flickering action/device
     TaskParameters.GUI.EarlyWithdrawalTimeOut = 1; % penalty for C_out before stimulus delivery ends
-    TaskParameters.GUI.EarlyWithdrawalFeedbackType = 1; % feedback for EarlyWithdrawal
-    TaskParameters.GUIMeta.EarlyWithdrawalFeedbackType.Style = 'popupmenu';
-    TaskParameters.GUIMeta.EarlyWithdrawalFeedbackType.String = {'None','WhiteNoise'};
+    TaskParameters.GUI.EarlyWithdrawalFeedback = 1; % feedback for EarlyWithdrawal
+    TaskParameters.GUIMeta.EarlyWithdrawalFeedback.Style = 'popupmenu';
+    TaskParameters.GUIMeta.EarlyWithdrawalFeedback.String = {'None','WhiteNoise'};
 
-    TaskParameters.GUIPanels.Sampling = {'StimDelay','StimDelayDistributionType','StimDelayMin','StimDelayMax',...
+    TaskParameters.GUIPanels.Sampling = {'StimDelay','StimDelayDistribution','StimDelayMin','StimDelayMax',...
                                          'StimDelayIncrStepSize','StimDelayDecrStepSize','StimDelayTau',...
                                          'StimDelayAlpha','StimDelayBeta','BrokeFixationTimeOut',...
-                                         'BrokeFixationFeedbackType','PlayStimulus','StimulusTime',...
-                                         'SamplingGrace','EarlyWithdrawalTimeOut','EarlyWithdrawalFeedbackType'};
+                                         'BrokeFixationFeedback','PlayStimulus','StimulusTime',...
+                                         'SamplingGrace','EarlyWithdrawalTimeOut','EarlyWithdrawalFeedback'};
                                      
     %% FeedbackDelay, original named "Side Ports" ("waiting for feedback(either reward or punishment)")
-    TaskParameters.GUI.FeedbackDelayDistributionType = 1;
-    TaskParameters.GUIMeta.FeedbackDelayDistributionType.Style = 'popupmenu';
-    TaskParameters.GUIMeta.FeedbackDelayDistributionType.String = {'Fix','AutoIncr','TruncExp','Beta'}; % Fix = fix time; AutoIncr = incremental along session; TruncExp = random drawn within a range with prob distribution based on TrucExp; Beta = like TruncExp, but with beta distribution
+    TaskParameters.GUI.FeedbackDelayDistribution = 1;
+    TaskParameters.GUIMeta.FeedbackDelayDistribution.Style = 'popupmenu';
+    TaskParameters.GUIMeta.FeedbackDelayDistribution.String = {'Fix','AutoIncr','TruncExp','Beta'}; % Fix = fix time; AutoIncr = incremental along session; TruncExp = random drawn within a range with prob distribution based on TrucExp; Beta = like TruncExp, but with beta distribution
     TaskParameters.GUI.FeedbackDelayMin = 0; % lower boundary for FeedbackDelay; after (i+1)th value is created, it is used to bound the value
     TaskParameters.GUI.FeedbackDelayMax = 0; % upper boundary for FeedbackDelay
     
@@ -103,19 +103,19 @@ if isempty(fieldnames(TaskParameters))
     TaskParameters.GUI.FeedbackDelayGrace = 0; 
     
     TaskParameters.GUI.SkippedFeedbackTimeOut = 3;
-    TaskParameters.GUI.SkippedFeedbackFeedbackType = 1; % feedback for SkippedFeedback
-    TaskParameters.GUIMeta.SkippedFeedbackFeedbackType.Style = 'popupmenu';
-    TaskParameters.GUIMeta.SkippedFeedbackFeedbackType.String = {'None','WhiteNoise'};
+    TaskParameters.GUI.SkippedFeedbackFeedback = 1; % feedback for SkippedFeedback
+    TaskParameters.GUIMeta.SkippedFeedbackFeedback.Style = 'popupmenu';
+    TaskParameters.GUIMeta.SkippedFeedbackFeedback.String = {'None','WhiteNoise'};
     
     TaskParameters.GUI.CatchTrialPercentage = 0; % determine whether a trial is with extended FeedbackDelay, thus "catching" the time investment behaviour
     TaskParameters.GUI.CatchTrial = 'true'; % is the current trial a CatchTrial?
     TaskParameters.GUIMeta.CatchTrial.Style = 'text';
     
-    TaskParameters.GUIPanels.FeedbackDelay = {'FeedbackDelayDistributionType','FeedbackDelayMin',...
-                                              'FeedbackDelayMax','FeedbackDelayIncr','FeedbackDelayDecr',...
+    TaskParameters.GUIPanels.FeedbackDelay = {'FeedbackDelayDistribution','FeedbackDelayMin',...
+                                              'FeedbackDelayMax','FeedbackDelayIncrStepSize','FeedbackDelayDecrStepSize',...
                                               'FeedbackDelayTau','FeedbackDelayAlpha','FeedbackDelayBeta',...
                                               'FeedbackDelay','FeedbackDelayGrace','SkippedFeedbackTimeOut',...
-                                              'SkippedFeedbackFeedbackType','CatchTrialPercentage','CatchTrial'};
+                                              'SkippedFeedbackFeedback','CatchTrialPercentage','CatchTrial'};
                                       
     %% Reward and RewardProb
     TaskParameters.GUI.RewardAmount = 30; % (ul), baseline value for reward (adjusted by ExpressedAsExpectedValue)
@@ -126,8 +126,8 @@ if isempty(fieldnames(TaskParameters))
     TaskParameters.GUIMeta.RiskType.Style = 'popupmenu';
     TaskParameters.GUIMeta.RiskType.String = {'Fix','BlockRand','BlockFix','Cued'}; % decide how reward probability is expressed: Fix, based on RewardProbLeft value to express fix RewardProb; BlockRand, randomly draw a value between Min and Max and assign; BlockFix, based on Max and Min and reverse L-R value; Cue, cued by Tone
     
-    TaskParameters.GUI.RewardProbLeft = 50; % Reward Probability of Left Poke, only for Fix in RiskType
-    TaskParameters.GUI.RewardProbRight = 50; % Reward Probability of Left Poke, only for Fix in RiskType
+    TaskParameters.GUI.RewardProbLeft = 0.5; % Reward Probability of Left Poke, only for Fix in RiskType
+    TaskParameters.GUI.RewardProbRight = 0.5; % Reward Probability of Left Poke, only for Fix in RiskType
     
     TaskParameters.GUI.BlockLenMin = 100; % lower boundart of BlockLen, only for Block in RiskType
     TaskParameters.GUI.BlockLenMax = 150; % upper boundart of BlockLen, only for Block in RiskType
@@ -136,25 +136,25 @@ if isempty(fieldnames(TaskParameters))
     TaskParameters.GUI.NextBlockTrialNumber = TaskParameters.GUI.BlockLen; % the trial, where the next block starts
     TaskParameters.GUIMeta.NextBlockTrialNumber.Style = 'text';
     
-    TaskParameters.GUI.RewardProbMax = 100; % upper boundary of reward probability, only for Block in RiskType
-    TaskParameters.GUI.RewardProbMin = 40; % lower boundary of reward probability, only for Block in RiskType
+    TaskParameters.GUI.RewardProbMax = 1; % upper boundary of reward probability, only for Block in RiskType
+    TaskParameters.GUI.RewardProbMin = 0.4; % lower boundary of reward probability, only for Block in RiskType
       
     TaskParameters.GUI.ToneRiskTable.ToneStartFreq = [2 5 10 20 40]'; % (kHz), only for Cue in RiskType
     TaskParameters.GUI.ToneRiskTable.ToneEndFreq = [2 5 10 20 40]'; % (kHz), features for sweep, only for Cue in RiskType
-    TaskParameters.GUI.ToneRiskTable.ToneCuedRewardProbability = [40, 50, 60, 70, 80]'; % reward probability of corresponding tone, only for Cue in RiskType
+    TaskParameters.GUI.ToneRiskTable.ToneCuedRewardProbability = [0.4, 0.5, 0.6, 0.7, 0.8]'; % reward probability of corresponding tone, only for Cue in RiskType
     TaskParameters.GUIMeta.ToneRiskTable.Style = 'table';
     TaskParameters.GUIMeta.ToneRiskTable.String = 'Tone cued reward probability';
-    TaskParameters.GUIMeta.ToneRiskTable.ColumnLabel = {'StartFreq','EndFreq','RewardProbability'};
+    TaskParameters.GUIMeta.ToneRiskTable.ColumnLabel = {'StartFreq','EndFreq','RewardProb'};
 
     TaskParameters.GUI.RewardProbActualLeft = TaskParameters.GUI.RewardProbLeft; % Reward Probability of Left Poke, for all RiskType
-    TaskParameters.GUIMeta.RewardProbBlockLeft.Style = 'text';
-    TaskParameters.GUI.RewardProbBlockRight = TaskParameters.GUI.RewardProbRight; % Reward Probability of Right Poke, for all RiskType
+    TaskParameters.GUIMeta.RewardProbActualLeft.Style = 'text';
+    TaskParameters.GUI.RewardProbActualRight = TaskParameters.GUI.RewardProbRight; % Reward Probability of Right Poke, for all RiskType
     TaskParameters.GUIMeta.RewardProbActualRight.Style = 'text';
   
-    TaskParameters.GUIPanels.Reward = {'RewardAmount','ExpressedAsExpectedValue','RiskType',...
+    TaskParameters.GUIPanels.Reward = {'ToneRiskTable','RewardAmount','ExpressedAsExpectedValue','RiskType',...
                                        'RewardProbLeft','RewardProbRight','BlockLenMin',...
                                        'BlockLenMax','BlockLen','NextBlockTrialNumber',...
-                                       'RewardProbMax','RewardProbMin','ToneRiskTable',...
+                                       'RewardProbMax','RewardProbMin',...
                                        'RewardProbActualLeft','RewardProbActualRight',};
     
     %% Photometry
@@ -240,7 +240,7 @@ if isempty(fieldnames(TaskParameters))
     TaskParameters.GUITabs.Photometry = {'PhotometryRecording','PhotometryNidaq','PhotometryPlot','PhotometryRig'};
        
     TaskParameters.GUI = orderfields(TaskParameters.GUI);
-    TaskParameters.Figures.OutcomePlot.Position = [100, 100, 1000, 800];
+    TaskParameters.Figures.OutcomePlot.Position = [100, 100, 800, 600];
 end
 BpodParameterGUI('init', TaskParameters);
 

@@ -91,7 +91,7 @@ switch Action
         AxesHandles.HandleFeedback.XLabel.String = 'Time (s)';
         AxesHandles.HandleFeedback.YLabel.String = 'Trial Counts';
         AxesHandles.HandleFeedback.Title.String = 'Feedback Delay';
-        set(AxesHandles.HandleFeedback,'TickDir','out','XLim',[0,35],'XTick',[0,10,20,30],'FontSize',13);
+        set(AxesHandles.HandleFeedback,'TickDir','out','XLim',[0,35],'XTick',[0,10,20,30]);
         
         %% TimeInvestment
         hold(AxesHandles.HandleTimeInvestment,'on')
@@ -102,7 +102,7 @@ switch Action
         AxesHandles.HandleTimeInvestment.XLabel.String = 'RewardProb';
         AxesHandles.HandleTimeInvestment.YLabel.String = 'Time (s)';
         AxesHandles.HandleTimeInvestment.Title.String = 'Time Investment';
-        set(AxesHandles.HandleTimeInvestment,'TickDir','out','XLim',[0,1.1],'YLim',[0,32],'XTick',[0,0.5,1],'YTick',[0,10,20,30],'FontSize',13);
+        set(AxesHandles.HandleTimeInvestment,'TickDir','out','XLim',[0,1.1],'YLim',[0,32],'XTick',[0,0.5,1],'YTick',[0,10,20,30]);
         
     case 'UpdateTrial' % Update before the trial starts, mainly for viewing what's the next trial is about
         iTrial = varargin{1};

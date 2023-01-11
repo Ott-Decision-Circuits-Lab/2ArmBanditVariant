@@ -83,9 +83,9 @@ switch TaskParameters.GUIMeta.RiskType.String{TaskParameters.GUI.RiskType}
     case 'BlockFix' % no adjustmnet needed
     case 'Cued'
         if isfield(BpodSystem.ModuleUSB, 'HiFi1')
-            SamplingAction = {'HiFi1', ['P' 7]};
+            SamplingAction = {'HiFi1', ['P' 6]};
         elseif isfield(BpodSystem.ModuleUSB, 'WavePlayer1')
-            SamplingAction = {'WavePlayer1', ['P' 7]};
+            SamplingAction = {'WavePlayer1', ['P' 6]};
         elseif BpodSystem.EmulatorMode
             SamplingAction = {};
         else

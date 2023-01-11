@@ -7,6 +7,7 @@ function LoadIndependentWaveform(Player)
 % IncorrectChoiceSound -> 5
 % SkippedFeedbackSound -> 6}
 % Sound Index 10 onwards are reserved for trial-dependent waveform (Max index for HiFi: 20; for Analog: 64)
+global BpodSystem
 global TaskParameters
 
 fs = Player.SamplingRate;
@@ -24,10 +25,10 @@ if isfield(TaskParameters.GUI, 'BrokeFixationTimeOut') && TaskParameters.GUI.Bro
 end
 
 if ~isempty(BrokeFixationSound)
-    if BpodSystem.assertModule('WavePlayer', 1) == 1
+    if isfield(BpodSystem.ModuleUSB, 'WavePlayer1')
         Player.loadWaveform(SoundIndex, BrokeFixationSound);
         Player.TriggerProfiles(SoundIndex, 1:2) = SoundIndex;
-    elseif BpodSystem.assertModule('HiFi', 1) == 1
+    elseif isfield(BpodSystem.ModuleUSB, 'HiFi1')
         Player.load(SoundIndex, BrokeFixationSound);
     end
 end
@@ -45,10 +46,10 @@ if isfield(TaskParameters.GUI, 'EarlyWithdrawalTimeOut') && TaskParameters.GUI.E
 end
 
 if ~isempty(EarlyWithdrawalSound)
-    if BpodSystem.assertModule('WavePlayer', 1) == 1
+    if isfield(BpodSystem.ModuleUSB, 'WavePlayer1')
         Player.loadWaveform(SoundIndex, EarlyWithdrawalSound);
         Player.TriggerProfiles(SoundIndex, 1:2) = SoundIndex;
-    elseif BpodSystem.assertModule('HiFi', 1) == 1
+    elseif isfield(BpodSystem.ModuleUSB, 'HiFi1')
         Player.load(SoundIndex, EarlyWithdrawalSound);
     end
 end
@@ -66,10 +67,10 @@ if isfield(TaskParameters.GUI, 'NoDecisionTimeOut') && TaskParameters.GUI.NoDeci
 end
 
 if ~isempty(NoDecisionSound)
-    if BpodSystem.assertModule('WavePlayer', 1) == 1
+    if isfield(BpodSystem.ModuleUSB, 'WavePlayer1')
         Player.loadWaveform(SoundIndex, NoDecisionSound);
         Player.TriggerProfiles(SoundIndex, 1:2) = SoundIndex;
-    elseif BpodSystem.assertModule('HiFi', 1) == 1
+    elseif isfield(BpodSystem.ModuleUSB, 'HiFi1')
         Player.load(SoundIndex, NoDecisionSound);
     end
 end
@@ -87,10 +88,10 @@ if isfield(TaskParameters.GUI, 'StartNewTrialTimeOut') && TaskParameters.GUI.Sta
 end
 
 if ~isempty(StartNewTrialSound)
-    if BpodSystem.assertModule('WavePlayer', 1) == 1
+    if isfield(BpodSystem.ModuleUSB, 'WavePlayer1')
         Player.loadWaveform(SoundIndex, StartNewTrialSound);
         Player.TriggerProfiles(SoundIndex, 1:2) = SoundIndex;
-    elseif BpodSystem.assertModule('HiFi', 1) == 1
+    elseif isfield(BpodSystem.ModuleUSB, 'HiFi1')
         Player.load(SoundIndex, StartNewTrialSound);
     end
 end
@@ -108,10 +109,10 @@ if isfield(TaskParameters.GUI, 'IncorrectChoiceTimeOut') && TaskParameters.GUI.I
 end
 
 if ~isempty(IncorrectChoiceSound)
-    if BpodSystem.assertModule('WavePlayer', 1) == 1
+    if isfield(BpodSystem.ModuleUSB, 'WavePlayer1')
         Player.loadWaveform(SoundIndex, IncorrectChoiceSound);
         Player.TriggerProfiles(SoundIndex, 1:2) = SoundIndex;
-    elseif BpodSystem.assertModule('HiFi', 1) == 1
+    elseif isfield(BpodSystem.ModuleUSB, 'HiFi1')
         Player.load(SoundIndex, IncorrectChoiceSound);
     end
 end
@@ -129,10 +130,10 @@ if isfield(TaskParameters.GUI, 'SkippedFeedbackTimeOut') && TaskParameters.GUI.S
 end
 
 if ~isempty(SkippedFeedbackSound)
-    if BpodSystem.assertModule('WavePlayer', 1) == 1
+    if isfield(BpodSystem.ModuleUSB, 'WavePlayer1')
         Player.loadWaveform(SoundIndex, SkippedFeedbackSound);
         Player.TriggerProfiles(SoundIndex, 1:2) = SoundIndex;
-    elseif BpodSystem.assertModule('HiFi', 1) == 1
+    elseif isfield(BpodSystem.ModuleUSB, 'HiFi1')
         Player.load(SoundIndex, SkippedFeedbackSound);
     end
 end

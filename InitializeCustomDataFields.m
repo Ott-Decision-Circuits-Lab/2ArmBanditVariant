@@ -185,7 +185,7 @@ switch TaskParameters.GUIMeta.RiskType.String{TaskParameters.GUI.RiskType}
         end
         
     case 'Cued'
-        NoOfValidCue = min([size(TaskParameters.GUI.ToneRiskTable.ToneStartFreq, 1), size(TaskParameters.GUI.ToneRiskTable.ToneEndFreq, 1), TaskParameters.GUI.ToneRiskTable.ToneCuedRewardProbability]);
+        NoOfValidCue = min([size(TaskParameters.GUI.ToneRiskTable.ToneStartFreq, 1), size(TaskParameters.GUI.ToneRiskTable.ToneEndFreq, 1), size(TaskParameters.GUI.ToneRiskTable.ToneCuedRewardProbability, 1)]);
         CueLeft = randi(NoOfValidCue);
         CueRight = randi(NoOfValidCue);
         TrialData.RewardCueLeft(:,iTrial) = [TaskParameters.GUI.ToneRiskTable.ToneStartFreq(CueLeft), TaskParameters.GUI.ToneRiskTable.ToneEndFreq(CueLeft)]';

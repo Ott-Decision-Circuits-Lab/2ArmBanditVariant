@@ -11,7 +11,7 @@ BpodSystem.GUIHandles.OutcomePlot.HandleStimDelay = axes('Position',   [2*.05 + 
 BpodSystem.GUIHandles.OutcomePlot.HandleSampleTime = axes('Position',  [3*.05 + 2*.1   .55  .1  .4],'Visible','off');
 BpodSystem.GUIHandles.OutcomePlot.HandleMoveTime = axes('Position',    [4*.05 + 3*.1   .55  .1  .4],'Visible','off');
 BpodSystem.GUIHandles.OutcomePlot.HandleFeedback = axes('Position',    [5*.05 + 4*.1   .55  .1  .4],'Visible','off');
-BpodSystem.GUIHandles.OutcomePlot.HandleVevaiometric = axes('Position',[6*.05 + 5*.1   .55  .1  .4],'Visible','off');
+BpodSystem.GUIHandles.OutcomePlot.HandleTimeInvestment = axes('Position',[6*.05 + 5*.1   .55  .1  .4],'Visible','off');
 
 TwoArmBanditVariant_PlotSideOutcome(BpodSystem.GUIHandles.OutcomePlot,'init');
 

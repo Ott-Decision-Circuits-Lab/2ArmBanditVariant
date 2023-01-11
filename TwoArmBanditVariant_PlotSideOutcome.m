@@ -93,16 +93,16 @@ switch Action
         AxesHandles.HandleFeedback.Title.String = 'Feedback Delay';
         set(AxesHandles.HandleFeedback,'TickDir','out','XLim',[0,35],'XTick',[0,10,20,30],'FontSize',13);
         
-        %% Vevaiometric
-        hold(AxesHandles.HandleVevaiometric,'on')
-        BpodSystem.GUIHandles.OutcomePlot.VevaiometricPointsIncorrect = line(AxesHandles.HandleVevaiometric,-1,0, 'LineStyle','none','Marker','.','MarkerEdge',scarlet,'MarkerFace','none', 'MarkerSize',6);
-        BpodSystem.GUIHandles.OutcomePlot.VevaiometricPointsCorrect = line(AxesHandles.HandleVevaiometric,-1,0, 'LineStyle','none','Marker','.','MarkerEdge',azure,'MarkerFace','none', 'MarkerSize',6);
-        BpodSystem.GUIHandles.OutcomePlot.VevaiometricIncorrect = errorbar(AxesHandles.HandleVevaiometric,-1,0,1, 'LineStyle','-','Marker','o','MarkerEdge',scarlet,'MarkerFace','none', 'MarkerSize',8);
-        BpodSystem.GUIHandles.OutcomePlot.VevaiometricCorrect = errorbar(AxesHandles.HandleVevaiometric,-1,0,1, 'LineStyle','-','Marker','o','MarkerEdge',azure,'MarkerFace','none', 'MarkerSize',8);
-        AxesHandles.HandleMT.XLabel.String = 'RewardProb';
-        AxesHandles.HandleMT.YLabel.String = 'Time (s)';
-        AxesHandles.HandleMT.Title.String = 'Vevaiometry';
-        set(AxesHandles.HandleVevaiometric,'TickDir','out','XLim',[0,1.1],'YLim',[0,32],'XTick',[0,0.5,1],'YTick',[0,10,20,30],'FontSize',13);
+        %% TimeInvestment
+        hold(AxesHandles.HandleTimeInvestment,'on')
+        BpodSystem.GUIHandles.OutcomePlot.TimeInvestmentPointsIncorrect = line(AxesHandles.HandleTimeInvestment,-1,0, 'LineStyle','none','Marker','.','MarkerEdge',scarlet,'MarkerFace','none', 'MarkerSize',6);
+        BpodSystem.GUIHandles.OutcomePlot.TimeInvestmentPointsCorrect = line(AxesHandles.HandleTimeInvestment,-1,0, 'LineStyle','none','Marker','.','MarkerEdge',azure,'MarkerFace','none', 'MarkerSize',6);
+        BpodSystem.GUIHandles.OutcomePlot.TimeInvestmentIncorrect = errorbar(AxesHandles.HandleTimeInvestment,-1,0,1, 'LineStyle','-','Marker','o','MarkerEdge',scarlet,'MarkerFace','none', 'MarkerSize',8);
+        BpodSystem.GUIHandles.OutcomePlot.TimeInvestmentCorrect = errorbar(AxesHandles.HandleTimeInvestment,-1,0,1, 'LineStyle','-','Marker','o','MarkerEdge',azure,'MarkerFace','none', 'MarkerSize',8);
+        AxesHandles.HandleTimeInvestment.XLabel.String = 'RewardProb';
+        AxesHandles.HandleTimeInvestment.YLabel.String = 'Time (s)';
+        AxesHandles.HandleTimeInvestment.Title.String = 'Time Investment';
+        set(AxesHandles.HandleTimeInvestment,'TickDir','out','XLim',[0,1.1],'YLim',[0,32],'XTick',[0,0.5,1],'YTick',[0,10,20,30],'FontSize',13);
         
     case 'UpdateTrial' % Update before the trial starts, mainly for viewing what's the next trial is about
         iTrial = varargin{1};
@@ -367,10 +367,10 @@ switch Action
 %                                                    sprintf('RFLeftP=%1.2f',RFLeftP),sprintf('RFRightP=%1.2f',RFRightP)})
         end
         
-        %% Vevaiometric
-        BpodSystem.GUIHandles.OutcomePlot.HandleVevaiometric.Visible = 'on';
-        set(get(BpodSystem.GUIHandles.OutcomePlot.HandleVevaiometric,'Children'),'Visible','on');
-        cla(AxesHandles.HandleVevaiometric)
+        %% TimeInvestment
+        BpodSystem.GUIHandles.OutcomePlot.HandleTimeInvestment.Visible = 'on';
+        set(get(BpodSystem.GUIHandles.OutcomePlot.HandleTimeInvestment,'Children'),'Visible','on');
+        cla(AxesHandles.HandleTimeInvestment)
         
         if CatchTrial(iTrial) == 1
             ndxIncorrect = CatchTrial == 1 & IncorrectChoice == 1; %all (completed) error trials (including catch errors)
@@ -384,8 +384,8 @@ switch Action
             CorrectChoiceWT = FeedbackWaitingTime(ndxIncorrect);
             
             % scatter plot
-            set(BpodSystem.GUIHandles.OutcomePlot.VevaiometricPointsIncorrect, 'xdata', IncorrectChoiceRewardProb, 'ydata', IncorrectChoiceWT);
-            set(BpodSystem.GUIHandles.OutcomePlot.VevaiometricPointsCorrect, 'xdata', CorrectChoiceRewardProb, 'ydata', CorrectChoiceWT);
+            set(BpodSystem.GUIHandles.OutcomePlot.TimeInvestmentPointsIncorrect, 'xdata', IncorrectChoiceRewardProb, 'ydata', IncorrectChoiceWT);
+            set(BpodSystem.GUIHandles.OutcomePlot.TimeInvestmentPointsCorrect, 'xdata', CorrectChoiceRewardProb, 'ydata', CorrectChoiceWT);
             
             % Mean-Error curve
             RewardProbBin = 0.1;
@@ -399,8 +399,8 @@ switch Action
             [IncorrectChoiceWTBinMean, IncorrectChoiceWTBinErr] = grpstats(IncorrectChoiceTable, 'RewardProbBin', {'mean','sem'});
             [CorrectChoiceWTBinMean, CorrectChoiceWTBinErr] = grpstats(CorrectChoiceTable, 'RewardProbBin', {'mean','sem'});
             
-            set(BpodSystem.GUIHandles.OutcomePlot.VevaiometricIncorrect, 'xdata', XBinIdx, 'ydata', IncorrectChoiceWTBinMean, 'err',IncorrectChoiceWTBinErr);
-            set(BpodSystem.GUIHandles.OutcomePlot.VevaiometricCorrect, 'xdata', XBinIdx, 'ydata', CorrectChoiceWTBinMean, 'err',CorrectChoiceWTBinErr);
+            set(BpodSystem.GUIHandles.OutcomePlot.TimeInvestmentIncorrect, 'xdata', XBinIdx, 'ydata', IncorrectChoiceWTBinMean, 'err',IncorrectChoiceWTBinErr);
+            set(BpodSystem.GUIHandles.OutcomePlot.TimeInvestmentCorrect, 'xdata', XBinIdx, 'ydata', CorrectChoiceWTBinMean, 'err',CorrectChoiceWTBinErr);
         end
         
 end % switch end

@@ -141,9 +141,9 @@ end
 
 LeftLightValue = 255;
 RightLightValue = 255;
-if TrialData.LightLeft == true
+if TrialData.LightLeft(iTrial) == true
     RightLightValue = 0;
-elseif TrialData.LightLeft == false
+elseif TrialData.LightLeft(iTrial) == false
     LeftLightValue = 0;
 end
 

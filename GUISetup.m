@@ -67,9 +67,9 @@ if isempty(fieldnames(TaskParameters))
     TaskParameters.GUIMeta.BrokeFixationFeedback.Style = 'popupmenu';
     TaskParameters.GUIMeta.BrokeFixationFeedback.String = {'None','WhiteNoise'};
     
-    TaskParameters.GUI.PlayStimulus = 1; % stimulus type
-    TaskParameters.GUIMeta.PlayStimulus.Style = 'popupmenu';
-    TaskParameters.GUIMeta.PlayStimulus.String = {'None','Freq'}; % if freq
+%     TaskParameters.GUI.PlayStimulus = 1; % stimulus type
+%     TaskParameters.GUIMeta.PlayStimulus.Style = 'popupmenu';
+%     TaskParameters.GUIMeta.PlayStimulus.String = {'None','Freq'}; % if freq
 
     TaskParameters.GUI.StimulusTime = 0.35; % legnth of stimulus reception, also how long the animal is required to sample (to avoid random decision)
     
@@ -82,7 +82,8 @@ if isempty(fieldnames(TaskParameters))
     TaskParameters.GUIPanels.Sampling = {'StimDelay','StimDelayDistribution','StimDelayMin','StimDelayMax',...
                                          'StimDelayIncrStepSize','StimDelayDecrStepSize','StimDelayTau',...
                                          'StimDelayAlpha','StimDelayBeta','BrokeFixationTimeOut',...
-                                         'BrokeFixationFeedback','PlayStimulus','StimulusTime',...
+                                         'BrokeFixationFeedback',...'PlayStimulus',
+                                         'StimulusTime',...
                                          'SamplingGrace','EarlyWithdrawalTimeOut','EarlyWithdrawalFeedback'};
                                      
     %% FeedbackDelay, original named "Side Ports" ("waiting for feedback(either reward or punishment)")

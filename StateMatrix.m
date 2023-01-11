@@ -77,14 +77,15 @@ sma = AddState(sma, 'Name', 'BrokeFixation',...
     'OutputActions', BrokeFixationAction);
 
 SamplingAction = {};
-switch TaskParameters.GUIMeta.PlayStimulus.String{TaskParameters.GUI.PlayStimulus}
-    case 'None' % no adjustmnet needed
-        
-    case 'Freq'
+switch TaskParameters.GUIMeta.RiskType.String{TaskParameters.GUI.RiskType}
+    case 'Fix' % no adjustmnet needed
+    case 'BlockRand' % no adjustmnet needed
+    case 'BlockFix' % no adjustmnet needed
+    case 'Cued'
         if isfield(BpodSystem.ModuleUSB, 'HiFi1')
-            SamplingAction = {'HiFi1', ['P' 1]};
+            SamplingAction = {'HiFi1', ['P' 7]};
         elseif isfield(BpodSystem.ModuleUSB, 'WavePlayer1')
-            SamplingAction = {'WavePlayer1', ['P' 1]};
+            SamplingAction = {'WavePlayer1', ['P' 7]};
         elseif BpodSystem.EmulatorMode
             SamplingAction = {};
         else
@@ -110,9 +111,9 @@ switch TaskParameters.GUIMeta.EarlyWithdrawalFeedback.String{TaskParameters.GUI.
         
     case 'WhiteNoise'
         if isfield(BpodSystem.ModuleUSB, 'HiFi1')
-            EarlyWithdrawalAction = {'HiFi1', ['P' 2]};
+            EarlyWithdrawalAction = {'HiFi1', ['P' 1]};
         elseif isfield(BpodSystem.ModuleUSB, 'WavePlayer1')
-            EarlyWithdrawalAction = {'WavePlayer1', ['P' 2]};
+            EarlyWithdrawalAction = {'WavePlayer1', ['P' 1]};
         elseif BpodSystem.EmulatorMode
             EarlyWithdrawalAction = {};
         else
@@ -161,9 +162,9 @@ switch TaskParameters.GUIMeta.NoDecisionFeedback.String{TaskParameters.GUI.NoDec
         
     case 'WhiteNoise'
         if isfield(BpodSystem.ModuleUSB, 'HiFi1')
-            NoDecisionAction = {'HiFi1', ['P' 3]};
+            NoDecisionAction = {'HiFi1', ['P' 2]};
         elseif isfield(BpodSystem.ModuleUSB, 'WavePlayer1')
-            NoDecisionAction = {'WavePlayer1', ['P' 3]};
+            NoDecisionAction = {'WavePlayer1', ['P' 2]};
         elseif BpodSystem.EmulatorMode
             NoDecisionAction = {};
         else
@@ -187,9 +188,9 @@ switch TaskParameters.GUIMeta.StartNewTrialFeedback.String{TaskParameters.GUI.St
         
     case 'WhiteNoise'
         if isfield(BpodSystem.ModuleUSB, 'HiFi1')
-            StartNewTrialAction = {'HiFi1', ['P' 4]};
+            StartNewTrialAction = {'HiFi1', ['P' 3]};
         elseif isfield(BpodSystem.ModuleUSB, 'WavePlayer1')
-            StartNewTrialAction = {'WavePlayer1', ['P' 4]};
+            StartNewTrialAction = {'WavePlayer1', ['P' 3]};
         elseif BpodSystem.EmulatorMode
             StartNewTrialAction = {};
         else
@@ -267,9 +268,9 @@ switch TaskParameters.GUIMeta.IncorrectChoiceFeedback.String{TaskParameters.GUI.
         
     case 'WhiteNoise'
         if isfield(BpodSystem.ModuleUSB, 'HiFi1')
-            IncorrectChoiceAction = {'HiFi1', ['P' 5]};
+            IncorrectChoiceAction = {'HiFi1', ['P' 4]};
         elseif isfield(BpodSystem.ModuleUSB, 'WavePlayer1')
-            IncorrectChoiceAction = {'WavePlayer1', ['P' 5]};
+            IncorrectChoiceAction = {'WavePlayer1', ['P' 4]};
         elseif BpodSystem.EmulatorMode
             IncorrectChoiceAction = {};
         else
@@ -288,9 +289,9 @@ switch TaskParameters.GUIMeta.SkippedFeedbackFeedback.String{TaskParameters.GUI.
         
     case 'WhiteNoise'
         if isfield(BpodSystem.ModuleUSB, 'HiFi1')
-            SkippedFeedbackAction = {'HiFi1', ['P' 6]};
+            SkippedFeedbackAction = {'HiFi1', ['P' 5]};
         elseif isfield(BpodSystem.ModuleUSB, 'WavePlayer1')
-            SkippedFeedbackAction = {'WavePlayer1', ['P' 6]};
+            SkippedFeedbackAction = {'WavePlayer1', ['P' 5]};
         elseif BpodSystem.EmulatorMode
             SkippedFeedbackAction = {};
         else

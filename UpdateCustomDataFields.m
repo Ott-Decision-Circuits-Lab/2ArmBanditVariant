@@ -125,12 +125,19 @@ elseif any(strcmp('WaterL',StatesThisTrial)) || any(strcmp('WaterR',StatesThisTr
    TrialData.SkippedFeedback(iTrial) = false;
 end
 
-%% Peri-outcome
-if any(strcmp('WaterL',StatesThisTrial))
-    TrialData.Rewarded(iTrial) = (TrialStates.WaterL(1,2) - TrialStates.WaterL(1,1)) > 0;
-elseif any(strcmp('WaterR',StatesThisTrial))
-    TrialData.Rewarded(iTrial) = (TrialStates.WaterR(1,2) - TrialStates.WaterR(1,1)) > 0;
+if TaskParameters.GUI.CatchTrial && ~isnan(TrialData.ChoiceLeft(iTrial)) % if a choice is made (no matter SingleSidePoke) 
+    TrialData.TITrial(iTrial) = false; % True if it is included in TimeInvestment
+    if TrialData.IncorrectChoice(iTrial) == 1 % Catch 1: incorrect choice
+        TrialData.TITrial(iTrial) = true;
+    elseif TrialData.Baited(2-TrialData.ChoiceLeft(iTrial), iTrial) == 0 % Catch 2: choice made is not baited
+        TrialData.TITrial(iTrial) = true;
+    elseif TrialData.SkippedFeedback(iTrial) && TrialData.Baited(2-TrialData.ChoiceLeft(iTrial), iTrial) == 1 % Catch 3: Choice made is baited, but Skipped Feedback
+        TrialData.TITrial(iTrial) = true;
+    end
 end
+
+%% Peri-outcome
+TrialData.Rewarded(iTrial) = 1-TrialData.TITrial(iTrial); % if isnan(TITrial), Rewarded==NaN
 
 BpodSystem.Data.Custom.TrialData = TrialData;
 end

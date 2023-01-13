@@ -108,15 +108,14 @@ if isempty(fieldnames(TaskParameters))
     TaskParameters.GUIMeta.SkippedFeedbackFeedback.Style = 'popupmenu';
     TaskParameters.GUIMeta.SkippedFeedbackFeedback.String = {'None','WhiteNoise'};
     
-    TaskParameters.GUI.CatchTrialPercentage = 0; % determine whether a trial is with extended FeedbackDelay, thus "catching" the time investment behaviour
-    TaskParameters.GUI.CatchTrial = 'true'; % is the current trial a CatchTrial?
-    TaskParameters.GUIMeta.CatchTrial.Style = 'text';
+    TaskParameters.GUI.CatchTrial = false; % Is the (incorrect/unbaited) trial caught for time investment?
+    TaskParameters.GUIMeta.CatchTrial.Style = 'checkbox';
     
     TaskParameters.GUIPanels.FeedbackDelay = {'FeedbackDelayDistribution','FeedbackDelayMin',...
                                               'FeedbackDelayMax','FeedbackDelayIncrStepSize','FeedbackDelayDecrStepSize',...
                                               'FeedbackDelayTau','FeedbackDelayAlpha','FeedbackDelayBeta',...
                                               'FeedbackDelay','FeedbackDelayGrace','SkippedFeedbackTimeOut',...
-                                              'SkippedFeedbackFeedback','CatchTrialPercentage','CatchTrial'};
+                                              'SkippedFeedbackFeedback','CatchTrial'};
                                       
     %% Reward and RewardProb
     TaskParameters.GUI.RewardAmount = 30; % (ul), baseline value for reward (adjusted by ExpressedAsExpectedValue)
@@ -140,9 +139,9 @@ if isempty(fieldnames(TaskParameters))
     TaskParameters.GUI.RewardProbMax = 1; % upper boundary of reward probability, only for Block in RiskType
     TaskParameters.GUI.RewardProbMin = 0.4; % lower boundary of reward probability, only for Block in RiskType
       
-    TaskParameters.GUI.ToneRiskTable.ToneStartFreq = [2 5 10 20 40]'; % (kHz), only for Cue in RiskType
-    TaskParameters.GUI.ToneRiskTable.ToneEndFreq = [2 5 10 20 40]'; % (kHz), features for sweep, only for Cue in RiskType
-    TaskParameters.GUI.ToneRiskTable.ToneCuedRewardProbability = [0.4, 0.5, 0.6, 0.7, 0.8]'; % reward probability of corresponding tone, only for Cue in RiskType
+    TaskParameters.GUI.ToneRiskTable.ToneStartFreq = [2 5 10 20]'; % (kHz), only for Cue in RiskType
+    TaskParameters.GUI.ToneRiskTable.ToneEndFreq = [2 5 10 20]'; % (kHz), features for sweep, only for Cue in RiskType
+    TaskParameters.GUI.ToneRiskTable.ToneCuedRewardProbability = [0.5, 0.6, 0.7, 0.8]'; % reward probability of corresponding tone, only for Cue in RiskType
     TaskParameters.GUIMeta.ToneRiskTable.Style = 'table';
     TaskParameters.GUIMeta.ToneRiskTable.String = 'Tone cued reward probability';
     TaskParameters.GUIMeta.ToneRiskTable.ColumnLabel = {'StartFreq','EndFreq','RewardProb'};

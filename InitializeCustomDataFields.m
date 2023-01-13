@@ -124,13 +124,7 @@ TaskParameters.GUI.FeedbackDelay = TrialData.FeedbackDelay(iTrial);
 TrialData.FeedbackGrace(1,iTrial) = NaN; % first index for the number of time the state is entered
 TrialData.FeedbackWaitingTime(iTrial) = NaN; % Time spend to wait for feedback
 TrialData.SkippedFeedback(iTrial) = NaN; % True if SkippedFeedback
-
-TrialData.CatchTrial(iTrial) = rand < TaskParameters.GUI.CatchTrialPercentage; % determine whether a trial is a CatchTrial
-if TrialData.CatchTrial(iTrial)
-    TaskParameters.GUI.CatchTrial = 'true';
-else
-    TaskParameters.GUI.CatchTrial = 'false';
-end
+TrialData.TITrial(iTrial) = NaN; % True if it is included in TimeInvestment
 
 %% Peri-outcome
 TrialData.RewardProb(:,iTrial) = [NaN, NaN]';
@@ -211,10 +205,17 @@ elseif TrialData.LightLeft(iTrial) == 0
     TrialData.RewardMagnitude(1,iTrial) = 0;
 end
 
+TrialData.Baited(:,iTrial) = rand(2,1) < TrialData.RewardProb(:,iTrial); % NaN in case of 1)Not LightLeft 2) Not SingleSidePoke, 3) Not ExpressedAsExpectedValue
+
 if TaskParameters.GUI.ExpressedAsExpectedValue
+    TrialData.Baited(:,iTrial) = NaN;
     TrialData.RewardMagnitude(:,iTrial) = TrialData.RewardMagnitude(:,iTrial).* TrialData.RewardProb(:,iTrial);
 else
-    TrialData.RewardMagnitude(:,iTrial) = TrialData.RewardMagnitude(:,iTrial).* (rand(2,1) < TrialData.RewardProb(:,iTrial));
+    TrialData.RewardMagnitude(:,iTrial) = TrialData.RewardMagnitude(:,iTrial).* TrialData.Baited(iTrial);
+end
+
+if ~isnan(TrialData.LightLeft(iTrial)) % i.e. SingleSidePoke is true, this can't go after line 208, as dot mulitplication will happen with NaN
+    TrialData.Baited(TrialData.LightLeft(iTrial)+1,iTrial) = NaN; % Non light-guided one being irrelevant
 end
 
 TrialData.Rewarded(iTrial) = NaN; % true if a non-zero reward is delivered

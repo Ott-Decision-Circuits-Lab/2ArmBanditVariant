@@ -39,8 +39,6 @@ switch Action
         
         BpodSystem.GUIHandles.OutcomePlot.SkippedFeedback = line(AxesHandles.HandleOutcome,-1,0,...
             'LineStyle','none','Marker','o','MarkerEdge',denim,'MarkerFace','none', 'MarkerSize',14);
-        BpodSystem.GUIHandles.OutcomePlot.CatchTrial = line(AxesHandles.HandleOutcome,-1,0,...
-            'LineStyle','none','Marker','pentagram','MarkerEdge',denim,'MarkerFace','none', 'MarkerSize',5);
         
         BpodSystem.GUIHandles.OutcomePlot.RewardRight = line(AxesHandles.HandleOutcome,-1,0,...
             'LineStyle','none','Marker','>','MarkerEdge',azure,'MarkerFace','none', 'MarkerSize',6);
@@ -53,7 +51,7 @@ switch Action
             'verticalalignment','bottom','horizontalalignment','center');
         
         BpodSystem.GUIHandles.OutcomePlot.legend = legend(AxesHandles.HandleOutcome,'NoTrialStart','BrokeFixation','EarlyWithdrawal','NoDecision','StartNewTrial',...
-                                    'Reward(L)','Unreward(L)','Choice(L)','SkippedFeedback','CatchTrial','Location','east');
+                                    'Reward(L)','Unreward(L)','Choice(L)','SkippedFeedback','Location','east');
         
         
         set(AxesHandles.HandleOutcome,'TickDir','out','YLim',[0,1.2],'XLim',[0,nTrialsToShow],'YTick',[0 1],'FontSize',13);
@@ -95,21 +93,22 @@ switch Action
         
         %% TimeInvestment
         hold(AxesHandles.HandleTimeInvestment,'on')
+        BpodSystem.GUIHandles.OutcomePlot.TimeInvestmentPointsBaitedSkipped = line(AxesHandles.HandleTimeInvestment,-1,0, 'LineStyle','none','Marker','.','MarkerEdge',denim,'MarkerFace','none', 'MarkerSize',6);
+        BpodSystem.GUIHandles.OutcomePlot.TimeInvestmentBaitedSkipped = errorbar(AxesHandles.HandleTimeInvestment,-1,0,1, 'LineStyle','-','Marker','o','MarkerEdge',denim,'MarkerFace','none', 'MarkerSize',8);
+        BpodSystem.GUIHandles.OutcomePlot.TimeInvestmentPointsNotBaited = line(AxesHandles.HandleTimeInvestment,-1,0, 'LineStyle','none','Marker','.','MarkerEdge',azure,'MarkerFace','none', 'MarkerSize',6);
+        BpodSystem.GUIHandles.OutcomePlot.TimeInvestmentNotBaited = errorbar(AxesHandles.HandleTimeInvestment,-1,0,1, 'LineStyle','-','Marker','o','MarkerEdge',azure,'MarkerFace','none', 'MarkerSize',8);
         BpodSystem.GUIHandles.OutcomePlot.TimeInvestmentPointsIncorrect = line(AxesHandles.HandleTimeInvestment,-1,0, 'LineStyle','none','Marker','.','MarkerEdge',scarlet,'MarkerFace','none', 'MarkerSize',6);
-        BpodSystem.GUIHandles.OutcomePlot.TimeInvestmentPointsCorrect = line(AxesHandles.HandleTimeInvestment,-1,0, 'LineStyle','none','Marker','.','MarkerEdge',azure,'MarkerFace','none', 'MarkerSize',6);
         BpodSystem.GUIHandles.OutcomePlot.TimeInvestmentIncorrect = errorbar(AxesHandles.HandleTimeInvestment,-1,0,1, 'LineStyle','-','Marker','o','MarkerEdge',scarlet,'MarkerFace','none', 'MarkerSize',8);
-        BpodSystem.GUIHandles.OutcomePlot.TimeInvestmentCorrect = errorbar(AxesHandles.HandleTimeInvestment,-1,0,1, 'LineStyle','-','Marker','o','MarkerEdge',azure,'MarkerFace','none', 'MarkerSize',8);
         AxesHandles.HandleTimeInvestment.XLabel.String = 'RewardProb';
         AxesHandles.HandleTimeInvestment.YLabel.String = 'Time (s)';
         AxesHandles.HandleTimeInvestment.Title.String = 'Time Investment';
-        set(AxesHandles.HandleTimeInvestment,'TickDir','out','XLim',[0,1.1],'YLim',[0,32],'XTick',[0,0.5,1],'YTick',[0,10,20,30]);
+        set(AxesHandles.HandleTimeInvestment,'TickDir','out','XLim',[0,1.1],'YLim',[0,25],'XTick',[0,0.5,1],'YTick',[0,10,20]);
         
     case 'UpdateTrial' % Update before the trial starts, mainly for viewing what's the next trial is about
         iTrial = varargin{1};
         TrialData = BpodSystem.Data.Custom.TrialData;
         
         LightLeft = TrialData.LightLeft;
-        CatchTrial = TrialData.CatchTrial;
         RewardProb = TrialData.RewardProb;
         RewardMagnitude = TrialData.RewardMagnitude;
         
@@ -141,12 +140,6 @@ switch Action
         YData = RewardProb(2,indxToPlot(ndxUnrewardRight));
         set(BpodSystem.GUIHandles.OutcomePlot.UnrewardRight, 'xdata', XData, 'ydata', YData);
         
-        % CatchTrial
-        ndxCatch = CatchTrial(indxToPlot) == 1; % include case == 1
-        XData = indxToPlot(ndxCatch);
-        YData = 1.05 * ones(1,sum(ndxCatch));
-        set(BpodSystem.GUIHandles.OutcomePlot.CatchTrial, 'xdata', XData, 'ydata', YData);
-        
     case 'UpdateResult' % plot trial result
         iTrial = varargin{1};
         TrialData = BpodSystem.Data.Custom.TrialData;
@@ -159,7 +152,6 @@ switch Action
         ChoiceLeft = TrialData.ChoiceLeft;
         IncorrectChoice = TrialData.IncorrectChoice;
         SkippedFeedback = TrialData.SkippedFeedback;
-        CatchTrial = TrialData.CatchTrial;
         RewardProb = TrialData.RewardProb;
         
         StimWaitingTime = TrialData.StimWaitingTime;
@@ -167,6 +159,8 @@ switch Action
         MoveTime = TrialData.MoveTime;
         StartNewTrialSuccessful = TrialData.StartNewTrialSuccessful;
         FeedbackWaitingTime = TrialData.FeedbackWaitingTime;
+        Baited = TrialData.Baited;
+        Rewarded = TrialData.Rewarded;
 
         %% OutcomePlot
         % recompute xlim
@@ -368,39 +362,47 @@ switch Action
         end
         
         %% TimeInvestment
-        BpodSystem.GUIHandles.OutcomePlot.HandleTimeInvestment.Visible = 'on';
-        set(get(BpodSystem.GUIHandles.OutcomePlot.HandleTimeInvestment,'Children'),'Visible','on');
-        cla(AxesHandles.HandleTimeInvestment)
-        
-        if CatchTrial(iTrial) == 1
-            ndxIncorrect = CatchTrial == 1 & IncorrectChoice == 1; %all (completed) error trials (including catch errors)
-            ndxCorrect = CatchTrial == 1 & IncorrectChoice == 0; %all (completed) error trials (including catch errors)
-            ChoiceRewardProb = sum(RewardProb.*[ChoiceLeft; 1-ChoiceLeft], 1);
+        if TaskParameters.GUI.CatchTrial && Rewarded(iTrial) == 0 % only when CatchTrial is true
+            BpodSystem.GUIHandles.OutcomePlot.HandleTimeInvestment.Visible = 'on';
+            set(get(BpodSystem.GUIHandles.OutcomePlot.HandleTimeInvestment,'Children'),'Visible','on');
+            cla(AxesHandles.HandleTimeInvestment)
             
-            IncorrectChoiceRewardProb = ChoiceRewardProb(ndxIncorrect==1);
-            CorrectChoiceRewardProb = ChoiceRewardProb(ndxCorrect==1);
+            ChoiceLeftRight = [ChoiceLeft; 1-ChoiceLeft];
+            ndxIncorrect = IncorrectChoice == 1; %all (completed) error trials (including catch errors)
+            ndxNotBaited = any(Baited == 0 .* ChoiceLeftRight, 1); % Choice is non-baited
+            ndxSkippedBaited = any(Baited == 1 .* ChoiceLeftRight .* [SkippedFeedback; SkippedFeedback], 1); % Choice made is Baited but Skipped
+            
+            ChoiceRewardProb = sum(RewardProb.*ChoiceLeftRight, 1);
+            IncorrectChoiceRewardProb = ChoiceRewardProb(ndxIncorrect);
+            NotBaitedCorrectChoiceRewardProb = ChoiceRewardProb(ndxNotBaited);
+            SkippedBaitedCorrectChoiceRewardProb = ChoiceRewardProb(ndxSkippedBaited);
             
             IncorrectChoiceWT = FeedbackWaitingTime(ndxIncorrect);
-            CorrectChoiceWT = FeedbackWaitingTime(ndxIncorrect);
+            NotBaitedCorrectChoiceWT = FeedbackWaitingTime(ndxNotBaited);
+            SkippedBaitedCorrectChoiceWT = FeedbackWaitingTime(ndxSkippedBaited);
             
             % scatter plot
             set(BpodSystem.GUIHandles.OutcomePlot.TimeInvestmentPointsIncorrect, 'xdata', IncorrectChoiceRewardProb, 'ydata', IncorrectChoiceWT);
-            set(BpodSystem.GUIHandles.OutcomePlot.TimeInvestmentPointsCorrect, 'xdata', CorrectChoiceRewardProb, 'ydata', CorrectChoiceWT);
+            set(BpodSystem.GUIHandles.OutcomePlot.TimeInvestmentPointsNotBaited, 'xdata', NotBaitedCorrectChoiceRewardProb, 'ydata', NotBaitedCorrectChoiceWT);
+            set(BpodSystem.GUIHandles.OutcomePlot.TimeInvestmentPointsSkippedBaited, 'xdata', SkippedBaitedCorrectChoiceRewardProb, 'ydata', SkippedBaitedCorrectChoiceWT);
             
             % Mean-Error curve
             RewardProbBin = 0.1;
             XBinIdx = 0:RewardProbBin:(1-RewardProbBin);
             
             IncorrectChoiceTable = table(discretize(IncorrectChoiceRewardProb, XBinIdx),IncorrectChoiceWT, 'VariableNames',{'RewardProbBin', 'WT'});
-            CorrectChoiceTable = table(discretize(CorrectChoiceRewardProb, XBinIdx),CorrectChoiceWT, 'VariableNames',{'RewardProbBin', 'WT'});
+            NotBaitedCorrectChoiceTable = table(discretize(NotBaitedCorrectChoiceRewardProb, XBinIdx),NotBaitedCorrectChoiceWT, 'VariableNames',{'RewardProbBin', 'WT'});
+            SkippedBaitedCorrectChoiceTable = table(discretize(SkippedBaitedCorrectChoiceRewardProb, XBinIdx),SkippedBaitedCorrectChoiceWT, 'VariableNames',{'RewardProbBin', 'WT'});
             
             XBinIdx = XBinIdx + RewardProbBin/2;
             
             [IncorrectChoiceWTBinMean, IncorrectChoiceWTBinErr] = grpstats(IncorrectChoiceTable, 'RewardProbBin', {'mean','sem'});
-            [CorrectChoiceWTBinMean, CorrectChoiceWTBinErr] = grpstats(CorrectChoiceTable, 'RewardProbBin', {'mean','sem'});
+            [NotBaitedCorrectChoiceWTBinMean, NotBaitedCorrectChoiceWTBinErr] = grpstats(NotBaitedCorrectChoiceTable, 'RewardProbBin', {'mean','sem'});
+            [SkippedBaitedCorrectChoiceWTBinMean, SkippedBaitedCorrectChoiceWTBinErr] = grpstats(SkippedBaitedCorrectChoiceTable, 'RewardProbBin', {'mean','sem'});
             
-            set(BpodSystem.GUIHandles.OutcomePlot.TimeInvestmentIncorrect, 'xdata', XBinIdx, 'ydata', IncorrectChoiceWTBinMean, 'err',IncorrectChoiceWTBinErr);
-            set(BpodSystem.GUIHandles.OutcomePlot.TimeInvestmentCorrect, 'xdata', XBinIdx, 'ydata', CorrectChoiceWTBinMean, 'err',CorrectChoiceWTBinErr);
+            set(BpodSystem.GUIHandles.OutcomePlot.TimeInvestmentIncorrect, 'xdata', XBinIdx, 'ydata', IncorrectChoiceWTBinMean, 'err', IncorrectChoiceWTBinErr);
+            set(BpodSystem.GUIHandles.OutcomePlot.TimeInvestmentNotBaited, 'xdata', XBinIdx, 'ydata', NotBaitedCorrectChoiceWTBinMean, 'err', NotBaitedCorrectChoiceWTBinErr);
+            set(BpodSystem.GUIHandles.OutcomePlot.TimeInvestmentSkippedBaited, 'xdata', XBinIdx, 'ydata', SkippedBaitedCorrectChoiceWTBinMean, 'err', SkippedBaitedCorrectChoiceWTBinErr);
         end
         
 end % switch end
@@ -413,16 +415,16 @@ mx = mn + nTrialsToShow - 1;
 set(AxesHandle,'XLim',[mn-1 mx+1]);
 end
 
-function cornertext(h,str)
-unit = get(h,'Units');
-set(h,'Units','char');
-pos = get(h,'Position');
-if ~iscell(str)
-    str = {str};
-end
-for i = 1:length(str)
-    x = pos(1)+1;y = pos(2)+pos(4)-i;
-    uicontrol(h.Parent,'Units','char','Position',[x,y,length(str{i})+1,1],'string',str{i},'style','text','background',[1,1,1],'FontSize',8);
-end
-set(h,'Units',unit);
-end
+% function cornertext(h,str) % Not in use due to long computation time
+% unit = get(h,'Units');
+% set(h,'Units','char');
+% pos = get(h,'Position');
+% if ~iscell(str)
+%     str = {str};
+% end
+% for i = 1:length(str)
+%     x = pos(1)+1;y = pos(2)+pos(4)-i;
+%     uicontrol(h.Parent,'Units','char','Position',[x,y,length(str{i})+1,1],'string',str{i},'style','text','background',[1,1,1],'FontSize',8);
+% end
+% set(h,'Units',unit);
+% end

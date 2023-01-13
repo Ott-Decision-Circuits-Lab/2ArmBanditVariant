@@ -205,17 +205,18 @@ elseif TrialData.LightLeft(iTrial) == 0
     TrialData.RewardMagnitude(1,iTrial) = 0;
 end
 
-TrialData.Baited(:,iTrial) = rand(2,1) < TrialData.RewardProb(:,iTrial); % NaN in case of 1)Not LightLeft 2) Not SingleSidePoke, 3) Not ExpressedAsExpectedValue
+TrialData.Baited(:,iTrial) = rand(2,1) < TrialData.RewardProb(:,iTrial); 
+% only logicals now
+% [NOT IMPLEMENTED] NaN in case of 1)Not LightLeft 2) Not SingleSidePoke, 3) Not ExpressedAsExpectedValue
 
 if TaskParameters.GUI.ExpressedAsExpectedValue
-    TrialData.Baited(:,iTrial) = NaN;
     TrialData.RewardMagnitude(:,iTrial) = TrialData.RewardMagnitude(:,iTrial).* TrialData.RewardProb(:,iTrial);
 else
     TrialData.RewardMagnitude(:,iTrial) = TrialData.RewardMagnitude(:,iTrial).* TrialData.Baited(iTrial);
 end
 
 if ~isnan(TrialData.LightLeft(iTrial)) % i.e. SingleSidePoke is true, this can't go after line 208, as dot mulitplication will happen with NaN
-    TrialData.Baited(TrialData.LightLeft(iTrial)+1,iTrial) = NaN; % Non light-guided one being irrelevant
+    TrialData.Baited(TrialData.LightLeft(iTrial)+1,iTrial) = false; % Non light-guided one being irrelevant
 end
 
 TrialData.Rewarded(iTrial) = NaN; % true if a non-zero reward is delivered

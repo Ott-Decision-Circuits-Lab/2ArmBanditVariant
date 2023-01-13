@@ -108,6 +108,7 @@ switch Action
         iTrial = varargin{1};
         TrialData = BpodSystem.Data.Custom.TrialData;
         
+        Baited = TrialData.Baited;
         LightLeft = TrialData.LightLeft;
         RewardProb = TrialData.RewardProb;
         RewardMagnitude = TrialData.RewardMagnitude;
@@ -117,25 +118,25 @@ switch Action
         indxToPlot = mn:iTrial;
         
         % RewardLeft
-        ndxRewardLeft = LightLeft(indxToPlot) ~= 0 & RewardMagnitude(1,indxToPlot) > 0; % include case == 1 and == NaN
+        ndxRewardLeft = LightLeft(indxToPlot) ~= 0 & Baited(1,indxToPlot); % include case == 1 and == NaN
         XData = indxToPlot(ndxRewardLeft);
         YData = RewardProb(1,indxToPlot(ndxRewardLeft));
         set(BpodSystem.GUIHandles.OutcomePlot.RewardLeft, 'xdata', XData, 'ydata', YData);
         
         % RewardRight
-        ndxRewardRight = LightLeft(indxToPlot) ~= 1 & RewardMagnitude(2,indxToPlot) > 0; % include case == 0 and == NaN
+        ndxRewardRight = LightLeft(indxToPlot) ~= 1 & Baited(2,indxToPlot); % include case == 0 and == NaN
         XData = indxToPlot(ndxRewardRight);
         YData = RewardProb(2,indxToPlot(ndxRewardRight));
         set(BpodSystem.GUIHandles.OutcomePlot.RewardRight, 'xdata', XData, 'ydata', YData);
         
         % UnrewardLeft
-        ndxUnrewardLeft = LightLeft(indxToPlot) ~= 0 & RewardMagnitude(1,indxToPlot) == 0; % include case == 1 and == NaN
+        ndxUnrewardLeft = LightLeft(indxToPlot) ~= 0 & ~Baited(1,indxToPlot); % include case == 1 and == NaN
         XData = indxToPlot(ndxUnrewardLeft);
         YData = RewardProb(1,indxToPlot(ndxUnrewardLeft));
         set(BpodSystem.GUIHandles.OutcomePlot.UnrewardLeft, 'xdata', XData, 'ydata', YData);
         
         % UnrewardRight
-        ndxUnrewardRight = LightLeft(indxToPlot) ~= 1 & RewardMagnitude(2,indxToPlot) == 0; % include case == 0 and == NaN
+        ndxUnrewardRight = LightLeft(indxToPlot) ~= 1 & ~Baited(2,indxToPlot); % include case == 0 and == NaN
         XData = indxToPlot(ndxUnrewardRight);
         YData = RewardProb(2,indxToPlot(ndxUnrewardRight));
         set(BpodSystem.GUIHandles.OutcomePlot.UnrewardRight, 'xdata', XData, 'ydata', YData);

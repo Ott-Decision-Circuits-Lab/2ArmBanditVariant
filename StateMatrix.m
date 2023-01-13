@@ -238,7 +238,7 @@ sma = AddState(sma, 'Name', 'LIn',...
     'OutputActions', {LeftLight, LeftLightValue});
 
 WaterLAction = {};
-if TrialData.RewardMagnitude(1,iTrial) > 0
+if TrialData.Baited(1,iTrial)
     WaterLAction = {'ValveState', LeftValve};
 end
 sma = AddState(sma, 'Name', 'WaterL',...
@@ -261,7 +261,7 @@ if TrialData.LightLeft(iTrial) == true
 end
 sma = AddState(sma, 'Name', 'StartRIn',... % dummy state for trigger GlobalTimer3
     'Timer', 0,...
-    'StateChangeConditions', {'Tup', 'RIn', 'GlobalTimer3_End', RInStateChange},...
+    'StateChangeConditions', {'Tup', 'RIn', 'GlobalTimer4_End', RInStateChange},...
     'OutputActions',{'GlobalTimerTrig', 4, RightLight, RightLightValue});
 
 sma = AddState(sma, 'Name', 'RIn',...
@@ -270,7 +270,7 @@ sma = AddState(sma, 'Name', 'RIn',...
     'OutputActions', {RightLight, RightLightValue});
 
 WaterRAction = {};
-if TrialData.RewardMagnitude(2,iTrial) > 0
+if TrialData.Baited(2,iTrial)
     WaterRAction = {'ValveState', RightValve};
 end
 sma = AddState(sma, 'Name', 'WaterR',...

@@ -232,10 +232,10 @@ switch Action
         end
         
         % CumRwd
-        reward_total = calculate_cumulative_reward(); % custom function under Bpod_Gen2/Custom
+        RewardTotal = CalculateCumulativeReward(); % custom function under Bpod_Gen2/Custom
         set(BpodSystem.GUIHandles.OutcomePlot.CumRwd, ...
             'position', [iTrial+1 1], ...
-            'string', [num2str(reward_total) ' microL']);
+            'string', [num2str(RewardTotal) ' microL']);
         
         %% Trial rate
         BpodSystem.GUIHandles.OutcomePlot.HandleTrialRate.Visible = 'on';

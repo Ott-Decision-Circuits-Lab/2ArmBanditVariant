@@ -212,7 +212,7 @@ TrialData.Baited(:,iTrial) = rand(2,1) < TrialData.RewardProb(:,iTrial);
 if TaskParameters.GUI.ExpressedAsExpectedValue
     TrialData.RewardMagnitude(:,iTrial) = TrialData.RewardMagnitude(:,iTrial).* TrialData.RewardProb(:,iTrial);
 else
-    TrialData.RewardMagnitude(:,iTrial) = TrialData.RewardMagnitude(:,iTrial).* TrialData.Baited(iTrial);
+    TrialData.RewardMagnitude(:,iTrial) = TrialData.RewardMagnitude(:,iTrial).* TrialData.Baited(:,iTrial);
 end
 
 if ~isnan(TrialData.LightLeft(iTrial)) % i.e. SingleSidePoke is true, this can't go after line 208, as dot mulitplication will happen with NaN

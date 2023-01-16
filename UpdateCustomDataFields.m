@@ -113,9 +113,9 @@ if any(strcmp('LIn',StatesThisTrial))
     WaitBegin = TrialStates.LIn(1,1);
     WaitEnd = TrialStates.LIn(1,2); 
     TrialData.FeedbackWaitingTime(iTrial) = WaitEnd - WaitBegin;
-elseif any(strcmp('LIn',StatesThisTrial))
-    WaitBegin = TrialStates.LIn(1,1);
-    WaitEnd = TrialStates.LIn(1,2); 
+elseif any(strcmp('RIn',StatesThisTrial))
+    WaitBegin = TrialStates.RIn(1,1);
+    WaitEnd = TrialStates.RIn(1,2); 
     TrialData.FeedbackWaitingTime(iTrial) = WaitEnd - WaitBegin;
 end
 

@@ -137,7 +137,9 @@ if TaskParameters.GUI.CatchTrial && ~isnan(TrialData.ChoiceLeft(iTrial)) % if a 
 end
 
 %% Peri-outcome
-TrialData.Rewarded(iTrial) = 1-TrialData.TITrial(iTrial); % if isnan(TITrial), Rewarded==NaN
+if ~isnan(TrialData.ChoiceLeft(iTrial)) % if a choice is made (no matter SingleSidePoke) 
+    TrialData.Rewarded(iTrial) = TrialData.Baited(2-TrialData.ChoiceLeft(iTrial),iTrial) & TrialData.SkippedFeedback(iTrial) == false; % True if rewarded with a non-zero water
+end
 
 BpodSystem.Data.Custom.TrialData = TrialData;
 end

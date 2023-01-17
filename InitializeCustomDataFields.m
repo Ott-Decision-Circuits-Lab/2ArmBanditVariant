@@ -219,7 +219,7 @@ if ~isnan(TrialData.LightLeft(iTrial)) % i.e. SingleSidePoke is true, this can't
     TrialData.Baited(TrialData.LightLeft(iTrial)+1,iTrial) = false; % Non light-guided one being irrelevant
 end
 
-TrialData.Rewarded(iTrial) = NaN; % true if a non-zero reward is delivered
+TrialData.Rewarded(iTrial) = NaN; % true if a non-zero reward is delivered, NaN if no choice made
 
 %%
 BpodSystem.Data.Custom.TrialData = TrialData;

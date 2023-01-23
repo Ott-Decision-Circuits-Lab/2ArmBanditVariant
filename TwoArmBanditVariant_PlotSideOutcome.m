@@ -64,7 +64,7 @@ switch Action
         BpodSystem.GUIHandles.OutcomePlot.NoStartP = text(AxesHandles.HandleTrialRate,0,1,'NoStartP = 0%','FontSize',8,'Units','normalized','Visible','off');
         AxesHandles.HandleTrialRate.XLabel.String = 'Time (min)'; % FIGURE OUT UNIT
         AxesHandles.HandleTrialRate.YLabel.String = 'Trial Counts';
-        AxesHandles.HandleTrialRate.Title.String = 'Trial Rate';
+        AxesHandles.HandleTrialRate.Title.String = 'Trial Start Rate';
 
         %% StimeDelay histogram
         hold(AxesHandles.HandleStimDelay,'on')
@@ -240,8 +240,8 @@ switch Action
         %% Trial rate
         BpodSystem.GUIHandles.OutcomePlot.HandleTrialRate.Visible = 'on';
         set(get(BpodSystem.GUIHandles.OutcomePlot.HandleTrialRate,'Children'),'Visible','on');
-        BpodSystem.GUIHandles.OutcomePlot.TrialRate.XData = (BpodSystem.Data.TrialStartTimestamp-min(BpodSystem.Data.TrialStartTimestamp))/60;
-        BpodSystem.GUIHandles.OutcomePlot.TrialRate.YData = 1:numel(ChoiceLeft(1:end));
+        BpodSystem.GUIHandles.OutcomePlot.TrialRate.XData = (BpodSystem.Data.TrialStartTimestamp-min(BpodSystem.Data.TrialStartTimestamp))/60; % (min)
+        BpodSystem.GUIHandles.OutcomePlot.TrialRate.YData = cumsum(NoTrialStart==1);
         NoTrialStartP = 100*sum(NoTrialStart==1)/iTrial;
         set(BpodSystem.GUIHandles.OutcomePlot.NoStartP, 'string', ['NoStartP = ' sprintf('%1.1f',NoTrialStartP) '%']);
 %         cornertext(AxesHandles.HandleTrialRate,sprintf('NoStartP=%1.2f',NoTrialStartP)) %percentage of No Trial Started

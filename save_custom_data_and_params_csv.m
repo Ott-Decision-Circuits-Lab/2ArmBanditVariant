@@ -1,17 +1,16 @@
 function save_custom_data_and_params_csv()
 %{
-Function to write trial custom data from NosePoke
-into a tab separated value file (.tsv)
+Function to write trial custom data from TwoArmBanditVariant
+into a comma separated value file (.csv)
 
-Author: Greg Knoll
-Date: October 13, 2022
+Author: Antonio Lee
+Date: 2023-01-23
 %}
 
 global BpodSystem
 
-n_trials = BpodSystem.Data.nTrials;
-
-trial_data = BpodSystem.Data.Custom.TrialData;
+nTrials = BpodSystem.Data.nTrials;
+TrialData = BpodSystem.Data.Custom.TrialData;
 
 %{
 ---------------------------------------------------------------------------
@@ -24,44 +23,82 @@ then save in the table as a column (requires using .', which inverts the
 dimensions)
 ---------------------------------------------------------------------------
 %}
-data_table = table();
+DataTable = table();
 
-% ---------------------Sample and Choice variables-------------------- %
-data_table.EarlyWithdrawal = trial_data.EarlyWithdrawal(1:n_trials).';
-data_table.sample_length = trial_data.sample_length(1:n_trials).';
-data_table.ChoiceLeft = trial_data.ChoiceLeft(1:n_trials).';
-data_table.move_time = trial_data.move_time(1:n_trials).';
-data_table.port_entry_delay = trial_data.port_entry_delay(1:n_trials).';
+try
+    %% Pre-stimulus delivery
+    DataTable.NoTrialStart = TrialData.NoTrialStart(1:nTrials).';
+    DataTable.BrokeFixation = TrialData.BrokeFixation(1:nTrials).';
+    DataTable.StimDelay = TrialData.StimDelay(1:nTrials).';
+    DataTable.StimWaitingTime = TrialData.StimWaitingTime(1:nTrials).';
 
+    %% Peri-stimulus delivery and Pre-decision
+    DataTable.SamplingGrace = TrialData.SamplingGrace(1, 1:nTrials).'; % only first row is exported
+    DataTable.EarlyWithdrawal = TrialData.EarlyWithdrawal(1:nTrials).';
+    DataTable.SampleTime = TrialData.SampleTime(1:nTrials).';
+    DataTable.LightLeft = TrialData.LightLeft(1:nTrials).';
 
-% -----------------------Reward variables------------------------------ %
-data_table.Correct = trial_data.Correct(1:n_trials).';
-data_table.Rewarded = trial_data.Rewarded(1:n_trials).';
-data_table.RewardAvailable = trial_data.RewardAvailable(1:n_trials).';
-data_table.RewardDelay = trial_data.RewardDelay(1:n_trials).';
-data_table.RewardMagnitude_L = trial_data.RewardMagnitude(1:n_trials, 1);
-data_table.RewardMagnitude_R = trial_data.RewardMagnitude(1:n_trials, 2);
+    %% Peri-decision and pre-outcome
+    DataTable.NoDecision = TrialData.NoDecision(1:nTrials).';
+    DataTable.MoveTime = TrialData.MoveTime(1:nTrials).';
+    DataTable.StartNewTrial = TrialData.StartNewTrial(1:nTrials).';
+    DataTable.StartNewTrialSuccessful = TrialData.StartNewTrialSuccessful(1:nTrials).';
 
+    DataTable.ChoiceLeft = TrialData.ChoiceLeft(1:nTrials).';
+    DataTable.IncorrectChoice = TrialData.IncorrectChoice(1:nTrials).';
+    DataTable.FeedbackDelay = TrialData.FeedbackGrace(1, 1:nTrials).'; % only first row is exported
+    DataTable.FeedbackGrace = TrialData.StartNewTrialSuccessful(1:nTrials).';
+    DataTable.FeedbackWaitingTime = TrialData.FeedbackWaitingTime(1:nTrials).';
+    DataTable.SkippedFeedback = TrialData.SkippedFeedback(1:nTrials).';
+    DataTable.TITrial = TrialData.TITrial(1:nTrials).';
 
-% -------------------------Misc variables------------------------------ %
-data_table.RandomThresholdPassed = trial_data.RandomThresholdPassed(1:n_trials).';
-data_table.LightLeft = trial_data.LightLeft(1:n_trials).';
-
+    %% Peri-outcome
+    DataTable.LeftRewardProb = TrialData.RewardProb(1, 1:nTrials).';
+    DataTable.RightRewardProb = TrialData.RewardProb(2, 1:nTrials).';
+    DataTable.BlockNumber = TrialData.BlockNumber(1:nTrials).';
+    DataTable.BlockTrialNumber = TrialData.BlockTrialNumber(1:nTrials).';
+    DataTable.LeftRewardCueStartFreq = TrialData.RewardCueLeft(1, 1:nTrials).';
+    DataTable.LeftRewardCueEndFreq = TrialData.RewardCueLeft(2, 1:nTrials).';
+    DataTable.RightRewardCueStartFreq = TrialData.RewardCueRight(1, 1:nTrials).';
+    DataTable.RightRewardCueEndFreq = TrialData.RewardCueRight(2, 1:nTrials).';
+    DataTable.LeftRewardMagnitude = TrialData.RewardMagnitude(1, 1:nTrials).';
+    DataTable.RightRewardMagnitude = TrialData.RewardMagnitude(2, 1:nTrials).';
+    DataTable.LeftBaited = TrialData.Baited(1, 1:nTrials).';
+    DataTable.RightBaited = TrialData.Baited(2, 1:nTrials).';
+    DataTable.Rewarded = TrialData.Rewarded(1:nTrials).';
+catch
+    warning('TrialData cannot convert to DataTable. No .csv file is saved.')
+    return
+end
 
 % ----------------------------Params----------------------------------- %
-param_names = BpodSystem.GUIData.ParameterGUI.ParamNames;
-param_vals = BpodSystem.Data.TrialSettings.';
-params_table = cell2table(param_vals, "VariableNames", param_names);
-
+try
+    ParamNames = BpodSystem.GUIData.ParameterGUI.ParamNames;
+    ParamVals = BpodSystem.Data.TrialSettings.';
+    ParamsTable = cell2table(ParamVals, "VariableNames", ParamNames);
+catch
+    warning('SettingParam cannot convert to ParamsTable. No .csv file is saved.')
+    return
+end
 
 % --------------------------------------------------------------------- %
 % Combine the data and params tables and save to .csv
 % --------------------------------------------------------------------- %
-full_table = [data_table params_table];
-
-[filepath, session_name, ext] = fileparts(BpodSystem.Path.CurrentDataFile);
-csv_name = "_trial_custom_data_and_params.csv";
-file_name = string(strcat("O:\data\", session_name, csv_name));
-writetable(full_table, file_name, "Delimiter", "\t")
-
+try
+    FullTable = [DataTable ParamsTable];
+catch
+    warning('DataTable cannot append to ParamsTable. No .csv file is saved.')
+    return
+end
+  
+try
+    [~, session_name, ~] = fileparts(BpodSystem.Path.CurrentDataFile);
+    csv_name = "_trial_custom_data_and_params.csv";
+    file_name = string(strcat("O:\data\", session_name, csv_name));
+    writetable(FullTable, file_name)
+catch
+    warning('Error: writetable malfunction. No .csv file is saved.')
+    return
+end
+disp('trial_custom_data_and_params.csv for TwoArmBanditVariant is successfully saved')
 end  % save_custom_data_and_params_tsv()

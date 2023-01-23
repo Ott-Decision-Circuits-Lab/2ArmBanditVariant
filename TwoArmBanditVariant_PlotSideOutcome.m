@@ -241,7 +241,7 @@ switch Action
         BpodSystem.GUIHandles.OutcomePlot.HandleTrialRate.Visible = 'on';
         set(get(BpodSystem.GUIHandles.OutcomePlot.HandleTrialRate,'Children'),'Visible','on');
         BpodSystem.GUIHandles.OutcomePlot.TrialRate.XData = (BpodSystem.Data.TrialStartTimestamp-min(BpodSystem.Data.TrialStartTimestamp))/60; % (min)
-        BpodSystem.GUIHandles.OutcomePlot.TrialRate.YData = cumsum(NoTrialStart==1);
+        BpodSystem.GUIHandles.OutcomePlot.TrialRate.YData = cumsum(NoTrialStart==0);
         NoTrialStartP = 100*sum(NoTrialStart==1)/iTrial;
         set(BpodSystem.GUIHandles.OutcomePlot.NoStartP, 'string', ['NoStartP = ' sprintf('%1.1f',NoTrialStartP) '%']);
 %         cornertext(AxesHandles.HandleTrialRate,sprintf('NoStartP=%1.2f',NoTrialStartP)) %percentage of No Trial Started

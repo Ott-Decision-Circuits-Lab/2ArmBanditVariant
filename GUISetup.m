@@ -26,8 +26,8 @@ if isempty(fieldnames(TaskParameters))
     TaskParameters.GUIMeta.IncorrectChoiceFeedback.Style = 'popupmenu';
     TaskParameters.GUIMeta.IncorrectChoiceFeedback.String = {'None','WhiteNoise'};
   
-    TaskParameters.GUI.StartNewTrial = false; % check if starting a new trial by C_in after stimulus
-    TaskParameters.GUIMeta.StartNewTrial.Style = 'checkbox';
+    TaskParameters.GUI.StartNewTrialEnable = false; % check if starting a new trial by C_in after stimulus
+    TaskParameters.GUIMeta.StartNewTrialEnable.Style = 'checkbox';
     TaskParameters.GUI.StartNewTrialHoldingTime = 0.35; % time required to trigger starting a new trial
     TaskParameters.GUI.StartNewTrialFeedback = 1; % feedback for successful StartNewTrial
     TaskParameters.GUIMeta.StartNewTrialFeedback.Style = 'popupmenu';
@@ -42,7 +42,7 @@ if isempty(fieldnames(TaskParameters))
     TaskParameters.GUIPanels.General = {'SessionDescription','Ports_LMR','PreITI','WaitCInMax',...
                                         'ChoiceDeadline','NoDecisionTimeOut','NoDecisionFeedback',...
                                         'SingleSidePoke','IncorrectChoiceTimeOut','IncorrectChoiceFeedback',...
-                                        'StartNewTrial','StartNewTrialHoldingTime','StartNewTrialFeedback',...
+                                        'StartNewTrialEnable','StartNewTrialHoldingTime','StartNewTrialFeedback',...
                                         'StartNewTrialTimeOut','ITI', 'VI'};
     
     %% StimDelay

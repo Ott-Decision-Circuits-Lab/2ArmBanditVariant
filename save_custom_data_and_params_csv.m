@@ -46,8 +46,8 @@ try
 
     DataTable.ChoiceLeft = TrialData.ChoiceLeft(1:nTrials).';
     DataTable.IncorrectChoice = TrialData.IncorrectChoice(1:nTrials).';
-    DataTable.FeedbackDelay = TrialData.FeedbackGrace(1, 1:nTrials).'; % only first row is exported
-    DataTable.FeedbackGrace = TrialData.StartNewTrialSuccessful(1:nTrials).';
+    DataTable.FeedbackDelay = TrialData.FeedbackDelay(1:nTrials).'; % only first row is exported
+    DataTable.FeedbackGrace = TrialData.FeedbackGrace(1, 1:nTrials).';
     DataTable.FeedbackWaitingTime = TrialData.FeedbackWaitingTime(1:nTrials).';
     DataTable.SkippedFeedback = TrialData.SkippedFeedback(1:nTrials).';
     DataTable.TITrial = TrialData.TITrial(1:nTrials).';

@@ -134,7 +134,7 @@ sma = AddState(sma, 'Name', 'StillSampling',... % dummy state for trigger Global
 %%
 CInStateChange = 'WaitSIn';
 CenterLightValue = 0;
-if TaskParameters.GUI.StartNewTrial
+if TaskParameters.GUI.StartNewTrialEnable
     CInStateChange = 'StartNewTrial';
     CenterLightValue = 255;
 end

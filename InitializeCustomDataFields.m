@@ -205,6 +205,9 @@ elseif TrialData.LightLeft(iTrial) == 0
     TrialData.RewardMagnitude(1,iTrial) = 0;
 end
 
+TrialData.RewardMagnitudeL(iTrial) = TrialData.RewardMagnitude(1, iTrial);
+TrialData.RewardMagnitudeR(iTrial) = TrialData.RewardMagnitude(2, iTrial);
+
 TrialData.Baited(:,iTrial) = rand(2,1) < TrialData.RewardProb(:,iTrial); 
 % only logicals now
 % [NOT IMPLEMENTED] NaN in case of 1)Not LightLeft 2) Not SingleSidePoke, 3) Not ExpressedAsExpectedValue

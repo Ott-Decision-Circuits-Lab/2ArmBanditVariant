@@ -13,7 +13,7 @@ nidaq.ai_data           = [];
 nidaq.ao_channels       = {'ao0','ao1'};           % LED1 and LED2
 nidaq.ao_data           = [];
 
-daq.reset
+daqreset
 daq.HardwareInfo.getInstance('DisableReferenceClockSynchronization',true); % Necessary for this Nidaq
 
 %create nidaq session

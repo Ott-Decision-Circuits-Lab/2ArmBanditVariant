@@ -1,7 +1,11 @@
 function TwoArmBanditVariant_PlotSideOutcome(AxesHandles, Action, varargin)
-global nTrialsToShow %this is for convenience
 global BpodSystem
 global TaskParameters
+
+nTrialsToShow = 90; %default number of trials to display
+if nargin >= 3 % custom number of trials to show
+    nTrialsToShow = varargin{1};
+end
 
 % colour palette (suitable for most colourblind people)
 scarlet = [254, 60, 60]/255; % for unreward sign, contracting with denim or denim
@@ -10,12 +14,16 @@ azure = [0, 162, 254]/255; % for reward sign
 
 switch Action
     case 'init'
-        %% initialize pokes plot
-        nTrialsToShow = 90; %default number of trials to display
-        
-        if nargin >= 3 % custom number of trials to show
-            nTrialsToShow = varargin{1};
-        end
+        %% initialize Outcome Figure
+        BpodSystem.ProtocolFigures.SideOutcomePlotFig = figure('Position',TaskParameters.Figures.OutcomePlot.Position + [-100, 400, 800, -050],...
+                                                       'name','OutcomePlot','numbertitle','off','MenuBar','none','Resize','off');
+        BpodSystem.GUIHandles.OutcomePlot.HandleOutcome = axes('Position',     [  .05          .15  .9  .3]);
+        BpodSystem.GUIHandles.OutcomePlot.HandleTrialRate = axes('Position',   [1*.05 + 0*.1   .55  .1  .4],'Visible','off');
+        BpodSystem.GUIHandles.OutcomePlot.HandleStimDelay = axes('Position',   [2*.05 + 1*.1   .55  .1  .4],'Visible','off'); % old HandleFix
+        BpodSystem.GUIHandles.OutcomePlot.HandleSampleTime = axes('Position',  [3*.05 + 2*.1   .55  .1  .4],'Visible','off');
+        BpodSystem.GUIHandles.OutcomePlot.HandleMoveTime = axes('Position',    [4*.05 + 3*.1   .55  .1  .4],'Visible','off');
+        BpodSystem.GUIHandles.OutcomePlot.HandleFeedback = axes('Position',    [5*.05 + 4*.1   .55  .1  .4],'Visible','off');
+        BpodSystem.GUIHandles.OutcomePlot.HandleTimeInvestment = axes('Position',[6*.05 + 5*.1   .55  .1  .4],'Visible','off');
         
         %% Outcome Plot
         hold(AxesHandles.HandleOutcome, 'on');

@@ -1,12 +1,7 @@
 function TwoArmBanditVariant_PlotSideOutcome(AxesHandles, Action, varargin)
 global BpodSystem
 global TaskParameters
-
-if nargin >= 3 % custom number of trials to show
-    nTrialsToShow = varargin{1};
-else
-    nTrialsToShow = 90; %default number of trials to display
-end
+global nTrialsToShow
 
 % colour palette (suitable for most colourblind people)
 scarlet = [254, 60, 60]/255; % for unreward sign, contracting with denim or denim
@@ -27,6 +22,12 @@ switch Action
         BpodSystem.GUIHandles.OutcomePlot.HandleTimeInvestment = axes('Position',[6*.05 + 5*.1   .55  .1  .4],'Visible','off');
         
         %% Outcome Plot
+        if nargin >= 3 % custom number of trials to show
+            nTrialsToShow = varargin{1};
+        else
+            nTrialsToShow = 90; %default number of trials to display
+        end
+
         AxesHandles = BpodSystem.GUIHandles.OutcomePlot;
         hold(AxesHandles.HandleOutcome, 'on');
         BpodSystem.GUIHandles.OutcomePlot.NoTrialStart = line(AxesHandles.HandleOutcome,-1,0,...
@@ -380,8 +381,8 @@ switch Action
             
             ChoiceLeftRight = [ChoiceLeft; 1-ChoiceLeft];
             ndxIncorrect = IncorrectChoice == 1; %all (completed) error trials (including catch errors)
-            ndxNotBaited = (IncorrectChoice == 0) && any((Baited == 0) .* ChoiceLeftRight, 1); % Choice is non-baited
-            ndxSkippedBaited = (IncorrectChoice == 0) && any((Baited == 1) .* ChoiceLeftRight .* [SkippedFeedback; SkippedFeedback], 1); % Choice made is Baited but Skipped
+            ndxNotBaited = (IncorrectChoice == 0) & any((Baited == 0) .* ChoiceLeftRight, 1); % Choice is non-baited
+            ndxSkippedBaited = (IncorrectChoice == 0) & any((Baited == 1) .* ChoiceLeftRight .* [SkippedFeedback; SkippedFeedback], 1); % Choice made is Baited but Skipped
             
             ChoiceRewardProb = sum(RewardProb.*ChoiceLeftRight, 1);
             IncorrectChoiceRewardProb = ChoiceRewardProb(ndxIncorrect);

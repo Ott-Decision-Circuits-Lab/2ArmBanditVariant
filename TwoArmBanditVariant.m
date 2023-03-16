@@ -8,7 +8,7 @@ global BpodSystem
 global TaskParameters
 
 TaskParameters = GUISetup();  % Set experiment parameters in GUISetup.m
-TwoArmBanditVariant_PlotSideOutcome(BpodSystem.GUIHandles.OutcomePlot,'init');
+TwoArmBanditVariant_PlotSideOutcome(BpodSystem.GUIHandles,'init');
 
 if ~BpodSystem.EmulatorMode
     if isfield(BpodSystem.ModuleUSB, 'WavePlayer1')

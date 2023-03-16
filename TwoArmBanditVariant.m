@@ -13,13 +13,12 @@ TwoArmBanditVariant_PlotSideOutcome(BpodSystem.GUIHandles.OutcomePlot,'init');
 if ~BpodSystem.EmulatorMode
     if isfield(BpodSystem.ModuleUSB, 'WavePlayer1')
         [Player, ~] = SetupWavePlayer(50000); % 25kHz =sampling rate of 8Ch with 8Ch fully on; 50kHz for 4Ch; 100kHZ for 2Ch
-        LoadIndependentWaveform(Player);
     elseif isfield(BpodSystem.ModuleUSB, 'HiFi1')
         [Player, ~] = SetupHiFi(192000); % 192kHz = max sampling rate
-        LoadIndependentWaveform(Player);
     else
         error('Error: To run this protocol, you must first pair a Analog Output Module or a HiFi Module(hardware) with its USB port. Click the USB config button on the Bpod console.')
     end
+    LoadIndependentWaveform(Player);
 end
     
 if TaskParameters.GUI.Photometry

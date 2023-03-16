@@ -38,13 +38,15 @@ while RunSession
         TwoArmBanditVariant_LoadTrialDependentWaveform(Player, iTrial); % Load stimuli trains to wave player if not EmulatorMode
     end
     
+    sma = StateMatrix(iTrial); % set up State Matrix
+    SendStateMatrix(sma); % send State Matrix to Bpod
+    
     % NIDAQ Get nidaq ready to start
     if TaskParameters.GUI.Photometry
         Nidaq_photometry('WaitToStart');
     end
     
-    sma = StateMatrix(iTrial); % set up State Matrix
-    SendStateMatrix(sma); % send State Matrix to Bpod
+    % Run Trial
     RawEvents = RunStateMatrix; % run Trial
     
     % NIDAQ Stop acquisition and save data in bpod structure

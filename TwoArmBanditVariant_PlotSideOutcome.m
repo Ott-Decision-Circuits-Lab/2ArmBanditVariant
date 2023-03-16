@@ -21,7 +21,6 @@ switch Action
         BpodSystem.GUIHandles.OutcomePlot.HandleFeedback = axes('Position',    [5*.05 + 4*.1   .55  .1  .4],'Visible','off');
         BpodSystem.GUIHandles.OutcomePlot.HandleTimeInvestment = axes('Position',[6*.05 + 5*.1   .55  .1  .4],'Visible','off');
         
-        %% Outcome Plot
         if nargin >= 3 % custom number of trials to show
             nTrialsToShow = varargin{1};
         else
@@ -29,6 +28,8 @@ switch Action
         end
 
         AxesHandles = BpodSystem.GUIHandles.OutcomePlot;
+        
+        %% Outcome Plot
         hold(AxesHandles.HandleOutcome, 'on');
         BpodSystem.GUIHandles.OutcomePlot.NoTrialStart = line(AxesHandles.HandleOutcome,-1,0,...
             'LineStyle','none','Marker','x','MarkerEdge',denim,'MarkerFace','none', 'MarkerSize',8);

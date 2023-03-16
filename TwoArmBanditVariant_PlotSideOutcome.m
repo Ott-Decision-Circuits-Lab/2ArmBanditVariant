@@ -2,9 +2,10 @@ function TwoArmBanditVariant_PlotSideOutcome(AxesHandles, Action, varargin)
 global BpodSystem
 global TaskParameters
 
-nTrialsToShow = 90; %default number of trials to display
 if nargin >= 3 % custom number of trials to show
     nTrialsToShow = varargin{1};
+else
+    nTrialsToShow = 90; %default number of trials to display
 end
 
 % colour palette (suitable for most colourblind people)
@@ -26,6 +27,7 @@ switch Action
         BpodSystem.GUIHandles.OutcomePlot.HandleTimeInvestment = axes('Position',[6*.05 + 5*.1   .55  .1  .4],'Visible','off');
         
         %% Outcome Plot
+        AxesHandles = BpodSystem.GUIHandles.OutcomePlot;
         hold(AxesHandles.HandleOutcome, 'on');
         BpodSystem.GUIHandles.OutcomePlot.NoTrialStart = line(AxesHandles.HandleOutcome,-1,0,...
             'LineStyle','none','Marker','x','MarkerEdge',denim,'MarkerFace','none', 'MarkerSize',8);

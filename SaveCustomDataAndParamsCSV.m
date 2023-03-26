@@ -2,6 +2,8 @@ function SaveCustomDataAndParamsCSV()
 %{
 Function to write trial custom data from TwoArmBanditVariant
 into a comma separated value file (.csv)
+Can not be renamed to protocol-specific scheme, as it's triggered at bpod
+level
 
 Author: Antonio Lee
 Date: 2023-01-23

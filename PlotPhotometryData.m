@@ -1,4 +1,4 @@
-function PlotPhotometryData(FigNidaq1,FigNidaq2, PhotoData, Photo2Data)
+function PlotPhotometryData(iTrial, FigNidaq1,FigNidaq2, PhotoData, Photo2Data)
 
 global BpodSystem
 global TaskParameters

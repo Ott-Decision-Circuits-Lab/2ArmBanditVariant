@@ -8,18 +8,17 @@ global BpodSystem
 global TaskParameters
 
 TaskParameters = GUISetup();  % Set experiment parameters in GUISetup.m
-InitializePlots();
+TwoArmBanditVariant_PlotSideOutcome(BpodSystem.GUIHandles,'init');
 
 if ~BpodSystem.EmulatorMode
     if isfield(BpodSystem.ModuleUSB, 'WavePlayer1')
         [Player, ~] = SetupWavePlayer(50000); % 25kHz =sampling rate of 8Ch with 8Ch fully on; 50kHz for 4Ch; 100kHZ for 2Ch
-        LoadIndependentWaveform(Player);
     elseif isfield(BpodSystem.ModuleUSB, 'HiFi1')
         [Player, ~] = SetupHiFi(192000); % 192kHz = max sampling rate
-        LoadIndependentWaveform(Player);
     else
         error('Error: To run this protocol, you must first pair a Analog Output Module or a HiFi Module(hardware) with its USB port. Click the USB config button on the Bpod console.')
     end
+    LoadIndependentWaveform(Player);
 end
     
 if TaskParameters.GUI.Photometry
@@ -39,24 +38,26 @@ while RunSession
         TwoArmBanditVariant_LoadTrialDependentWaveform(Player, iTrial); % Load stimuli trains to wave player if not EmulatorMode
     end
     
+    sma = StateMatrix(iTrial); % set up State Matrix
+    SendStateMatrix(sma); % send State Matrix to Bpod
+    
     % NIDAQ Get nidaq ready to start
     if TaskParameters.GUI.Photometry
         Nidaq_photometry('WaitToStart');
     end
     
-    sma = StateMatrix(iTrial); % set up State Matrix
-    SendStateMatrix(sma); % send State Matrix to Bpod
+    % Run Trial
     RawEvents = RunStateMatrix; % run Trial
     
     % NIDAQ Stop acquisition and save data in bpod structure
     if TaskParameters.GUI.Photometry
         Nidaq_photometry('Stop');
         [PhotoData,Photo2Data] = Nidaq_photometry('Save');
-        BpodSystem.Data.TrialData.NidaqData{iTrial} = PhotoData;
+        BpodSystem.Data.Custom.TrialData.NidaqData{iTrial} = PhotoData;
         if TaskParameters.GUI.DbleFibers || TaskParameters.GUI.RedChannel
-            BpodSystem.Data.TrialData.Nidaq2Data{iTrial} = Photo2Data;
+            BpodSystem.Data.Custom.TrialData.Nidaq2Data{iTrial} = Photo2Data;
         end
-        PlotPhotometryData(FigNidaq1, FigNidaq2, PhotoData, Photo2Data);
+        PlotPhotometryData(iTrial, FigNidaq1, FigNidaq2, PhotoData, Photo2Data);
     end
     
     % Bpod save & update fields

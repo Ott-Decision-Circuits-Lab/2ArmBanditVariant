@@ -1,7 +1,7 @@
 function TwoArmBanditVariant_PlotSideOutcome(AxesHandles, Action, varargin)
-global nTrialsToShow %this is for convenience
 global BpodSystem
 global TaskParameters
+global nTrialsToShow
 
 % colour palette (suitable for most colourblind people)
 scarlet = [254, 60, 60]/255; % for unreward sign, contracting with denim or denim
@@ -10,12 +10,24 @@ azure = [0, 162, 254]/255; % for reward sign
 
 switch Action
     case 'init'
-        %% initialize pokes plot
-        nTrialsToShow = 90; %default number of trials to display
+        %% initialize Outcome Figure
+        BpodSystem.ProtocolFigures.SideOutcomePlotFig = figure('Position',TaskParameters.Figures.OutcomePlot.Position + [-100, 400, 800, -050],...
+                                                       'name','OutcomePlot','numbertitle','off','MenuBar','none','Resize','off');
+        BpodSystem.GUIHandles.OutcomePlot.HandleOutcome = axes('Position',     [  .05          .15  .9  .3]);
+        BpodSystem.GUIHandles.OutcomePlot.HandleTrialRate = axes('Position',   [1*.05 + 0*.1   .55  .1  .4],'Visible','off');
+        BpodSystem.GUIHandles.OutcomePlot.HandleStimDelay = axes('Position',   [2*.05 + 1*.1   .55  .1  .4],'Visible','off'); % old HandleFix
+        BpodSystem.GUIHandles.OutcomePlot.HandleSampleTime = axes('Position',  [3*.05 + 2*.1   .55  .1  .4],'Visible','off');
+        BpodSystem.GUIHandles.OutcomePlot.HandleMoveTime = axes('Position',    [4*.05 + 3*.1   .55  .1  .4],'Visible','off');
+        BpodSystem.GUIHandles.OutcomePlot.HandleFeedback = axes('Position',    [5*.05 + 4*.1   .55  .1  .4],'Visible','off');
+        BpodSystem.GUIHandles.OutcomePlot.HandleTimeInvestment = axes('Position',[6*.05 + 5*.1   .55  .1  .4],'Visible','off');
         
         if nargin >= 3 % custom number of trials to show
             nTrialsToShow = varargin{1};
+        else
+            nTrialsToShow = 90; %default number of trials to display
         end
+
+        AxesHandles = BpodSystem.GUIHandles.OutcomePlot;
         
         %% Outcome Plot
         hold(AxesHandles.HandleOutcome, 'on');
@@ -370,8 +382,8 @@ switch Action
             
             ChoiceLeftRight = [ChoiceLeft; 1-ChoiceLeft];
             ndxIncorrect = IncorrectChoice == 1; %all (completed) error trials (including catch errors)
-            ndxNotBaited = any((Baited == 0) .* ChoiceLeftRight, 1); % Choice is non-baited
-            ndxSkippedBaited = any((Baited == 1) .* ChoiceLeftRight .* [SkippedFeedback; SkippedFeedback], 1); % Choice made is Baited but Skipped
+            ndxNotBaited = (IncorrectChoice == 0) & any((Baited == 0) .* ChoiceLeftRight, 1); % Choice is non-baited
+            ndxSkippedBaited = (IncorrectChoice == 0) & any((Baited == 1) .* ChoiceLeftRight .* [SkippedFeedback; SkippedFeedback], 1); % Choice made is Baited but Skipped
             
             ChoiceRewardProb = sum(RewardProb.*ChoiceLeftRight, 1);
             IncorrectChoiceRewardProb = ChoiceRewardProb(ndxIncorrect);
@@ -389,33 +401,33 @@ switch Action
             
             % Mean-Error curve
             %% NOT IMPLEMENTED %%
-%             RewardProbBin = 0.1;
-%             XBinIdx = 0:RewardProbBin:(1-RewardProbBin);
-%             
-%             IncorrectChoiceTable = table(discretize(IncorrectChoiceRewardProb, XBinIdx)',IncorrectChoiceWT', 'VariableNames',{'RewardProbBin', 'WT'});
-%             NotBaitedCorrectChoiceTable = table(discretize(NotBaitedCorrectChoiceRewardProb, XBinIdx)',NotBaitedCorrectChoiceWT', 'VariableNames',{'RewardProbBin', 'WT'});
-%             SkippedBaitedCorrectChoiceTable = table(discretize(SkippedBaitedCorrectChoiceRewardProb, XBinIdx)',SkippedBaitedCorrectChoiceWT', 'VariableNames',{'RewardProbBin', 'WT'});
-%             
-%             XBinIdx = XBinIdx + RewardProbBin/2;
-%             
-%             IncorrectChoiceGrpStats = grpstats(IncorrectChoiceTable, 'RewardProbBin', {'mean','sem'},'DataVars','WT');
-%             IncorrectChoiceWTBin = IncorrectChoiceGrpStats.RewardProbBin;
-%             IncorrectChoiceWTBinMean = IncorrectChoiceGrpStats.mean_WT;
-%             IncorrectChoiceWTBinErr = IncorrectChoiceGrpStats.sem_WT;
-% 
-%             NotBaitedCorrectChoiceGrpStats = grpstats(NotBaitedCorrectChoiceTable, 'RewardProbBin', {'mean','sem'},'DataVars','WT');
-%             NotBaitedCorrectChoiceWTBin = NotBaitedCorrectChoiceGrpStats.RewardProbBin;
-%             NotBaitedCorrectChoiceWTBinMean = NotBaitedCorrectChoiceGrpStats.mean_WT;
-%             NotBaitedCorrectChoiceWTBinErr = NotBaitedCorrectChoiceGrpStats.sem_WT;
-%             
-%             SkippedBaitedCorrectChoiceGrpStats = grpstats(SkippedBaitedCorrectChoiceTable, 'RewardProbBin', {'mean','sem'},'DataVars','WT');
-%             SkippedBaitedCorrectChoiceWTBin = SkippedBaitedCorrectChoiceGrpStats.RewardProbBin;
-%             SkippedBaitedCorrectChoiceWTBinMean = SkippedBaitedCorrectChoiceGrpStats.mean_WT;
-%             SkippedBaitedCorrectChoiceWTBinErr = SkippedBaitedCorrectChoiceGrpStats.sem_WT;
-%             
-%             set(BpodSystem.GUIHandles.OutcomePlot.TimeInvestmentIncorrect, 'xdata', XBinIdx(IncorrectChoiceWTBin), 'ydata', IncorrectChoiceWTBinMean, 'YNegativeDelta', IncorrectChoiceWTBinErr, 'YPositiveDelta', IncorrectChoiceWTBinErr);
-%             set(BpodSystem.GUIHandles.OutcomePlot.TimeInvestmentNotBaited, 'xdata', XBinIdx(NotBaitedCorrectChoiceWTBin), 'ydata', NotBaitedCorrectChoiceWTBinMean, 'YNegativeDelta', NotBaitedCorrectChoiceWTBinErr, 'YPositiveDelta', NotBaitedCorrectChoiceWTBinErr);
-%             set(BpodSystem.GUIHandles.OutcomePlot.TimeInvestmentSkippedBaited, 'xdata', XBinIdx(SkippedBaitedCorrectChoiceWTBin), 'ydata', SkippedBaitedCorrectChoiceWTBinMean, 'YNegativeDelta', SkippedBaitedCorrectChoiceWTBinErr, 'YPositiveDelta', SkippedBaitedCorrectChoiceWTBinErr);
+            RewardProbBin = 0.1;
+            XBinIdx = 0:RewardProbBin:(1-RewardProbBin);
+            
+            IncorrectChoiceTable = table(discretize(IncorrectChoiceRewardProb, XBinIdx)',IncorrectChoiceWT', 'VariableNames',{'RewardProbBin', 'WT'});
+            NotBaitedCorrectChoiceTable = table(discretize(NotBaitedCorrectChoiceRewardProb, XBinIdx)',NotBaitedCorrectChoiceWT', 'VariableNames',{'RewardProbBin', 'WT'});
+            SkippedBaitedCorrectChoiceTable = table(discretize(SkippedBaitedCorrectChoiceRewardProb, XBinIdx)',SkippedBaitedCorrectChoiceWT', 'VariableNames',{'RewardProbBin', 'WT'});
+            
+            XBinIdx = XBinIdx + RewardProbBin/2;
+            
+            IncorrectChoiceGrpStats = grpstats(IncorrectChoiceTable, 'RewardProbBin', {'mean','sem'},'DataVars','WT');
+            IncorrectChoiceWTBin = IncorrectChoiceGrpStats.RewardProbBin;
+            IncorrectChoiceWTBinMean = IncorrectChoiceGrpStats.mean_WT;
+            IncorrectChoiceWTBinErr = IncorrectChoiceGrpStats.sem_WT;
+
+            NotBaitedCorrectChoiceGrpStats = grpstats(NotBaitedCorrectChoiceTable, 'RewardProbBin', {'mean','sem'},'DataVars','WT');
+            NotBaitedCorrectChoiceWTBin = NotBaitedCorrectChoiceGrpStats.RewardProbBin;
+            NotBaitedCorrectChoiceWTBinMean = NotBaitedCorrectChoiceGrpStats.mean_WT;
+            NotBaitedCorrectChoiceWTBinErr = NotBaitedCorrectChoiceGrpStats.sem_WT;
+            
+            SkippedBaitedCorrectChoiceGrpStats = grpstats(SkippedBaitedCorrectChoiceTable, 'RewardProbBin', {'mean','sem'},'DataVars','WT');
+            SkippedBaitedCorrectChoiceWTBin = SkippedBaitedCorrectChoiceGrpStats.RewardProbBin;
+            SkippedBaitedCorrectChoiceWTBinMean = SkippedBaitedCorrectChoiceGrpStats.mean_WT;
+            SkippedBaitedCorrectChoiceWTBinErr = SkippedBaitedCorrectChoiceGrpStats.sem_WT;
+            
+            set(BpodSystem.GUIHandles.OutcomePlot.TimeInvestmentIncorrect, 'xdata', XBinIdx(IncorrectChoiceWTBin), 'ydata', IncorrectChoiceWTBinMean, 'YNegativeDelta', IncorrectChoiceWTBinErr, 'YPositiveDelta', IncorrectChoiceWTBinErr);
+            set(BpodSystem.GUIHandles.OutcomePlot.TimeInvestmentNotBaited, 'xdata', XBinIdx(NotBaitedCorrectChoiceWTBin), 'ydata', NotBaitedCorrectChoiceWTBinMean, 'YNegativeDelta', NotBaitedCorrectChoiceWTBinErr, 'YPositiveDelta', NotBaitedCorrectChoiceWTBinErr);
+            set(BpodSystem.GUIHandles.OutcomePlot.TimeInvestmentSkippedBaited, 'xdata', XBinIdx(SkippedBaitedCorrectChoiceWTBin), 'ydata', SkippedBaitedCorrectChoiceWTBinMean, 'YNegativeDelta', SkippedBaitedCorrectChoiceWTBinErr, 'YPositiveDelta', SkippedBaitedCorrectChoiceWTBinErr);
         end
         
 end % switch end

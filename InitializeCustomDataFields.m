@@ -13,9 +13,9 @@ end
 TrialData = BpodSystem.Data.Custom.TrialData;
 
 %% Pre-stimulus delivery
-TrialData.NoTrialStart(iTrial) = true;
+TrialData.NoTrialStart(iTrial) = true; % true = no state StartCIn; false = with state StartCIn.
 
-TrialData.BrokeFixation(iTrial) = NaN; % True if BrokeFixation
+TrialData.BrokeFixation(iTrial) = NaN; % NaN = no state StartCIn; true = with state BrokeFixation; false = with state Sampling
 TrialData.StimDelay(iTrial) = TaskParameters.GUI.StimDelay;
 switch TaskParameters.GUIMeta.StimDelayDistribution.String{TaskParameters.GUI.StimDelayDistribution}
     case 'Fix'
@@ -61,7 +61,7 @@ TrialData.StimWaitingTime(iTrial) = NaN; % Time that stayed CenterPortIn for Sti
 
 %% Peri-stimulus delivery and Pre-decision
 TrialData.SamplingGrace(1,iTrial) = NaN; % old GracePeriod, row is for the n-th time the state is entered, column is for the time in this State
-TrialData.EarlyWithdrawal(iTrial) = NaN; % True if early withdrawal
+TrialData.EarlyWithdrawal(iTrial) = NaN; % NaN = no state Sampling; true = with state EarlyWithdrawal; false = with state StillSampling
 TrialData.SampleTime(iTrial) = NaN; % Time that stayed CenterPortIn for sampling, from stimulus starts
 
 % TrialData.SingleSidePokeEnabled(iTrial) = TaskParameters.GUI.SingleSidePoke;

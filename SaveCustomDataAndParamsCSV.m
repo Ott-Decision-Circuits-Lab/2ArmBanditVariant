@@ -1,4 +1,4 @@
-function save_custom_data_and_params_csv()
+function SaveCustomDataAndParamsCSV()
 %{
 Function to write trial custom data from TwoArmBanditVariant
 into a comma separated value file (.csv)
@@ -29,7 +29,7 @@ try
     %% Pre-stimulus delivery
     DataTable.NoTrialStart = TrialData.NoTrialStart(1:nTrials).';
     DataTable.BrokeFixation = TrialData.BrokeFixation(1:nTrials).';
-    DataTable.StimDelay = TrialData.StimDelay(1:nTrials).';
+%     DataTable.StimDelay = TrialData.StimDelay(1:nTrials).';
     DataTable.StimWaitingTime = TrialData.StimWaitingTime(1:nTrials).';
 
     %% Peri-stimulus delivery and Pre-decision
@@ -46,8 +46,8 @@ try
 
     DataTable.ChoiceLeft = TrialData.ChoiceLeft(1:nTrials).';
     DataTable.IncorrectChoice = TrialData.IncorrectChoice(1:nTrials).';
-    DataTable.FeedbackDelay = TrialData.FeedbackDelay(1:nTrials).'; % only first row is exported
-    DataTable.FeedbackGrace = TrialData.FeedbackGrace(1, 1:nTrials).';
+%     DataTable.FeedbackDelay = TrialData.FeedbackDelay(1:nTrials).';
+    DataTable.FeedbackGrace = TrialData.FeedbackGrace(1, 1:nTrials).'; % only first row is exported
     DataTable.FeedbackWaitingTime = TrialData.FeedbackWaitingTime(1:nTrials).';
     DataTable.SkippedFeedback = TrialData.SkippedFeedback(1:nTrials).';
     DataTable.TITrial = TrialData.TITrial(1:nTrials).';

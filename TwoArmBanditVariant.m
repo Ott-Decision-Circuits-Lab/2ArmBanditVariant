@@ -7,7 +7,7 @@ function TwoArmBanditVariant()
 global BpodSystem
 global TaskParameters
 
-TaskParameters = GUISetup();  % Set experiment parameters in GUISetup.m
+TaskParameters = TwoArmBanditVariant_SetupGUI();  % Set experiment parameters in GUISetup.m
 TwoArmBanditVariant_PlotSideOutcome(BpodSystem.GUIHandles,'init');
 
 % Set up additional bpod module(s)
@@ -37,7 +37,7 @@ RunSession = true;
 iTrial = 1;
 
 while RunSession
-    InitializeCustomDataFields(iTrial); % Initialize data (trial type) vectors and first values, potentially updated TaskParameters
+    TwoArmBanditVariant_InitializeCustomDataFields(iTrial); % Initialize data (trial type) vectors and first values, potentially updated TaskParameters
     TaskParameters = BpodParameterGUI('sync', TaskParameters);
     TwoArmBanditVariant_PlotSideOutcome(BpodSystem.GUIHandles.OutcomePlot,'UpdateTrial',iTrial);
     
@@ -45,7 +45,7 @@ while RunSession
         TwoArmBanditVariant_LoadTrialDependentWaveform(Player, iTrial); % Load stimuli trains to wave player if not EmulatorMode
     end
     
-    sma = StateMatrix(iTrial); % set up State Matrix
+    sma = TwoArmBanditVariant_StateMatrix(iTrial); % set up State Matrix
     SendStateMatrix(sma); % send State Matrix to Bpod
     
     % NIDAQ Get nidaq ready to start
@@ -70,8 +70,8 @@ while RunSession
     % Bpod save & update fields
     if ~isempty(fieldnames(RawEvents))
         BpodSystem.Data = AddTrialEvents(BpodSystem.Data,RawEvents);
-        InsertSessionDescription(iTrial);
-        UpdateCustomDataFields(iTrial);
+        TwoArmBanditVariant_InsertSessionDescription(iTrial);
+        TwoArmBanditVariant_UpdateCustomDataFields(iTrial);
         SaveBpodSessionData();
     end
     

@@ -1,4 +1,4 @@
-function InitializeCustomDataFields(iTrial)
+function TwoArmBanditVariant_InitializeCustomDataFields(iTrial)
 %{ 
 Initializing trial data
 %}
@@ -7,7 +7,7 @@ global BpodSystem
 global TaskParameters
 
 if iTrial == 1
-    BpodSystem.Data.Custom.TrialData.ChoiceLeft(iTrial) = NaN; % initializing .TrialData
+    BpodSystem.Data.Custom.TrialData = struct(); % initializing .TrialData
 end
 
 TrialData = BpodSystem.Data.Custom.TrialData;

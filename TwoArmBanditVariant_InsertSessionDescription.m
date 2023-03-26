@@ -1,4 +1,4 @@
-function InsertSessionDescription(iTrial)
+function TwoArmBanditVariant_InsertSessionDescription(iTrial)
 global BpodSystem
 global TaskParameters
 

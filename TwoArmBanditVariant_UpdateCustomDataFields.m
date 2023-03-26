@@ -1,4 +1,4 @@
-function UpdateCustomDataFields(iTrial)
+function TwoArmBanditVariant_UpdateCustomDataFields(iTrial)
 
 global BpodSystem
 global TaskParameters

@@ -1,4 +1,4 @@
-function TaskParameters = GUISetup()
+function TaskParameters = TwoArmBanditVariant_SetupGUI()
 
 global BpodSystem
 

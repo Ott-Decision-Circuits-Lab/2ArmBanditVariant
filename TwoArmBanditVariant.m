@@ -13,7 +13,7 @@ TwoArmBanditVariant_PlotSideOutcome(BpodSystem.GUIHandles,'init');
 % Set up additional bpod module(s)
 if ~BpodSystem.EmulatorMode % Sound/laser waveform generation is not compulsory in this protocol
     if ~isfield(BpodSystem.ModuleUSB, 'WavePlayer1') && ~isfield(BpodSystem.ModuleUSB, 'HiFi1')
-        Warning('Warning: To run this protocol with sound or laser, you will need to pair an Analog Output Module or a HiFi Module(hardware) with its USB port. Click the USB config button on the Bpod console.')
+        warning('Warning: To run this protocol with sound or laser, you will need to pair an Analog Output Module or a HiFi Module(hardware) with its USB port. Click the USB config button on the Bpod console.')
     else
         if isfield(BpodSystem.ModuleUSB, 'HiFi1')
             [Player, ~] = SetupHiFi(192000); % 192kHz = max sampling rate

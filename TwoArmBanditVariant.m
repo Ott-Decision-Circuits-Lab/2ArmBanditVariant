@@ -10,17 +10,24 @@ global TaskParameters
 TaskParameters = GUISetup();  % Set experiment parameters in GUISetup.m
 TwoArmBanditVariant_PlotSideOutcome(BpodSystem.GUIHandles,'init');
 
-if ~BpodSystem.EmulatorMode
-    if isfield(BpodSystem.ModuleUSB, 'WavePlayer1')
-        [Player, ~] = SetupWavePlayer(50000); % 25kHz =sampling rate of 8Ch with 8Ch fully on; 50kHz for 4Ch; 100kHZ for 2Ch
-    elseif isfield(BpodSystem.ModuleUSB, 'HiFi1')
-        [Player, ~] = SetupHiFi(192000); % 192kHz = max sampling rate
+% Set up additional bpod module(s)
+if ~BpodSystem.EmulatorMode % Sound/laser waveform generation is not compulsory in this protocol
+    if ~isfield(BpodSystem.ModuleUSB, 'WavePlayer1') && ~isfield(BpodSystem.ModuleUSB, 'HiFi1')
+        Warning('Warning: To run this protocol with sound or laser, you will need to pair an Analog Output Module or a HiFi Module(hardware) with its USB port. Click the USB config button on the Bpod console.')
     else
-        error('Error: To run this protocol, you must first pair a Analog Output Module or a HiFi Module(hardware) with its USB port. Click the USB config button on the Bpod console.')
+        if isfield(BpodSystem.ModuleUSB, 'HiFi1')
+            [Player, ~] = SetupHiFi(192000); % 192kHz = max sampling rate
+        end
+        
+        ChannelNumber = 4;
+        if isfield(BpodSystem.ModuleUSB, 'WavePlayer1')
+            [Player, ~] = SetupWavePlayer(ChannelNumber); % 25kHz = sampling rate of 8Ch with 8Ch fully on; 50kHz for 4Ch; 100kHZ for 2Ch
+        end
+        LoadIndependentWaveform(Player); %Taking the last Player for now as the WaveformPlayer
     end
-    LoadIndependentWaveform(Player);
 end
-    
+
+% Set up photometry module
 if TaskParameters.GUI.Photometry
     [FigNidaq1,FigNidaq2] = InitializeNidaq();
 end

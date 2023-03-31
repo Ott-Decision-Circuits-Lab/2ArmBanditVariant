@@ -143,7 +143,7 @@ switch TaskParameters.GUIMeta.RiskType.String{TaskParameters.GUI.RiskType}
             TrialData.BlockNumber(iTrial) = 1;
             TrialData.BlockTrialNumber(iTrial) = 1;
             TaskParameters.GUI.BlockLen = randi([TaskParameters.GUI.BlockLenMin,TaskParameters.GUI.BlockLenMax]);
-            TaskParameters.GUI.NextBlockTrialNumber = TaskParameters.GUI.BlockLen;
+            TaskParameters.GUI.NextBlockTrialNumber = TaskParameters.GUI.BlockLen + 1;
             TrialData.RewardProb(:,iTrial) = randi([TaskParameters.GUI.RewardProbMin,TaskParameters.GUI.RewardProbMax],2,1);
         else
             TrialData.BlockNumber(iTrial) = TrialData.BlockNumber(iTrial-1);
@@ -153,7 +153,7 @@ switch TaskParameters.GUIMeta.RiskType.String{TaskParameters.GUI.RiskType}
                 TrialData.BlockNumber(iTrial) = TrialData.BlockNumber(iTrial-1) + 1;
                 TrialData.BlockTrialNumber(iTrial) = 1;
                 TaskParameters.GUI.BlockLen = randi([TaskParameters.GUI.BlockLenMin,TaskParameters.GUI.BlockLenMax]);
-                TaskParameters.GUI.NextBlockTrialNumber = (iTrial-1) + TaskParameters.GUI.BlockLen;
+                TaskParameters.GUI.NextBlockTrialNumber = (iTrial-1) + TaskParameters.GUI.BlockLen + 1;
                 TrialData.RewardProb(:,iTrial) = randi([TaskParameters.GUI.RewardProbMin,TaskParameters.GUI.RewardProbMax],2,1);
             end
         end
@@ -163,7 +163,7 @@ switch TaskParameters.GUIMeta.RiskType.String{TaskParameters.GUI.RiskType}
             TrialData.BlockNumber(iTrial) = 1;
             TrialData.BlockTrialNumber(iTrial) = 1;
             TaskParameters.GUI.BlockLen = randi([TaskParameters.GUI.BlockLenMin,TaskParameters.GUI.BlockLenMax]);
-            TaskParameters.GUI.NextBlockTrialNumber = TaskParameters.GUI.BlockLen;
+            TaskParameters.GUI.NextBlockTrialNumber = TaskParameters.GUI.BlockLen + 1;
             TrialData.RewardProb(:,iTrial) = [TaskParameters.GUI.RewardProbMin,TaskParameters.GUI.RewardProbMax]';
         else
             TrialData.BlockNumber(iTrial) = TrialData.BlockNumber(iTrial-1);
@@ -173,7 +173,27 @@ switch TaskParameters.GUIMeta.RiskType.String{TaskParameters.GUI.RiskType}
                 TrialData.BlockNumber(iTrial) = TrialData.BlockNumber(iTrial-1) + 1;
                 TrialData.BlockTrialNumber(iTrial) = 1;
                 TaskParameters.GUI.BlockLen = randi([TaskParameters.GUI.BlockLenMin,TaskParameters.GUI.BlockLenMax]);
-                TaskParameters.GUI.NextBlockTrialNumber = (iTrial-1) + TaskParameters.GUI.BlockLen;
+                TaskParameters.GUI.NextBlockTrialNumber = (iTrial-1) + TaskParameters.GUI.BlockLen + 1;
+                TrialData.RewardProb(:,iTrial) = flip(TrialData.RewardProb(:,iTrial-1));
+            end
+        end
+        
+    case 'BlockFixHolding'
+        if iTrial == 1
+            TrialData.BlockNumber(iTrial) = 1;
+            TrialData.BlockTrialNumber(iTrial) = 1;
+            TaskParameters.GUI.BlockLen = randi([TaskParameters.GUI.BlockLenMin,TaskParameters.GUI.BlockLenMax]);
+            TaskParameters.GUI.NextBlockTrialNumber = TaskParameters.GUI.BlockLen + 1;
+            TrialData.RewardProb(:,iTrial) = [TaskParameters.GUI.RewardProbMin,TaskParameters.GUI.RewardProbMax]';
+        else
+            TrialData.BlockNumber(iTrial) = TrialData.BlockNumber(iTrial-1);
+            TrialData.BlockTrialNumber(iTrial) = TrialData.BlockTrialNumber(iTrial-1) + 1;
+            TrialData.RewardProb(:,iTrial) = TrialData.RewardProb(:,iTrial-1);
+            if TrialData.BlockTrialNumber(iTrial) > TaskParameters.GUI.BlockLen
+                TrialData.BlockNumber(iTrial) = TrialData.BlockNumber(iTrial-1) + 1;
+                TrialData.BlockTrialNumber(iTrial) = 1;
+                TaskParameters.GUI.BlockLen = randi([TaskParameters.GUI.BlockLenMin,TaskParameters.GUI.BlockLenMax]);
+                TaskParameters.GUI.NextBlockTrialNumber = (iTrial-1) + TaskParameters.GUI.BlockLen + 1;
                 TrialData.RewardProb(:,iTrial) = flip(TrialData.RewardProb(:,iTrial-1));
             end
         end

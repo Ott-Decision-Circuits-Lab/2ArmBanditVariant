@@ -137,6 +137,14 @@ if TaskParameters.GUI.CatchTrial && ~isnan(TrialData.ChoiceLeft(iTrial)) % if a 
 end
 
 %% Peri-outcome
+if TrialData.SkippedFeedback == false % what if Skipped Feedback is true, any updates?
+    if TrialData.ChoiceLeft == 1
+        TrialData.NotTakenReward(1, iTrial) = false;
+    elseif TrialData.ChoiceLeft == 0
+        TrialData.NotTakenReward(2, iTrial) = false;
+    end
+end
+
 if ~isnan(TrialData.ChoiceLeft(iTrial)) % if a choice is made (no matter SingleSidePoke) 
     TrialData.Rewarded(iTrial) = TrialData.Baited(2-TrialData.ChoiceLeft(iTrial),iTrial) & TrialData.SkippedFeedback(iTrial) == false; % True if rewarded with a non-zero water
 end

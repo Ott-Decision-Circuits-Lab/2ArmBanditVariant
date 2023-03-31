@@ -228,9 +228,17 @@ end
 TrialData.RewardMagnitudeL(iTrial) = TrialData.RewardMagnitude(1, iTrial);
 TrialData.RewardMagnitudeR(iTrial) = TrialData.RewardMagnitude(2, iTrial);
 
-TrialData.Baited(:,iTrial) = rand(2,1) < TrialData.RewardProb(:,iTrial); 
+TrialData.Baited(:,iTrial) = rand(2,1) < TrialData.RewardProb(:,iTrial);
 % only logicals now
 % [NOT IMPLEMENTED] NaN in case of 1)Not LightLeft 2) Not SingleSidePoke, 3) Not ExpressedAsExpectedValue
+switch TaskParameters.GUIMeta.RiskType.String{TaskParameters.GUI.RiskType}
+    case 'BlockFixHolding'
+        if TrialData.BlockTrialNumber(iTrial) ~= 1
+            TrialData.Baited(:, iTrial) = TrialData.Baited(:, iTrial) | (TrialData.Baited(:, iTrial-1) & TrialData.NotTakenReward(:, iTrial-1));
+        end
+        
+end
+TrialData.NotTakenReward(:, iTrial) = TrialData.Baited(:,iTrial); % Before trial, the two variables is the same. Only changed after the trial
 
 if TaskParameters.GUI.ExpressedAsExpectedValue
     TrialData.RewardMagnitude(:,iTrial) = TrialData.RewardMagnitude(:,iTrial).* TrialData.RewardProb(:,iTrial);

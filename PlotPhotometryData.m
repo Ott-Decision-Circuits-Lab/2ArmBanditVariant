@@ -9,7 +9,7 @@ global nidaq
 if TaskParameters.GUI.Photometry
         
     Alignments = {[],[],[],[]};
-    if TaskParameters.GUI.SidePokeIn && ~BpodSystem.Data.Custom.TrialData.EarlyWithdrawal(iTrial)
+    if TaskParameters.GUI.SidePokeIn & (BpodSystem.Data.Custom.TrialData.EarlyWithdrawal(iTrial)==0)
         Alignments{1} = 'wait_Sin';
     end
     if TaskParameters.GUI.SidePokeLeave && ~BpodSystem.Data.Custom.TrialData.EarlyWithdrawal(iTrial) && BpodSystem.Data.Custom.TrialData.Rewarded(iTrial)==0

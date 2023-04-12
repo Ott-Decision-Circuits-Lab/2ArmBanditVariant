@@ -137,10 +137,10 @@ if TaskParameters.GUI.CatchTrial && ~isnan(TrialData.ChoiceLeft(iTrial)) % if a 
 end
 
 %% Peri-outcome
-if TrialData.SkippedFeedback == false % what if Skipped Feedback is true, any updates?
-    if TrialData.ChoiceLeft == 1
+if TrialData.SkippedFeedback(iTrial) == false % what if Skipped Feedback is true, any updates?
+    if TrialData.ChoiceLeft(iTrial) == 1
         TrialData.NotTakenReward(1, iTrial) = false;
-    elseif TrialData.ChoiceLeft == 0
+    elseif TrialData.ChoiceLeft(iTrial) == 0
         TrialData.NotTakenReward(2, iTrial) = false;
     end
 end

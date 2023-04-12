@@ -90,6 +90,13 @@ while RunSession
         SaveBpodSessionData();
     end
     
+    %% handle pause condition
+    HandlePauseCondition; % Checks to see if the protocol is paused. If so, waits until user resumes.
+
+    if BpodSystem.Status.BeingUsed == 0
+        return
+    end
+
     %% update figures
     TwoArmBanditVariant_PlotSideOutcome(BpodSystem.GUIHandles.OutcomePlot,'UpdateResult',iTrial);
     
@@ -98,13 +105,6 @@ while RunSession
         PlotPhotometryData(iTrial, FigNidaq1,FigNidaq2, PhotoData, Photo2Data);
     end
     
-    %% handle pause condition
-    HandlePauseCondition; % Checks to see if the protocol is paused. If so, waits until user resumes.
-
-    if BpodSystem.Status.BeingUsed == 0
-        return
-    end
-
     iTrial = iTrial + 1;
     
 end % Main loop

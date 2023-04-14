@@ -240,7 +240,10 @@ end
 sma = SetGlobalTimer(sma, 3, FeedbackDelayLeft); % used to track side poke grace period
 
 LInStateChange = 'WaterL';
-if TrialData.LightLeft(iTrial) == false
+if TrialData.Baited(iTrial) == false
+    LInStateChange = 'NotBaied';
+end
+if TrialData.LightLeft(iTrial) == false % Incorrect Choice overwrite Baited 
     LInStateChange = 'IncorrectChoice';
 end
 sma = AddState(sma, 'Name', 'StartLIn',... % dummy state for trigger GlobalTimer3
@@ -279,7 +282,10 @@ sma = AddState(sma, 'Name', 'LInGrace',...
 sma = SetGlobalTimer(sma, 4, FeedbackDelayRight); % used to track side poke grace period
 
 RInStateChange = 'WaterR';
-if TrialData.LightLeft(iTrial) == true
+if TrialData.Baited(2, iTrial) == false
+    RInStateChange = 'NotBaited';
+end
+if TrialData.LightLeft(iTrial) == true % Incorrect Choice overwrite Baited 
     RInStateChange = 'IncorrectChoice';
 end
 sma = AddState(sma, 'Name', 'StartRIn',... % dummy state for trigger GlobalTimer3
@@ -314,6 +320,12 @@ sma = AddState(sma, 'Name', 'RInGrace',...
                               CenterPortIn, 'SkippedFeedback',...
                               LeftPortIn, 'SkippedFeedback'},...
     'OutputActions', {RightLight, RightLightValue});
+
+NotBaitedAction = {};
+sma = AddState(sma, 'Name', 'NotBaited',...
+    'Timer', RightValveTime,...
+    'StateChangeConditions', {'Tup', 'ITI'},...
+    'OutputActions', NotBaitedAction);
 
 IncorrectChoiceAction = {};
 switch TaskParameters.GUIMeta.IncorrectChoiceFeedback.String{TaskParameters.GUI.IncorrectChoiceFeedback}

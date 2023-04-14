@@ -92,7 +92,7 @@ switch TaskParameters.GUIMeta.FeedbackDelayDistribution.String{TaskParameters.GU
         if iTrial > 1
             History = 50; % Rat: History = 50
             Crit = 0.8; % Rat: Crit = 0.8
-            ConsiderTrials = max(1,iTrial-History):1:iTrial-1;
+            ConsiderTrials = max(1, iTrial-History):1:iTrial-1;
             ConsiderTrials = ConsiderTrials(~isnan(TrialData.ChoiceLeft(ConsiderTrials))); % exclude trials did not Choice
             NotSkippedFeedbackRate = sum(~TrialData.SkippedFeedback(ConsiderTrials))/length(ConsiderTrials);
             
@@ -121,17 +121,17 @@ elseif TrialData.FeedbackDelay(iTrial) < TaskParameters.GUI.FeedbackDelayMin
 end
 TaskParameters.GUI.FeedbackDelay = TrialData.FeedbackDelay(iTrial);
 
-TrialData.FeedbackGrace(1,iTrial) = NaN; % first index for the number of time the state is entered
+TrialData.FeedbackGrace(1, iTrial) = NaN; % first index for the number of time the state is entered
 TrialData.FeedbackWaitingTime(iTrial) = NaN; % Time spend to wait for feedback
 TrialData.SkippedFeedback(iTrial) = NaN; % True if SkippedFeedback
 TrialData.TITrial(iTrial) = NaN; % True if it is included in TimeInvestment
 
 %% Peri-outcome
-TrialData.RewardProb(:,iTrial) = [NaN, NaN]';
+TrialData.RewardProb(:, iTrial) = [NaN, NaN]';
 TrialData.BlockNumber(iTrial) = NaN; % only adjust if RiskType is Block
 TrialData.BlockTrialNumber(iTrial) = NaN; % only adjust if RiskType is Block
-TrialData.RewardCueLeft(:,iTrial) = [NaN, NaN]'; % only adjust if RiskType is Cued
-TrialData.RewardCueRight(:,iTrial) = [NaN, NaN]'; % only adjust if RiskType is Cued
+TrialData.RewardCueLeft(:, iTrial) = [NaN, NaN]'; % only adjust if RiskType is Cued
+TrialData.RewardCueRight(:, iTrial) = [NaN, NaN]'; % only adjust if RiskType is Cued
 
 switch TaskParameters.GUIMeta.RiskType.String{TaskParameters.GUI.RiskType}
     case 'Fix'
@@ -142,19 +142,19 @@ switch TaskParameters.GUIMeta.RiskType.String{TaskParameters.GUI.RiskType}
         if iTrial == 1
             TrialData.BlockNumber(iTrial) = 1;
             TrialData.BlockTrialNumber(iTrial) = 1;
-            TaskParameters.GUI.BlockLen = randi([TaskParameters.GUI.BlockLenMin,TaskParameters.GUI.BlockLenMax]);
+            TaskParameters.GUI.BlockLen = randi([TaskParameters.GUI.BlockLenMin, TaskParameters.GUI.BlockLenMax]);
             TaskParameters.GUI.NextBlockTrialNumber = TaskParameters.GUI.BlockLen + 1;
-            TrialData.RewardProb(:,iTrial) = randi([TaskParameters.GUI.RewardProbMin,TaskParameters.GUI.RewardProbMax],2,1);
+            TrialData.RewardProb(:,iTrial) = randi([TaskParameters.GUI.RewardProbMin, TaskParameters.GUI.RewardProbMax],2,1);
         else
             TrialData.BlockNumber(iTrial) = TrialData.BlockNumber(iTrial-1);
             TrialData.BlockTrialNumber(iTrial) = TrialData.BlockTrialNumber(iTrial-1) + 1;
-            TrialData.RewardProb(:,iTrial) = TrialData.RewardProb(:,iTrial-1);
+            TrialData.RewardProb(:,iTrial) = TrialData.RewardProb(:, iTrial-1);
             if TrialData.BlockTrialNumber(iTrial) > TaskParameters.GUI.BlockLen
                 TrialData.BlockNumber(iTrial) = TrialData.BlockNumber(iTrial-1) + 1;
                 TrialData.BlockTrialNumber(iTrial) = 1;
-                TaskParameters.GUI.BlockLen = randi([TaskParameters.GUI.BlockLenMin,TaskParameters.GUI.BlockLenMax]);
+                TaskParameters.GUI.BlockLen = randi([TaskParameters.GUI.BlockLenMin, TaskParameters.GUI.BlockLenMax]);
                 TaskParameters.GUI.NextBlockTrialNumber = (iTrial-1) + TaskParameters.GUI.BlockLen + 1;
-                TrialData.RewardProb(:,iTrial) = randi([TaskParameters.GUI.RewardProbMin,TaskParameters.GUI.RewardProbMax],2,1);
+                TrialData.RewardProb(:, iTrial) = randi([TaskParameters.GUI.RewardProbMin, TaskParameters.GUI.RewardProbMax],2,1);
             end
         end
         
@@ -162,19 +162,22 @@ switch TaskParameters.GUIMeta.RiskType.String{TaskParameters.GUI.RiskType}
         if iTrial == 1
             TrialData.BlockNumber(iTrial) = 1;
             TrialData.BlockTrialNumber(iTrial) = 1;
-            TaskParameters.GUI.BlockLen = randi([TaskParameters.GUI.BlockLenMin,TaskParameters.GUI.BlockLenMax]);
+            TaskParameters.GUI.BlockLen = randi([TaskParameters.GUI.BlockLenMin, TaskParameters.GUI.BlockLenMax]);
             TaskParameters.GUI.NextBlockTrialNumber = TaskParameters.GUI.BlockLen + 1;
-            TrialData.RewardProb(:,iTrial) = [TaskParameters.GUI.RewardProbMin,TaskParameters.GUI.RewardProbMax]';
+            TrialData.RewardProb(:,iTrial) = [TaskParameters.GUI.RewardProbMin, TaskParameters.GUI.RewardProbMax]';
+            if rand < 0.5
+                TrialData.RewardProb(:,iTrial) = flip(TrialData.RewardProb(:, iTrial));
+            end
         else
             TrialData.BlockNumber(iTrial) = TrialData.BlockNumber(iTrial-1);
             TrialData.BlockTrialNumber(iTrial) = TrialData.BlockTrialNumber(iTrial-1) + 1;
-            TrialData.RewardProb(:,iTrial) = TrialData.RewardProb(:,iTrial-1);
+            TrialData.RewardProb(:,iTrial) = TrialData.RewardProb(:, iTrial-1);
             if TrialData.BlockTrialNumber(iTrial) > TaskParameters.GUI.BlockLen
                 TrialData.BlockNumber(iTrial) = TrialData.BlockNumber(iTrial-1) + 1;
                 TrialData.BlockTrialNumber(iTrial) = 1;
-                TaskParameters.GUI.BlockLen = randi([TaskParameters.GUI.BlockLenMin,TaskParameters.GUI.BlockLenMax]);
+                TaskParameters.GUI.BlockLen = randi([TaskParameters.GUI.BlockLenMin, TaskParameters.GUI.BlockLenMax]);
                 TaskParameters.GUI.NextBlockTrialNumber = (iTrial-1) + TaskParameters.GUI.BlockLen + 1;
-                TrialData.RewardProb(:,iTrial) = flip(TrialData.RewardProb(:,iTrial-1));
+                TrialData.RewardProb(:, iTrial) = flip(TrialData.RewardProb(:, iTrial-1));
             end
         end
         
@@ -182,9 +185,12 @@ switch TaskParameters.GUIMeta.RiskType.String{TaskParameters.GUI.RiskType}
         if iTrial == 1
             TrialData.BlockNumber(iTrial) = 1;
             TrialData.BlockTrialNumber(iTrial) = 1;
-            TaskParameters.GUI.BlockLen = randi([TaskParameters.GUI.BlockLenMin,TaskParameters.GUI.BlockLenMax]);
+            TaskParameters.GUI.BlockLen = randi([TaskParameters.GUI.BlockLenMin, TaskParameters.GUI.BlockLenMax]);
             TaskParameters.GUI.NextBlockTrialNumber = TaskParameters.GUI.BlockLen + 1;
-            TrialData.RewardProb(:,iTrial) = [TaskParameters.GUI.RewardProbMin,TaskParameters.GUI.RewardProbMax]';
+            TrialData.RewardProb(:, iTrial) = [TaskParameters.GUI.RewardProbMin, TaskParameters.GUI.RewardProbMax]';
+            if rand < 0.5
+                TrialData.RewardProb(:,iTrial) = flip(TrialData.RewardProb(:, iTrial));
+            end
         else
             TrialData.BlockNumber(iTrial) = TrialData.BlockNumber(iTrial-1);
             TrialData.BlockTrialNumber(iTrial) = TrialData.BlockTrialNumber(iTrial-1) + 1;
@@ -192,9 +198,9 @@ switch TaskParameters.GUIMeta.RiskType.String{TaskParameters.GUI.RiskType}
             if TrialData.BlockTrialNumber(iTrial) > TaskParameters.GUI.BlockLen
                 TrialData.BlockNumber(iTrial) = TrialData.BlockNumber(iTrial-1) + 1;
                 TrialData.BlockTrialNumber(iTrial) = 1;
-                TaskParameters.GUI.BlockLen = randi([TaskParameters.GUI.BlockLenMin,TaskParameters.GUI.BlockLenMax]);
+                TaskParameters.GUI.BlockLen = randi([TaskParameters.GUI.BlockLenMin, TaskParameters.GUI.BlockLenMax]);
                 TaskParameters.GUI.NextBlockTrialNumber = (iTrial-1) + TaskParameters.GUI.BlockLen + 1;
-                TrialData.RewardProb(:,iTrial) = flip(TrialData.RewardProb(:,iTrial-1));
+                TrialData.RewardProb(:, iTrial) = flip(TrialData.RewardProb(:, iTrial-1));
             end
         end
         

@@ -63,11 +63,15 @@ try
     DataTable.LeftRewardCueEndFreq = TrialData.RewardCueLeft(2, 1:nTrials).';
     DataTable.RightRewardCueStartFreq = TrialData.RewardCueRight(1, 1:nTrials).';
     DataTable.RightRewardCueEndFreq = TrialData.RewardCueRight(2, 1:nTrials).';
-    DataTable.LeftRewardMagnitude = TrialData.RewardMagnitude(1, 1:nTrials).';
-    DataTable.RightRewardMagnitude = TrialData.RewardMagnitude(2, 1:nTrials).';
     DataTable.LeftBaited = TrialData.Baited(1, 1:nTrials).';
     DataTable.RightBaited = TrialData.Baited(2, 1:nTrials).';
+    DataTable.LeftAvailableReward = TrialData.AvailableReward(1, 1:nTrials).';
+    DataTable.RightAvailableReward = TrialData.AvailableReward(2, 1:nTrials).';
+    DataTable.LeftRewardMagnitude = TrialData.RewardMagnitude(1, 1:nTrials).';
+    DataTable.RightRewardMagnitude = TrialData.RewardMagnitude(2, 1:nTrials).';
     DataTable.Rewarded = TrialData.Rewarded(1:nTrials).';
+    DataTable.DrinkingTime = TrialData.DrinkingTime(1:nTrials).';
+    
 catch
     warning('TrialData cannot convert to DataTable. No .csv file is saved.')
     return

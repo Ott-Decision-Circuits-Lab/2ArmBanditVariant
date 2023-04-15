@@ -127,9 +127,9 @@ switch TaskParameters.GUIMeta.EarlyWithdrawalFeedback.String{TaskParameters.GUI.
         elseif isfield(BpodSystem.ModuleUSB, 'WavePlayer1')
             EarlyWithdrawalAction = {'WavePlayer1', ['P' 1]};
         elseif BpodSystem.EmulatorMode
-            disp('BpodSystem is in EmulatorMode. No EarlyWithdrawal WhiteNoise is played.');
+            disp('BpodSystem is in EmulatorMode. No EarlyWithdrawal WhiteNoise will be played.');
         else
-            disp('Neither HiFi nor analog module is setup. No EarlyWithdrawal WhiteNoise is played.');
+            disp('Neither HiFi nor analog module is setup. No EarlyWithdrawal WhiteNoise will be played.');
         end
         
 end
@@ -185,9 +185,9 @@ switch TaskParameters.GUIMeta.NoDecisionFeedback.String{TaskParameters.GUI.NoDec
         elseif isfield(BpodSystem.ModuleUSB, 'WavePlayer1')
             NoDecisionAction = {'WavePlayer1', ['P' 2]};
         elseif BpodSystem.EmulatorMode
-            disp('BpodSystem is in EmulatorMode. No NoDecision WhiteNoise is played.');
+            disp('BpodSystem is in EmulatorMode. No NoDecision WhiteNoise will be played.');
         else
-            disp('Neither HiFi nor analog module is setup. No NoDecision WhiteNoise is played.');
+            disp('Neither HiFi nor analog module is setup. No NoDecision WhiteNoise will be played.');
         end
         
 end
@@ -212,9 +212,9 @@ switch TaskParameters.GUIMeta.StartNewTrialFeedback.String{TaskParameters.GUI.St
         elseif isfield(BpodSystem.ModuleUSB, 'WavePlayer1')
             StartNewTrialAction = {'WavePlayer1', ['P' 3]};
         elseif BpodSystem.EmulatorMode
-            disp('BpodSystem is in EmulatorMode. No StartNewTrial WhiteNoise is played.');
+            disp('BpodSystem is in EmulatorMode. No StartNewTrial WhiteNoise will be played.');
         else
-            disp('Neither HiFi nor analog module is setup. No StartNewTrial WhiteNoise is played.');
+            disp('Neither HiFi nor analog module is setup. No StartNewTrial WhiteNoise will be played.');
         end
         
     case 'Beep'
@@ -223,9 +223,9 @@ switch TaskParameters.GUIMeta.StartNewTrialFeedback.String{TaskParameters.GUI.St
         elseif isfield(BpodSystem.ModuleUSB, 'WavePlayer1')
             StartNewTrialAction = {'WavePlayer1', ['P' 3]};
         elseif BpodSystem.EmulatorMode
-            disp('BpodSystem is in EmulatorMode. No StartNewTrial Beep is played.');
+            disp('BpodSystem is in EmulatorMode. No StartNewTrial Beep will be played.');
         else
-            disp('Neither HiFi nor analog module is setup. No StartNewTrial Beep is played.');
+            disp('Neither HiFi nor analog module is setup. No StartNewTrial Beep will be played.');
         end
         
 end
@@ -335,9 +335,9 @@ switch TaskParameters.GUIMeta.IncorrectChoiceFeedback.String{TaskParameters.GUI.
         elseif isfield(BpodSystem.ModuleUSB, 'WavePlayer1')
             IncorrectChoiceAction = {'WavePlayer1', ['P' 4]};
         elseif BpodSystem.EmulatorMode
-            disp('BpodSystem is in EmulatorMode. No IncorrecChoice WhiteNoise is played.');
+            disp('BpodSystem is in EmulatorMode. No IncorrecChoice WhiteNoise will be played.');
         else
-            disp('Neither HiFi nor analog module is setup. No IncorrecChoice WhiteNoise is played.');
+            disp('Neither HiFi nor analog module is setup. No IncorrecChoice WhiteNoise will be played.');
         end
         
 end
@@ -356,9 +356,9 @@ switch TaskParameters.GUIMeta.SkippedFeedbackFeedback.String{TaskParameters.GUI.
         elseif isfield(BpodSystem.ModuleUSB, 'WavePlayer1')
             SkippedFeedbackAction = {'WavePlayer1', ['P' 5]};
         elseif BpodSystem.EmulatorMode
-            disp('BpodSystem is in EmulatorMode. No SkippedFeedback WhiteNoise is played.');
+            disp('BpodSystem is in EmulatorMode. No SkippedFeedback WhiteNoise will be played.');
         else
-            disp('Neither HiFi nor analog module is setup. No SkippedFeedback WhiteNoise is played.');
+            disp('Neither HiFi nor analog module is setup. No SkippedFeedback WhiteNoise will be played.');
         end
         
     case 'Beep'
@@ -367,9 +367,9 @@ switch TaskParameters.GUIMeta.SkippedFeedbackFeedback.String{TaskParameters.GUI.
         elseif isfield(BpodSystem.ModuleUSB, 'WavePlayer1')
             SkippedFeedbackAction = {'WavePlayer1', ['P' 5]};
         elseif BpodSystem.EmulatorMode
-            disp('BpodSystem is in EmulatorMode. No SkippedFeedback Beep is played.');
+            disp('BpodSystem is in EmulatorMode. No SkippedFeedback Beep will be played.');
         else
-            disp('Neither a HiFi nor analog module is setup. No SkippedFeedback Beep is played.');
+            disp('Neither a HiFi nor analog module is setup. No SkippedFeedback Beep will be played.');
         end
         
 end
@@ -388,9 +388,9 @@ switch TaskParameters.GUIMeta.NotBaitedFeedback.String{TaskParameters.GUI.NotBai
         elseif isfield(BpodSystem.ModuleUSB, 'WavePlayer1')
             NotBaitedAction = {'WavePlayer1', ['P' 6]};
         elseif BpodSystem.EmulatorMode
-            disp('BpodSystem is in EmulatorMode. No NotBaited WhiteNoise is played.');
+            disp('BpodSystem is in EmulatorMode. No NotBaited WhiteNoise will be played.');
         else
-            disp('Neither HiFi nor analog module is setup. No NotBaited WhiteNoise is played.');
+            disp('Neither HiFi nor analog module is setup. No NotBaited WhiteNoise will be played.');
         end
         
     case 'Beep'
@@ -399,9 +399,9 @@ switch TaskParameters.GUIMeta.NotBaitedFeedback.String{TaskParameters.GUI.NotBai
         elseif isfield(BpodSystem.ModuleUSB, 'WavePlayer1')
             NotBaitedAction = {'WavePlayer1', ['P' 6]};
         elseif BpodSystem.EmulatorMode
-            disp('BpodSystem is in EmulatorMode. No NotBaited Beep is played.');
+            disp('BpodSystem is in EmulatorMode. No NotBaited Beep will be played.');
         else
-            disp('Neither HiFi nor analog module is setup. No NotBaited Beep is played.');
+            disp('Neither HiFi nor analog module is setup. No NotBaited Beep will be played.');
         end
         
 end
@@ -412,13 +412,15 @@ sma = AddState(sma, 'Name', 'NotBaited',...
 
 sma = AddState(sma, 'Name', 'Drinking',... % serve as time buffer before next trial start
     'Timer', 0,...
-    'StateChangeConditions', {CenterPortOut, 'DrinkingGrace'},...
+    'StateChangeConditions', {LeftPortOut, 'DrinkingGrace',...
+                              RightPortOut, 'DrinkingGrace'},...
     'OutputActions', {});
 
 DrinkingGraceTimer = TaskParameters.GUI.DrinkingGraceTime;
 sma = AddState(sma, 'Name', 'DrinkingGrace',... % serve as time buffer before next trial start
     'Timer', DrinkingGraceTimer,...
-    'StateChangeConditions', {CenterPortIn, 'Drinking',...
+    'StateChangeConditions', {LeftPortIn, 'Drinking',...
+                              RightPortIn, 'Drinking',...
                               'Tup', 'ITI'},...
     'OutputActions', {});
 

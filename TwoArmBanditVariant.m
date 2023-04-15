@@ -24,7 +24,7 @@ if ~BpodSystem.EmulatorMode % Sound/laser waveform generation is not compulsory 
         if isfield(BpodSystem.ModuleUSB, 'WavePlayer1')
             [Player, ~] = SetupWavePlayer(ChannelNumber); % 25kHz = sampling rate of 8Ch with 8Ch fully on; 50kHz for 4Ch; 100kHZ for 2Ch
         end
-        LoadIndependentWaveform(Player); %Taking the last Player for now as the WaveformPlayer
+        TwoArmBanditVariant_LoadWaveform(Player, 'TrialIndependent'); %Taking the last Player for now as the WaveformPlayer
     end
 end
 
@@ -45,7 +45,7 @@ while RunSession
     
     %% load waveform to auxillary bpod modules
     if ~BpodSystem.EmulatorMode
-        TwoArmBanditVariant_LoadTrialDependentWaveform(Player, iTrial); % Load stimuli trains to wave player if not EmulatorMode
+        TwoArmBanditVariant_LoadWaveform(Player, 'TrialDependent', iTrial); % Load stimuli trains to wave player if not EmulatorMode
     end
     
     %% set up state matrix and send to bpod

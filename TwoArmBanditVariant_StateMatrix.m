@@ -337,7 +337,7 @@ switch TaskParameters.GUIMeta.IncorrectChoiceFeedback.String{TaskParameters.GUI.
         elseif BpodSystem.EmulatorMode
             disp('BpodSystem is in EmulatorMode. No IncorrecChoice WhiteNoise is played.');
         else
-            disp('Neither a HiFi nor analog module is setup. No IncorrecChoice WhiteNoise is played.');
+            disp('Neither HiFi nor analog module is setup. No IncorrecChoice WhiteNoise is played.');
         end
         
 end
@@ -358,7 +358,7 @@ switch TaskParameters.GUIMeta.SkippedFeedbackFeedback.String{TaskParameters.GUI.
         elseif BpodSystem.EmulatorMode
             disp('BpodSystem is in EmulatorMode. No SkippedFeedback WhiteNoise is played.');
         else
-            disp('Neither a HiFi nor analog module is setup. No SkippedFeedback WhiteNoise is played.');
+            disp('Neither HiFi nor analog module is setup. No SkippedFeedback WhiteNoise is played.');
         end
         
     case 'Beep'
@@ -390,7 +390,7 @@ switch TaskParameters.GUIMeta.NotBaitedFeedback.String{TaskParameters.GUI.NotBai
         elseif BpodSystem.EmulatorMode
             disp('BpodSystem is in EmulatorMode. No NotBaited WhiteNoise is played.');
         else
-            disp('Neither a HiFi nor analog module is setup. No NotBaited WhiteNoise is played.');
+            disp('Neither HiFi nor analog module is setup. No NotBaited WhiteNoise is played.');
         end
         
     case 'Beep'
@@ -401,7 +401,7 @@ switch TaskParameters.GUIMeta.NotBaitedFeedback.String{TaskParameters.GUI.NotBai
         elseif BpodSystem.EmulatorMode
             disp('BpodSystem is in EmulatorMode. No NotBaited Beep is played.');
         else
-            disp('Neither a HiFi nor analog module is setup. No NotBaited Beep is played.');
+            disp('Neither HiFi nor analog module is setup. No NotBaited Beep is played.');
         end
         
 end

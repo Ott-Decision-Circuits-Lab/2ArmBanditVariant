@@ -111,6 +111,7 @@ if isempty(fieldnames(TaskParameters))
     TaskParameters.GUI.CatchTrial = false; % Is the (incorrect/unbaited) trial caught for time investment?
     TaskParameters.GUIMeta.CatchTrial.Style = 'checkbox';
     
+    TaskParameters.GUI.NotBaitedTimeOut = 0.10;
     TaskParameters.GUI.NotBaitedFeedback = 1; % feedback for SkippedFeedback
     TaskParameters.GUIMeta.NotBaitedFeedback.Style = 'popupmenu';
     TaskParameters.GUIMeta.SkippedFeedbackFeedback.String = {'None', 'WhiteNoise', 'Beep'};
@@ -123,7 +124,8 @@ if isempty(fieldnames(TaskParameters))
                                               'FeedbackDelayTau', 'FeedbackDelayAlpha', 'FeedbackDelayBeta',...
                                               'FeedbackDelay', 'FeedbackDelayGrace',...
                                               'SkippedFeedbackTimeOut', 'SkippedFeedbackFeedback',...
-                                              'CatchTrial', 'NotBaitedFeedback', 'DrinkingGraceTime'};
+                                              'CatchTrial', 'NotBaitedTimeOut', 'NotBaitedFeedback',...
+                                              'DrinkingGraceTime'};
                                       
     %% Reward and RewardProb
     TaskParameters.GUI.RewardAmount = 30; % (ul), baseline value for reward (adjusted by ExpressedAsExpectedValue)

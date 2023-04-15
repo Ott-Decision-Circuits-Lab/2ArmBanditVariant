@@ -224,37 +224,42 @@ TaskParameters.GUI.RewardProbActualRight = TrialData.RewardProb(2,iTrial);
 %     TrialData.RewardProb(1,iTrial) = 0;
 % end}
 
+TrialData.Baited(:, iTrial) = rand(2, 1) < TrialData.RewardProb(:, iTrial); % only logicals 
+switch TaskParameters.GUIMeta.RiskType.String{TaskParameters.GUI.RiskType}
+    case 'BlockFixHolding'
+        if TrialData.BlockTrialNumber(iTrial) ~= 1
+            TrialData.Baited(:, iTrial) = TrialData.Baited(:, iTrial) | TrialData.AvailableReward(:, iTrial-1);
+        end
+        
+end
+
+if TaskParameters.GUI.ExpressedAsExpectedValue
+    TrialData.Baited(:, iTrial) = true(2, 1);
+end
+
+if TrialData.LightLeft(iTrial) == 1 % i.e. SingleSidePoke is true; holding will be overwritten
+    TrialData.Baited(2, iTrial) = false; % Non light-guided one being irrelevant
+elseif TrialData.LightLeft(iTrial) == 0
+    TrialData.Baited(1, iTrial) = false;
+end
+
+TrialData.AvailableReward(:, iTrial) = TrialData.Baited(:,iTrial); % Before trial, the two variables is the same. Only changed after the trial
+
 TrialData.RewardMagnitude(:, iTrial) = [TaskParameters.GUI.RewardAmount, TaskParameters.GUI.RewardAmount]'; % first index is for left or right poke
 if TrialData.LightLeft(iTrial) == 1 % adjustment by SingleSidePoke, i.e. 1-arm bandit
-    TrialData.RewardMagnitude(2,iTrial) = 0;
+    TrialData.RewardMagnitude(2, iTrial) = 0;
 elseif TrialData.LightLeft(iTrial) == 0
-    TrialData.RewardMagnitude(1,iTrial) = 0;
+    TrialData.RewardMagnitude(1, iTrial) = 0;
+end
+
+if TaskParameters.GUI.ExpressedAsExpectedValue
+    TrialData.RewardMagnitude(:, iTrial) = TrialData.RewardMagnitude(:, iTrial).* TrialData.RewardProb(:, iTrial);
+else
+    TrialData.RewardMagnitude(:, iTrial) = TrialData.RewardMagnitude(:, iTrial).* TrialData.Baited(:, iTrial);
 end
 
 TrialData.RewardMagnitudeL(iTrial) = TrialData.RewardMagnitude(1, iTrial);
 TrialData.RewardMagnitudeR(iTrial) = TrialData.RewardMagnitude(2, iTrial);
-
-TrialData.Baited(:,iTrial) = rand(2,1) < TrialData.RewardProb(:,iTrial);
-% only logicals now
-% [NOT IMPLEMENTED] NaN in case of 1)Not LightLeft 2) Not SingleSidePoke, 3) Not ExpressedAsExpectedValue
-switch TaskParameters.GUIMeta.RiskType.String{TaskParameters.GUI.RiskType}
-    case 'BlockFixHolding'
-        if TrialData.BlockTrialNumber(iTrial) ~= 1
-            TrialData.Baited(:, iTrial) = TrialData.Baited(:, iTrial) | (TrialData.Baited(:, iTrial-1) & TrialData.NotTakenReward(:, iTrial-1));
-        end
-        
-end
-TrialData.NotTakenReward(:, iTrial) = TrialData.Baited(:,iTrial); % Before trial, the two variables is the same. Only changed after the trial
-
-if TaskParameters.GUI.ExpressedAsExpectedValue
-    TrialData.RewardMagnitude(:,iTrial) = TrialData.RewardMagnitude(:,iTrial).* TrialData.RewardProb(:,iTrial);
-else
-    TrialData.RewardMagnitude(:,iTrial) = TrialData.RewardMagnitude(:,iTrial).* TrialData.Baited(:,iTrial);
-end
-
-if ~isnan(TrialData.LightLeft(iTrial)) % i.e. SingleSidePoke is true, this can't go after line 208, as dot mulitplication will happen with NaN
-    TrialData.Baited(TrialData.LightLeft(iTrial)+1,iTrial) = false; % Non light-guided one being irrelevant
-end
 
 TrialData.Rewarded(iTrial) = NaN; % true if a non-zero reward is delivered, NaN if no choice made
 

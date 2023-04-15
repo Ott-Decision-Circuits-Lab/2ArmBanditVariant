@@ -139,9 +139,9 @@ end
 %% Peri-outcome
 if TrialData.SkippedFeedback(iTrial) == false % what if Skipped Feedback is true, any updates?
     if TrialData.ChoiceLeft(iTrial) == 1
-        TrialData.NotTakenReward(1, iTrial) = false;
+        TrialData.AvailableReward(1, iTrial) = false;
     elseif TrialData.ChoiceLeft(iTrial) == 0
-        TrialData.NotTakenReward(2, iTrial) = false;
+        TrialData.AvailableReward(2, iTrial) = false;
     end
 end
 

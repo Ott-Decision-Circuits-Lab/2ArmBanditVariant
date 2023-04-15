@@ -114,7 +114,7 @@ if isempty(fieldnames(TaskParameters))
     TaskParameters.GUI.NotBaitedTimeOut = 0.10;
     TaskParameters.GUI.NotBaitedFeedback = 1; % feedback for SkippedFeedback
     TaskParameters.GUIMeta.NotBaitedFeedback.Style = 'popupmenu';
-    TaskParameters.GUIMeta.SkippedFeedbackFeedback.String = {'None', 'WhiteNoise', 'Beep'};
+    TaskParameters.GUIMeta.NotBaitedFeedback.String = {'None', 'WhiteNoise', 'Beep'};
     
     TaskParameters.GUI.DrinkingGraceTime = 0.5;
     

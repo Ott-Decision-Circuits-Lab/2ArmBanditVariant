@@ -91,9 +91,9 @@ switch TaskParameters.GUIMeta.RiskType.String{TaskParameters.GUI.RiskType}
         
     case 'Cued'
         if isfield(BpodSystem.ModuleUSB, 'HiFi1')
-            SamplingAction = {'HiFi1', ['P' 6]};
+            SamplingAction = {'HiFi1', ['P' 7]};
         elseif isfield(BpodSystem.ModuleUSB, 'WavePlayer1')
-            SamplingAction = {'WavePlayer1', ['P' 6]};
+            SamplingAction = {'WavePlayer1', ['P' 7]};
         elseif BpodSystem.EmulatorMode
             disp('BpodSystem is in EmulatorMode. No Sampling Cued is played.');
         else
@@ -337,38 +337,6 @@ sma = AddState(sma, 'Name', 'RInGrace',...
                               LeftPortIn, 'SkippedFeedback'},...
     'OutputActions', {RightLight, RightLightValue});
 
-NotBaitedAction = {};
-switch TaskParameters.GUIMeta.NotBaitedFeedback.String{TaskParameters.GUI.NotBaitedFeedback}
-    case 'None' % no adjustmnet needed
-        
-    case 'WhiteNoise'
-        if isfield(BpodSystem.ModuleUSB, 'HiFi1')
-            NotBaitedAction = {'HiFi1', ['P' 7]};
-        elseif isfield(BpodSystem.ModuleUSB, 'WavePlayer1')
-            NotBaitedAction = {'WavePlayer1', ['P' 7]};
-        elseif BpodSystem.EmulatorMode
-            disp('BpodSystem is in EmulatorMode. No NotBaited WhiteNoise is played.');
-        else
-            disp('Neither a HiFi nor analog module is setup. No NotBaited WhiteNoise is played.');
-        end
-        
-    case 'Beep'
-        if isfield(BpodSystem.ModuleUSB, 'HiFi1')
-            NotBaitedAction = {'HiFi1', ['P' 7]};
-        elseif isfield(BpodSystem.ModuleUSB, 'WavePlayer1')
-            NotBaitedAction = {'WavePlayer1', ['P' 7]};
-        elseif BpodSystem.EmulatorMode
-            disp('BpodSystem is in EmulatorMode. No NotBaited Beep is played.');
-        else
-            disp('Neither a HiFi nor analog module is setup. No NotBaited Beep is played.');
-        end
-        
-end
-sma = AddState(sma, 'Name', 'NotBaited',...
-    'Timer', TaskParameters.GUI.NotBaitedTimeOut,...
-    'StateChangeConditions', {'Tup', 'ITI'},...
-    'OutputActions', NotBaitedAction);
-
 IncorrectChoiceAction = {};
 switch TaskParameters.GUIMeta.IncorrectChoiceFeedback.String{TaskParameters.GUI.IncorrectChoiceFeedback}
     case 'None' % no adjustmnet needed
@@ -422,9 +390,48 @@ sma = AddState(sma, 'Name', 'SkippedFeedback',...
     'StateChangeConditions', {'Tup', 'ITI'},...
     'OutputActions', SkippedFeedbackAction);
 
-sma = AddState(sma, 'Name', 'Drinking',... % serve as time buffer before next trial start
-    'Timer', 10,...
+NotBaitedAction = {};
+switch TaskParameters.GUIMeta.NotBaitedFeedback.String{TaskParameters.GUI.NotBaitedFeedback}
+    case 'None' % no adjustmnet needed
+        
+    case 'WhiteNoise'
+        if isfield(BpodSystem.ModuleUSB, 'HiFi1')
+            NotBaitedAction = {'HiFi1', ['P' 6]};
+        elseif isfield(BpodSystem.ModuleUSB, 'WavePlayer1')
+            NotBaitedAction = {'WavePlayer1', ['P' 6]};
+        elseif BpodSystem.EmulatorMode
+            disp('BpodSystem is in EmulatorMode. No NotBaited WhiteNoise is played.');
+        else
+            disp('Neither a HiFi nor analog module is setup. No NotBaited WhiteNoise is played.');
+        end
+        
+    case 'Beep'
+        if isfield(BpodSystem.ModuleUSB, 'HiFi1')
+            NotBaitedAction = {'HiFi1', ['P' 6]};
+        elseif isfield(BpodSystem.ModuleUSB, 'WavePlayer1')
+            NotBaitedAction = {'WavePlayer1', ['P' 6]};
+        elseif BpodSystem.EmulatorMode
+            disp('BpodSystem is in EmulatorMode. No NotBaited Beep is played.');
+        else
+            disp('Neither a HiFi nor analog module is setup. No NotBaited Beep is played.');
+        end
+        
+end
+sma = AddState(sma, 'Name', 'NotBaited',...
+    'Timer', TaskParameters.GUI.NotBaitedTimeOut,...
     'StateChangeConditions', {'Tup', 'ITI'},...
+    'OutputActions', NotBaitedAction);
+
+sma = AddState(sma, 'Name', 'Drinking',... % serve as time buffer before next trial start
+    'Timer', 0,...
+    'StateChangeConditions', {CenterPortOut, 'DrinkingGrace'},...
+    'OutputActions', {});
+
+DrinkingGraceTimer = TaskParameters.GUI.DrinkingGraceTime;
+sma = AddState(sma, 'Name', 'DrinkingGrace',... % serve as time buffer before next trial start
+    'Timer', DrinkingGraceTimer,...
+    'StateChangeConditions', {CenterPortIn, 'Drinking',...
+                              'Tup', 'ITI'},...
     'OutputActions', {});
 
 ITITimer = TaskParameters.GUI.ITI;

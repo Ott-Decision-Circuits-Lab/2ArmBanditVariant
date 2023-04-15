@@ -200,14 +200,11 @@ if isempty(fieldnames(TaskParameters))
     TaskParameters.GUI.RewardDelivery = 1;
 	TaskParameters.GUIMeta.RewardDelivery.Style = 'checkbox';
     
-    TaskParameters.GUI.RandomRewardDelivery = 1;
-	TaskParameters.GUIMeta.RandomRewardDelivery.Style = 'checkbox';
-    
     TaskParameters.GUI.BaselineBegin = 0.5;
     TaskParameters.GUI.BaselineEnd = 1.8;
     TaskParameters.GUIPanels.PhotometryPlot = {'TimeMin', 'TimeMax', 'NidaqMin', 'NidaqMax',...
                                                'SidePokeIn', 'SidePokeLeave', 'RewardDelivery',...
-                                               'RandomRewardDelivery', 'BaselineBegin', 'BaselineEnd'};
+                                               'BaselineBegin', 'BaselineEnd'};
     
     %% Nidaq and Photometry
     TaskParameters.GUI.PhotometryVersion = 1;

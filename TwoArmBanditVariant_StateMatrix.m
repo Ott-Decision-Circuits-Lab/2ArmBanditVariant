@@ -46,6 +46,7 @@ sma = AddState(sma, 'Name', 'WaitCIn',...
     'OutputActions', {CenterLight, 255});
 
 sma = SetGlobalTimer(sma, 1, TaskParameters.GUI.StimulusTime + TaskParameters.GUI.StimDelay); % used to track centre poke grace period
+
 sma = AddState(sma, 'Name', 'StartCIn',... % dummy state for trigger GlobalTimer1
     'Timer', 0,...
     'StateChangeConditions', {'Tup', 'StimulusDelay',...
@@ -69,9 +70,9 @@ switch TaskParameters.GUIMeta.BrokeFixationFeedback.String{TaskParameters.GUI.Br
         elseif isfield(BpodSystem.ModuleUSB, 'WavePlayer1')
             BrokeFixationAction = {'WavePlayer1', ['P' 0]};
         elseif BpodSystem.EmulatorMode
-            BrokeFixationAction = {};
+            disp('BpodSystem is in EmulatorMode. No BrokeFixation WhiteNoise is played.');
         else
-            error('Error: To run this protocol, you must first pair either a HiFi or analog module with its USB port. Click the USB config button on the Bpod console.')
+            disp('Neither HiFi nor analog module is setup. No BrokeFixation WhiteNoise is played.');
         end
         
 end
@@ -83,17 +84,20 @@ sma = AddState(sma, 'Name', 'BrokeFixation',...
 SamplingAction = {};
 switch TaskParameters.GUIMeta.RiskType.String{TaskParameters.GUI.RiskType}
     case 'Fix' % no adjustmnet needed
+        
     case 'BlockRand' % no adjustmnet needed
+        
     case 'BlockFix' % no adjustmnet needed
+        
     case 'Cued'
         if isfield(BpodSystem.ModuleUSB, 'HiFi1')
             SamplingAction = {'HiFi1', ['P' 6]};
         elseif isfield(BpodSystem.ModuleUSB, 'WavePlayer1')
             SamplingAction = {'WavePlayer1', ['P' 6]};
         elseif BpodSystem.EmulatorMode
-            SamplingAction = {};
+            disp('BpodSystem is in EmulatorMode. No Sampling Cued is played.');
         else
-            error('Error: To run this protocol, you must first pair either a HiFi or analog module with its USB port. Click the USB config button on the Bpod console.')
+            disp('Neither HiFi nor analog module is setup. No Sampling Cued is played.');
         end
         
 end
@@ -123,9 +127,9 @@ switch TaskParameters.GUIMeta.EarlyWithdrawalFeedback.String{TaskParameters.GUI.
         elseif isfield(BpodSystem.ModuleUSB, 'WavePlayer1')
             EarlyWithdrawalAction = {'WavePlayer1', ['P' 1]};
         elseif BpodSystem.EmulatorMode
-            EarlyWithdrawalAction = {};
+            disp('BpodSystem is in EmulatorMode. No EarlyWithdrawal WhiteNoise is played.');
         else
-            error('Error: To run this protocol, you must first pair either a HiFi or analog module with its USB port. Click the USB config button on the Bpod console.')
+            disp('Neither HiFi nor analog module is setup. No EarlyWithdrawal WhiteNoise is played.');
         end
         
 end
@@ -135,6 +139,7 @@ sma = AddState(sma, 'Name', 'EarlyWithdrawal',...
     'OutputActions', EarlyWithdrawalAction);
 
 sma = SetGlobalTimer(sma, 2, TaskParameters.GUI.ChoiceDeadline); % used to track side poke grace period
+
 sma = AddState(sma, 'Name', 'StillSampling',... % dummy state for trigger GlobalTimer2
     'Timer', TaskParameters.GUI.ChoiceDeadline,...
     'StateChangeConditions', {'Tup', 'NoDecision',...
@@ -180,9 +185,9 @@ switch TaskParameters.GUIMeta.NoDecisionFeedback.String{TaskParameters.GUI.NoDec
         elseif isfield(BpodSystem.ModuleUSB, 'WavePlayer1')
             NoDecisionAction = {'WavePlayer1', ['P' 2]};
         elseif BpodSystem.EmulatorMode
-            NoDecisionAction = {};
+            disp('BpodSystem is in EmulatorMode. No NoDecision WhiteNoise is played.');
         else
-            error('Error: To run this protocol, you must first pair either a HiFi or analog module with its USB port. Click the USB config button on the Bpod console.')
+            disp('Neither HiFi nor analog module is setup. No NoDecision WhiteNoise is played.');
         end
         
 end
@@ -207,9 +212,20 @@ switch TaskParameters.GUIMeta.StartNewTrialFeedback.String{TaskParameters.GUI.St
         elseif isfield(BpodSystem.ModuleUSB, 'WavePlayer1')
             StartNewTrialAction = {'WavePlayer1', ['P' 3]};
         elseif BpodSystem.EmulatorMode
-            StartNewTrialAction = {};
+            disp('BpodSystem is in EmulatorMode. No StartNewTrial WhiteNoise is played.');
         else
-            error('Error: To run this protocol, you must first pair either a HiFi or analog module with its USB port. Click the USB config button on the Bpod console.')
+            disp('Neither HiFi nor analog module is setup. No StartNewTrial WhiteNoise is played.');
+        end
+        
+    case 'Beep'
+        if isfield(BpodSystem.ModuleUSB, 'HiFi1')
+            StartNewTrialAction = {'HiFi1', ['P' 3]};
+        elseif isfield(BpodSystem.ModuleUSB, 'WavePlayer1')
+            StartNewTrialAction = {'WavePlayer1', ['P' 3]};
+        elseif BpodSystem.EmulatorMode
+            disp('BpodSystem is in EmulatorMode. No StartNewTrial Beep is played.');
+        else
+            disp('Neither HiFi nor analog module is setup. No StartNewTrial Beep is played.');
         end
         
 end
@@ -322,8 +338,34 @@ sma = AddState(sma, 'Name', 'RInGrace',...
     'OutputActions', {RightLight, RightLightValue});
 
 NotBaitedAction = {};
+switch TaskParameters.GUIMeta.NotBaitedFeedback.String{TaskParameters.GUI.NotBaitedFeedback}
+    case 'None' % no adjustmnet needed
+        
+    case 'WhiteNoise'
+        if isfield(BpodSystem.ModuleUSB, 'HiFi1')
+            NotBaitedAction = {'HiFi1', ['P' 7]};
+        elseif isfield(BpodSystem.ModuleUSB, 'WavePlayer1')
+            NotBaitedAction = {'WavePlayer1', ['P' 7]};
+        elseif BpodSystem.EmulatorMode
+            disp('BpodSystem is in EmulatorMode. No NotBaited WhiteNoise is played.');
+        else
+            disp('Neither a HiFi nor analog module is setup. No NotBaited WhiteNoise is played.');
+        end
+        
+    case 'Beep'
+        if isfield(BpodSystem.ModuleUSB, 'HiFi1')
+            NotBaitedAction = {'HiFi1', ['P' 7]};
+        elseif isfield(BpodSystem.ModuleUSB, 'WavePlayer1')
+            NotBaitedAction = {'WavePlayer1', ['P' 7]};
+        elseif BpodSystem.EmulatorMode
+            disp('BpodSystem is in EmulatorMode. No NotBaited Beep is played.');
+        else
+            disp('Neither a HiFi nor analog module is setup. No NotBaited Beep is played.');
+        end
+        
+end
 sma = AddState(sma, 'Name', 'NotBaited',...
-    'Timer', RightValveTime,...
+    'Timer', TaskParameters.GUI.NotBaitedTimeOut,...
     'StateChangeConditions', {'Tup', 'ITI'},...
     'OutputActions', NotBaitedAction);
 
@@ -337,9 +379,9 @@ switch TaskParameters.GUIMeta.IncorrectChoiceFeedback.String{TaskParameters.GUI.
         elseif isfield(BpodSystem.ModuleUSB, 'WavePlayer1')
             IncorrectChoiceAction = {'WavePlayer1', ['P' 4]};
         elseif BpodSystem.EmulatorMode
-            IncorrectChoiceAction = {};
+            disp('BpodSystem is in EmulatorMode. No IncorrecChoice WhiteNoise is played.');
         else
-            error('Error: To run this protocol, you must first pair either a HiFi or analog module with its USB port. Click the USB config button on the Bpod console.')
+            disp('Neither a HiFi nor analog module is setup. No IncorrecChoice WhiteNoise is played.');
         end
         
 end
@@ -358,9 +400,20 @@ switch TaskParameters.GUIMeta.SkippedFeedbackFeedback.String{TaskParameters.GUI.
         elseif isfield(BpodSystem.ModuleUSB, 'WavePlayer1')
             SkippedFeedbackAction = {'WavePlayer1', ['P' 5]};
         elseif BpodSystem.EmulatorMode
-            SkippedFeedbackAction = {};
+            disp('BpodSystem is in EmulatorMode. No SkippedFeedback WhiteNoise is played.');
         else
-            error('Error: To run this protocol, you must first pair either a HiFi or analog module with its USB port. Click the USB config button on the Bpod console.')
+            disp('Neither a HiFi nor analog module is setup. No SkippedFeedback WhiteNoise is played.');
+        end
+        
+    case 'Beep'
+        if isfield(BpodSystem.ModuleUSB, 'HiFi1')
+            SkippedFeedbackAction = {'HiFi1', ['P' 5]};
+        elseif isfield(BpodSystem.ModuleUSB, 'WavePlayer1')
+            SkippedFeedbackAction = {'WavePlayer1', ['P' 5]};
+        elseif BpodSystem.EmulatorMode
+            disp('BpodSystem is in EmulatorMode. No SkippedFeedback Beep is played.');
+        else
+            disp('Neither a HiFi nor analog module is setup. No SkippedFeedback Beep is played.');
         end
         
 end

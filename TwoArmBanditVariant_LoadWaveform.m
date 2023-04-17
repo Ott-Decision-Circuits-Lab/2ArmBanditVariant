@@ -94,7 +94,7 @@ switch Mode
                     StartNewTrialSound = rand(1, fs*TaskParameters.GUI.StartNewTrialTimeOut)*2 - 1;
                
                 case 'Beep' % 1k Hz
-                    StartNewTrialSound = GenerateRiskCue(fs, TaskParameters.GUI.StartNewTrialTimeOut, 'Freq', 1000, 1000);
+                    StartNewTrialSound = GenerateRiskCue(fs, TaskParameters.GUI.StartNewTrialTimeOut, 'Freq', 1, 1);
 
             end
         end
@@ -140,7 +140,7 @@ switch Mode
                     SkippedFeedbackSound = rand(1, fs*TaskParameters.GUI.SkippedFeedbackTimeOut)*2 - 1;
                     
                 case 'Beep' % 1k Hz
-                    SkippedFeedbackSound = GenerateRiskCue(fs, TaskParameters.GUI.SkippedFeedbackTimeOut, 'Freq', 1000, 1000);
+                    SkippedFeedbackSound = GenerateRiskCue(fs, TaskParameters.GUI.SkippedFeedbackTimeOut, 'Freq', 1, 1);
 
             end
         end
@@ -164,8 +164,8 @@ switch Mode
                 case 'WhiteNoise'
                     NotBaitedSound = rand(1, fs*TaskParameters.GUI.NotBaitedTimeOut)*2 - 1;
                     
-                case 'Beep' % 500Hz
-                    NotBaitedSound = GenerateRiskCue(fs, TaskParameters.GUI.NotBaitedTimeOut, 'Freq', 500, 500);
+                case 'Beep' % 0.5k Hz
+                    NotBaitedSound = GenerateRiskCue(fs, TaskParameters.GUI.NotBaitedTimeOut, 'Freq', 0.5, 0.5);
             end
         end
 

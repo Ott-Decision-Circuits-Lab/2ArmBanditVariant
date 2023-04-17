@@ -201,8 +201,12 @@ switch Mode
                 end
 
                 if isfield(BpodSystem.ModuleUSB, 'WavePlayer1')
-                    Player.loadWaveform(SoundIndex, LeftSound);
-                    Player.loadWaveform(SoundIndex+1, RightSound);
+                    if ~isempty(LeftSound)
+                        Player.loadWaveform(SoundIndex, LeftSound);
+                    end
+                    if ~isempty(RightSound)
+                        Player.loadWaveform(SoundIndex+1, RightSound);
+                    end
                     Player.TriggerProfiles(SoundIndex, 1:2) = [SoundIndex SoundIndex+1];
                 elseif isfield(BpodSystem.ModuleUSB, 'HiFi1')
                     Player.load(SoundIndex, [LeftSound; RightSound]);

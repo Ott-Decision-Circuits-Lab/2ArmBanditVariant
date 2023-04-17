@@ -11,6 +11,8 @@ if isempty(fieldnames(TaskParameters))
     TaskParameters.GUIMeta.SessionDescription.Style = 'edittext';
     
     TaskParameters.GUI.Ports_LMR = '123'; % bpod port number for poke connection
+    TaskParameters.GUI.EphysSession = false;
+    TaskParameters.GUIMeta.EphysSession.Style = 'checkbox';
     TaskParameters.GUI.PreITI = 0.5; % before wait_Cin
     TaskParameters.GUI.WaitCInMax = 20; % max waiting time for C_in before a new trial starts, useful to track progress
     TaskParameters.GUI.ChoiceDeadline = 10; % max waiting time for S_in after stimuli

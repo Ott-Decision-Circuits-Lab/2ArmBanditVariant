@@ -256,7 +256,7 @@ end
 sma = SetGlobalTimer(sma, 3, FeedbackDelayLeft); % used to track side poke grace period
 
 LInStateChange = 'WaterL';
-if TrialData.Baited(iTrial) == false
+if TrialData.Baited(1, iTrial) == false
     LInStateChange = 'NotBaited';
 end
 if TrialData.LightLeft(iTrial) == false % Incorrect Choice overwrite Baited 

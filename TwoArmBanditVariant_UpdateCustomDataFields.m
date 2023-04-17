@@ -154,7 +154,7 @@ end
 if TrialData.Rewarded(iTrial) == true
     DrinkingBegin = TrialStates.Drinking(1, 1);
     DrinkingEnd = TrialStates.ITI(1, 1); 
-    TrialData.DrinkingTime(iTrial) = DrinkingBegin - DrinkingEnd;
+    TrialData.DrinkingTime(iTrial) = DrinkingEnd - DrinkingBegin;
 end
 
 BpodSystem.Data.Custom.TrialData = TrialData;

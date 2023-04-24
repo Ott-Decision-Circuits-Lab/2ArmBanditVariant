@@ -59,6 +59,9 @@ switch Action
         BpodSystem.GUIHandles.OutcomePlot.ChoiceRight = line(AxesHandles.HandleOutcome,-1,0,...
             'LineStyle','none','Marker','>','MarkerEdge',denim,'MarkerFace','none', 'MarkerSize',14);
         
+        BpodSystem.GUIHandles.OutcomePlot.BlockSwitch = line(AxesHandles.HandleOutcome, [-0.5 -0.5], [0 1],...
+            'LineStyle',':','LineWidth',0.5,'Marker','none','Color',denim);
+        
         BpodSystem.GUIHandles.OutcomePlot.CumRwd = text(AxesHandles.HandleOutcome,1,1,'microL',...
             'verticalalignment','bottom','horizontalalignment','center');
         
@@ -152,6 +155,11 @@ switch Action
         XData = indxToPlot(ndxUnrewardRight);
         YData = RewardProb(2,indxToPlot(ndxUnrewardRight));
         set(BpodSystem.GUIHandles.OutcomePlot.UnrewardRight, 'xdata', XData, 'ydata', YData);
+        
+        % BlockSwitch
+        if TrialData.BlockTrialNumber(iTrial) == 1
+            set(BpodSystem.GUIHandles.OutcomPlot.BlockSwitch, 'xdata', [iTrial-0.5 iTrial-0.5]);
+        end
         
     case 'UpdateResult' % plot trial result
         iTrial = varargin{1};

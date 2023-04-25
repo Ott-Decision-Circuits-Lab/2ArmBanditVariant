@@ -4,9 +4,9 @@ global TaskParameters
 global nTrialsToShow
 
 % colour palette (suitable for most colourblind people)
-scarlet = [254, 60, 60]/255; % for unreward sign, contracting with denim or denim
+scarlet = [254, 60, 60]/255; % for incorrect/unbaited sign, contracting with azure
 denim = [31, 54, 104]/255; % mainly for neutral signs
-azure = [0, 162, 254]/255; % for reward sign
+azure = [0, 162, 254]/255; % for rewarded sign
 
 switch Action
     case 'init'
@@ -390,8 +390,8 @@ switch Action
             
             ChoiceLeftRight = [ChoiceLeft; 1-ChoiceLeft];
             ndxIncorrect = IncorrectChoice == 1; %all (completed) error trials (including catch errors)
-            ndxNotBaited = (IncorrectChoice == 0) & any((Baited == 0) .* ChoiceLeftRight, 1); % Choice is non-baited
-            ndxSkippedBaited = (IncorrectChoice == 0) & any((Baited == 1) .* ChoiceLeftRight .* [SkippedFeedback; SkippedFeedback], 1); % Choice made is Baited but Skipped
+            ndxNotBaited = (IncorrectChoice ~= 1) & any((Baited == 0) .* ChoiceLeftRight, 1); % Choice is non-baited
+            ndxSkippedBaited = (IncorrectChoice ~= 1) & any((Baited == 1) .* ChoiceLeftRight .* [SkippedFeedback; SkippedFeedback], 1); % Choice made is Baited but Skipped
             
             ChoiceRewardProb = sum(RewardProb.*ChoiceLeftRight, 1);
             IncorrectChoiceRewardProb = ChoiceRewardProb(ndxIncorrect);

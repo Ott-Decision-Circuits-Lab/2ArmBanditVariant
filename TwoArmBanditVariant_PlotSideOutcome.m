@@ -158,7 +158,7 @@ switch Action
         
         % BlockSwitch
         if TrialData.BlockTrialNumber(iTrial) == 1
-            set(BpodSystem.GUIHandles.OutcomPlot.BlockSwitch, 'xdata', [iTrial-0.5 iTrial-0.5]);
+            set(BpodSystem.GUIHandles.OutcomePlot.BlockSwitch, 'xdata', [iTrial-0.5 iTrial-0.5]);
         end
         
     case 'UpdateResult' % plot trial result

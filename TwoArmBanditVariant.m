@@ -102,7 +102,7 @@ while RunSession
     
     %% update photometry plots
     if TaskParameters.GUI.Photometry
-        PlotPhotometryData(iTrial, FigNidaq1,FigNidaq2, PhotoData, Photo2Data);
+        TwoArmBanditVariant_PlotPhotometryData(iTrial, FigNidaq1,FigNidaq2, PhotoData, Photo2Data);
     end
     
     iTrial = iTrial + 1;

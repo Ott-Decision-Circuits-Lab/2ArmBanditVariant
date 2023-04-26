@@ -19,7 +19,7 @@ Date = datestr(SessionData.Info.SessionDate, 'yyyymmdd');
 
 nTrials = SessionData.nTrials;
 ChoiceLeft = SessionData.Custom.TrialData.ChoiceLeft(1:nTrials);
-Baited = SessionData.Custom.TrialData.Baited(1:nTrials);
+Baited = SessionData.Custom.TrialData.Baited(:, 1:nTrials);
 IncorrectChoice = SessionData.Custom.TrialData.IncorrectChoice(1:nTrials);
 NoDecision = SessionData.Custom.TrialData.NoDecision(1:nTrials);
 NoTrialStart = SessionData.Custom.TrialData.NoTrialStart(1:nTrials);
@@ -32,7 +32,7 @@ Rewarded = SessionData.Custom.TrialData.Rewarded(1:nTrials);
 %FeedbackWaitingTime = DataFile.Custom.TrialData.FeedbackWaitingTime(1:nTrials);
 FeedbackWaitingTime = rand(684,1)*10'; %delete this
 FeedbackWaitingTime = FeedbackWaitingTime';  %delete this
-RewardProb = SessionData.Custom.TrialData.RewardProb(1:nTrials);
+RewardProb = SessionData.Custom.TrialData.RewardProb(:, 1:nTrials);
 LightLeft = SessionData.Custom.TrialData.LightLeft(1:nTrials);
 
 ChoiceLeftRight = [ChoiceLeft; 1-ChoiceLeft]; 

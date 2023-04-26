@@ -195,18 +195,14 @@ switch Mode
                 end
                 
                 if TrialData.LightLeft(iTrial) == 0
-                    LeftSound = [];
+                    LeftSound = [0];
                 elseif TrialData.LightLeft(iTrial) == 1
-                    RightSound = [];
+                    RightSound = [0];
                 end
 
                 if isfield(BpodSystem.ModuleUSB, 'WavePlayer1')
-                    if ~isempty(LeftSound)
-                        Player.loadWaveform(SoundIndex, LeftSound);
-                    end
-                    if ~isempty(RightSound)
-                        Player.loadWaveform(SoundIndex+1, RightSound);
-                    end
+                    Player.loadWaveform(SoundIndex, LeftSound);
+                    Player.loadWaveform(SoundIndex+1, RightSound);
                     Player.TriggerProfiles(SoundIndex, 1:2) = [SoundIndex SoundIndex+1];
                 elseif isfield(BpodSystem.ModuleUSB, 'HiFi1')
                     Player.load(SoundIndex, [LeftSound; RightSound]);

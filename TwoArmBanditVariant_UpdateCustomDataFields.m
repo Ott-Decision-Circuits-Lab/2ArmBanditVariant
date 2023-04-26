@@ -109,13 +109,13 @@ if any(strcmp('FeedbackGrace', StatesThisTrial))
     end
 end
 
-if any(strcmp('LIn', StatesThisTrial))
-    WaitBegin = TrialStates.LIn(1, 1);
-    WaitEnd = TrialStates.LIn(1, 2); 
+if any(strcmp('StartLIn', StatesThisTrial))
+    WaitBegin = TrialStates.StartLIn(1, 1);
+    WaitEnd = TrialStates.LIn(end, 2);
     TrialData.FeedbackWaitingTime(iTrial) = WaitEnd - WaitBegin;
-elseif any(strcmp('RIn',StatesThisTrial))
-    WaitBegin = TrialStates.RIn(1, 1);
-    WaitEnd = TrialStates.RIn(1, 2); 
+elseif any(strcmp('StartRIn',StatesThisTrial))
+    WaitBegin = TrialStates.StartRIn(1, 1);
+    WaitEnd = TrialStates.RIn(end, 2);
     TrialData.FeedbackWaitingTime(iTrial) = WaitEnd - WaitBegin;
 end
 
@@ -153,7 +153,7 @@ end
 
 if TrialData.Rewarded(iTrial) == true
     DrinkingBegin = TrialStates.Drinking(1, 1);
-    DrinkingEnd = TrialStates.ITI(1, 1); 
+    DrinkingEnd = TrialStates.Drinking(end, 2); 
     TrialData.DrinkingTime(iTrial) = DrinkingEnd - DrinkingBegin;
 end
 

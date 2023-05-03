@@ -150,18 +150,14 @@ switch SessionData.SettingsFile.GUIMeta.RiskType.String{SessionData.SettingsFile
             meanLow = [mean(WTLow(1));PLow];
 
             subplot(3,3,3);    %needs adjustment!
-            swarmchart(WTLow(2,:),WTLow(1,:),'cyan');
             hold on
+            xlim([0 1]);
+            swarmchart(WTLow(2,:),WTLow(1,:),'cyan');
             swarmchart(WTHigh(2,:),WTHigh(1,:),'blue');
-            %plot(meanHigh(2,:),meanHigh(1,:),'x','MarkerSize',10,'MarkerEdgeColor','black','LineWidth',2);
-            %plot(meanLow(2,:),meanHigh(2,:),'x','MarkerSize',10,'MarkerEdgeColor','black','LineWidth',2);
-            %xlim([0 1]);
-            %ticks = [PLow,PHigh];
-            %xticks(ticks);
-            %xticklabels({'PLow','PHigh'});
-            boxplot(WTLow(1,:),WTLow(2,:));
-            boxplot(WTHigh(1,:),WTHigh(2,:));
-            %set(gca, 'XTick', ticks)
+            ticks = [PLow PHigh];
+            boxplot(WTLow(1,:),'Positions',PLow);
+            boxplot(WTHigh(1,:),'Positions',PHigh);
+            xticks(ticks)
             set(gca, 'XTickLabel', {'PLow', 'PHigh'})
             ylabel('time investment (s)');
             text1 = sprintf('n = %d',nLow);
@@ -191,27 +187,23 @@ switch SessionData.SettingsFile.GUIMeta.RiskType.String{SessionData.SettingsFile
 
         ITI = nan(nTrials-1,1);
 
-        for i = 1:nTrials
-            if i == 1
+        for i = 2:nTrials
 
-                ITI(i) = SessionData.TrialStartTimestamp(1) - SessionData.Info.SessionStartTime_MATLAB + SessionData.RawEvents.Trial{i}.States.ITI(2) - SessionData.RawEvents.Trial{i}.States.ITI(1);
+            ITI(i) = SessionData.TrialStartTimestamp(i) - SessionData.TrialEndTimestamp(i-1) + SessionData.RawEvents.Trial{i}.States.ITI(2) - SessionData.RawEvents.Trial{i}.States.ITI(1);
 
-            else
-
-                ITI(i) = SessionData.TrialStartTimestamp(i) - SessionData.TrialEndTimestamp(i-1) + SessionData.RawEvents.Trial{i}.States.ITI(2) - SessionData.RawEvents.Trial{i}.States.ITI(1);
-
-            end
+           
         end
-        ITI = ITI';
-        cc=linspace(min(ITI),max(ITI));    % not working yet
+
+        ITI = ITI(2:nTrials)';
+        cc=linspace(min(ITI),max(ITI),10);    % not working yet
 
         if ~all(isnan(ITI))
 
             subplot(3,3,5);
-            histogram(ITI,cc)%,'FaceColor',[.5,.5,.5],'EdgeColor',[1,1,1]); %binning could be specified
+            xlim([min(ITI) max(ITI)])
+            histogram(ITI,cc,'FaceColor',[.5,.5,.5],'EdgeColor',[1,1,1]); %binning could be specified
             xlabel('actual ITI');
             ylabel('n')
-            xlim([min(cc) max(cc)]);
             txt = sprintf('GUI ITI: %d',SessionData.SettingsFile.GUI.ITI);
             title('InterTrial intervals');
             subtitle(txt);
@@ -285,8 +277,6 @@ switch SessionData.SettingsFile.GUIMeta.RiskType.String{SessionData.SettingsFile
             title('GLM Fit')
             legend('choice','reward','intercept');
 
-
-
         end
 
         %psychometric
@@ -330,8 +320,9 @@ switch SessionData.SettingsFile.GUIMeta.RiskType.String{SessionData.SettingsFile
         errorbar(x(vv),y(vv),e(vv))
         xlabel('Time investment (s)')
         ylabel('Percent exploit')
+        title('callibration plot')
 
-      %plot vevaiometric    
+      %% plot vevaiometric    
         subplot(3,3,9)
         hold on
 
@@ -360,6 +351,7 @@ switch SessionData.SettingsFile.GUIMeta.RiskType.String{SessionData.SettingsFile
         xlim([-max(abs([ExploitScatter_XData;ExploreScatter_XData])),max(abs([ExploitScatter_XData;ExploreScatter_XData]))])
         catch
         end
+        title('vevaiometric')
 
 
 

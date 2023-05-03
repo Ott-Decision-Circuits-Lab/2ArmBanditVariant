@@ -42,9 +42,9 @@ switch Action
         BpodSystem.GUIHandles.OutcomePlot.StartNewTrial = line(AxesHandles.HandleOutcome,-1,0,...
             'LineStyle','none','Marker','o','MarkerEdge',denim,'MarkerFace','none', 'MarkerSize',8);
         
-        BpodSystem.GUIHandles.OutcomePlot.RewardLeft = line(AxesHandles.HandleOutcome,-1,0,...
+        BpodSystem.GUIHandles.OutcomePlot.BaitedLeft = line(AxesHandles.HandleOutcome,-1,0,...
             'LineStyle','none','Marker','<','MarkerEdge',azure,'MarkerFace','none', 'MarkerSize',6);
-        BpodSystem.GUIHandles.OutcomePlot.UnrewardLeft = line(AxesHandles.HandleOutcome,-1,0,...
+        BpodSystem.GUIHandles.OutcomePlot.UnbaitedLeft = line(AxesHandles.HandleOutcome,-1,0,...
             'LineStyle','none','Marker','<','MarkerEdge',scarlet,'MarkerFace','none', 'MarkerSize',6);
         BpodSystem.GUIHandles.OutcomePlot.ChoiceLeft = line(AxesHandles.HandleOutcome,-1,0,...
             'LineStyle','none','Marker','<','MarkerEdge',denim,'MarkerFace','none', 'MarkerSize',14);
@@ -52,9 +52,9 @@ switch Action
         BpodSystem.GUIHandles.OutcomePlot.SkippedFeedback = line(AxesHandles.HandleOutcome,-1,0,...
             'LineStyle','none','Marker','o','MarkerEdge',denim,'MarkerFace','none', 'MarkerSize',14);
         
-        BpodSystem.GUIHandles.OutcomePlot.RewardRight = line(AxesHandles.HandleOutcome,-1,0,...
+        BpodSystem.GUIHandles.OutcomePlot.BaitedRight = line(AxesHandles.HandleOutcome,-1,0,...
             'LineStyle','none','Marker','>','MarkerEdge',azure,'MarkerFace','none', 'MarkerSize',6);
-        BpodSystem.GUIHandles.OutcomePlot.UnrewardRight = line(AxesHandles.HandleOutcome,-1,0,...
+        BpodSystem.GUIHandles.OutcomePlot.UnbaitedRight = line(AxesHandles.HandleOutcome,-1,0,...
             'LineStyle','none','Marker','>','MarkerEdge',scarlet,'MarkerFace','none', 'MarkerSize',6);
         BpodSystem.GUIHandles.OutcomePlot.ChoiceRight = line(AxesHandles.HandleOutcome,-1,0,...
             'LineStyle','none','Marker','>','MarkerEdge',denim,'MarkerFace','none', 'MarkerSize',14);
@@ -66,7 +66,7 @@ switch Action
             'verticalalignment','bottom','horizontalalignment','center');
         
         BpodSystem.GUIHandles.OutcomePlot.legend = legend(AxesHandles.HandleOutcome,'NoTrialStart','BrokeFixation','EarlyWithdrawal','NoDecision','StartNewTrial',...
-                                    'Reward(L)','Unreward(L)','Choice(L)','SkippedFeedback','Location','east');
+                                    'Baited(L)','Unbaited(L)','Choice(L)','SkippedFeedback','Location','east');
         
         
         set(AxesHandles.HandleOutcome,'TickDir','out','YLim',[0,1.2],'XLim',[0,nTrialsToShow],'YTick',[0 1],'FontSize',13);
@@ -133,28 +133,28 @@ switch Action
         indxToPlot = mn:iTrial;
         
         % RewardLeft
-        ndxRewardLeft = LightLeft(indxToPlot) ~= 0 & Baited(1,indxToPlot); % include case == 1 and == NaN
-        XData = indxToPlot(ndxRewardLeft);
-        YData = RewardProb(1,indxToPlot(ndxRewardLeft));
-        set(BpodSystem.GUIHandles.OutcomePlot.RewardLeft, 'xdata', XData, 'ydata', YData);
+        ndxBaitedLeft = LightLeft(indxToPlot) ~= 0 & Baited(1,indxToPlot); % include case == 1 and == NaN
+        XData = indxToPlot(ndxBaitedLeft);
+        YData = RewardProb(1,indxToPlot(ndxBaitedLeft));
+        set(BpodSystem.GUIHandles.OutcomePlot.BaitedLeft, 'xdata', XData, 'ydata', YData);
         
         % RewardRight
-        ndxRewardRight = LightLeft(indxToPlot) ~= 1 & Baited(2,indxToPlot); % include case == 0 and == NaN
-        XData = indxToPlot(ndxRewardRight);
-        YData = RewardProb(2,indxToPlot(ndxRewardRight));
-        set(BpodSystem.GUIHandles.OutcomePlot.RewardRight, 'xdata', XData, 'ydata', YData);
+        ndxBaitedRight = LightLeft(indxToPlot) ~= 1 & Baited(2,indxToPlot); % include case == 0 and == NaN
+        XData = indxToPlot(ndxBaitedRight);
+        YData = RewardProb(2,indxToPlot(ndxBaitedRight));
+        set(BpodSystem.GUIHandles.OutcomePlot.BaitedRight, 'xdata', XData, 'ydata', YData);
         
         % UnrewardLeft
-        ndxUnrewardLeft = LightLeft(indxToPlot) ~= 0 & ~Baited(1,indxToPlot); % include case == 1 and == NaN
-        XData = indxToPlot(ndxUnrewardLeft);
-        YData = RewardProb(1,indxToPlot(ndxUnrewardLeft));
-        set(BpodSystem.GUIHandles.OutcomePlot.UnrewardLeft, 'xdata', XData, 'ydata', YData);
+        ndxUnbaitedLeft = LightLeft(indxToPlot) ~= 0 & ~Baited(1,indxToPlot); % include case == 1 and == NaN
+        XData = indxToPlot(ndxUnbaitedLeft);
+        YData = RewardProb(1,indxToPlot(ndxUnbaitedLeft));
+        set(BpodSystem.GUIHandles.OutcomePlot.UnbaitedLeft, 'xdata', XData, 'ydata', YData);
         
         % UnrewardRight
-        ndxUnrewardRight = LightLeft(indxToPlot) ~= 1 & ~Baited(2,indxToPlot); % include case == 0 and == NaN
-        XData = indxToPlot(ndxUnrewardRight);
-        YData = RewardProb(2,indxToPlot(ndxUnrewardRight));
-        set(BpodSystem.GUIHandles.OutcomePlot.UnrewardRight, 'xdata', XData, 'ydata', YData);
+        ndxUnbaitedRight = LightLeft(indxToPlot) ~= 1 & ~Baited(2,indxToPlot); % include case == 0 and == NaN
+        XData = indxToPlot(ndxUnbaitedRight);
+        YData = RewardProb(2,indxToPlot(ndxUnbaitedRight));
+        set(BpodSystem.GUIHandles.OutcomePlot.UnbaitedRight, 'xdata', XData, 'ydata', YData);
         
         % BlockSwitch
         if TrialData.BlockTrialNumber(iTrial) == 1

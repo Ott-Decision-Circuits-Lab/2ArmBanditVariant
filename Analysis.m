@@ -11,9 +11,8 @@ else
 end
 
 %% Load related data to local variabels
-try
-    Animal = str2double(SessionData.Info.Subject);
-catch
+Animal = str2double(SessionData.Info.Subject);
+if isnan(Animal)
     Animal = -1;
 end
 Date = datestr(SessionData.Info.SessionDate, 'yyyymmdd');

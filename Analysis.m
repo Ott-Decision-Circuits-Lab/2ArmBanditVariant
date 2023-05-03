@@ -5,7 +5,12 @@ function FigHandle = Analysis(DataFile)
 
 if nargin < 1
     global BpodSystem
-    SessionData = BpodSystem.Data;
+    if isempty(BpodSystem)
+        [datafile, datapath] = uigetfile();
+        load(fullfile(datapath, datafile));
+    else
+        SessionData = BpodSystem.Data;
+    end
 else
     load(DataFile);
 end

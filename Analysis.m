@@ -95,7 +95,7 @@ switch SessionData.SettingsFile.GUIMeta.RiskType.String{SessionData.SettingsFile
         RewardProbLeft = RewardProb(1,:);
         
         %% Block switching behaviour across trial
-        subplot(3,3,1) %needs adjustment! depends on the number of plots in the end
+        subplot(4,3,1) %needs adjustment! depends on the number of plots in the end
         if ~isempty(ChoiceLeft) && ~all(isnan(ChoiceLeft))
             xdata = 1:nTrials;
             plot(xdata, RewardProbLeft, '-k', 'Color', [.5,.5,.5], 'LineWidth', 2);
@@ -128,9 +128,9 @@ switch SessionData.SettingsFile.GUIMeta.RiskType.String{SessionData.SettingsFile
         if ~isempty(EarlyWithdrawal) && ~all(isnan(EarlyWithdrawal))
             AllSessionEvents('EarlyWith','counts') = {length(EarlyWithdrawal(EarlyWithdrawal==1))};
         end
-        if ~isempty(SkippedFeedback) && all(isnan(SkippedFeedback))
-            AllSessionEvents('SkippedFeedback','counts') = {length(SkippedFeedback(SkippedFeedback==1))}; %-length(indxNotBaited(indxNotBaited==1))};
-        end                                                                                              %is skipped feedback now seperate from not-baited?
+        if ~isempty(SkippedFeedback) && ~all(isnan(SkippedFeedback))
+            AllSessionEvents('SkippedFeedback','counts') = {length(SkippedFeedback(SkippedFeedback==1))-length(NotBaited(NotBaited==1))};
+        end                                                                                             
         if ~isempty(Rewarded) && ~all(isnan(Rewarded))
             AllSessionEvents('Rewarded','counts') = {length(Rewarded(Rewarded==1))};
         end
@@ -144,7 +144,7 @@ switch SessionData.SettingsFile.GUIMeta.RiskType.String{SessionData.SettingsFile
         xlabels = {'No Choice','Broke Fix','Early With','Skipped Feedback','Rewarded','NotBaited'};
         colors = {'yellow', "#77AC30",'blue',"#EDB120",'black','cyan'};  
 
-        subplot(3,3,2)   %needs adjustment, depends on the number of subplots
+        subplot(4,3,2)   %needs adjustment, depends on the number of subplots
         hold on
 
         for i = 1:length(y)
@@ -174,7 +174,7 @@ switch SessionData.SettingsFile.GUIMeta.RiskType.String{SessionData.SettingsFile
             meanHigh = [mean(WTHigh(1));PHigh];
             meanLow = [mean(WTLow(1));PLow];
 
-            subplot(3,3,3);    %needs adjustment!
+            subplot(4,3,3);    %needs adjustment!
             hold on
             xlim([0 1]);
             swarmchart(WTLow(2,:),WTLow(1,:),'cyan');
@@ -199,7 +199,7 @@ switch SessionData.SettingsFile.GUIMeta.RiskType.String{SessionData.SettingsFile
 
         if ~all(isnan(DrinkingTime))
 
-            subplot(3,3,4);              % specification of the binning could be added
+            subplot(4,3,4);              % specification of the binning could be added
             histogram(DrinkingTime,'FaceColor',[.5,.5,.5],'EdgeColor',[1,1,1]);
             xlabel('drinking times (s)')
             ylabel('n')
@@ -224,7 +224,7 @@ switch SessionData.SettingsFile.GUIMeta.RiskType.String{SessionData.SettingsFile
 
         if ~all(isnan(ITI))
 
-            subplot(3,3,5);
+            subplot(4,3,5);
             xlim([min(ITI) max(ITI)])
             histogram(ITI,cc,'FaceColor',[.5,.5,.5],'EdgeColor',[1,1,1]); %binning could be specified
             xlabel('actual ITI');
@@ -284,7 +284,7 @@ switch SessionData.SettingsFile.GUIMeta.RiskType.String{SessionData.SettingsFile
         
         if model ~= false
             
-            subplot(3,3,6)
+            subplot(4,3,6)
             hold on
             
             xdata = 1:5;
@@ -307,7 +307,7 @@ switch SessionData.SettingsFile.GUIMeta.RiskType.String{SessionData.SettingsFile
         %% psychometric
         %ConditionColors = [0,0,0;1,0,0;1,.6,.6];
 
-        subplot(3,3,7)
+        subplot(4,3,7)
         hold on
 
         ndxvalid=~isnan(ChoiceLeft); ndxvalid = ndxvalid(:);
@@ -316,19 +316,20 @@ switch SessionData.SettingsFile.GUIMeta.RiskType.String{SessionData.SettingsFile
         dvbin=linspace(-max(abs(DV)),max(abs(DV)),10);
         [x,y,e]=BinData(DV,ChoiceL,dvbin);
         vv=~isnan(x) & ~isnan(y) & ~isnan(e);
-        errorbar(x(vv),y(vv),e(vv))%,'Color',ConditionColors(c,:),'LineStyle','none','LineWidth',2,'Marker','o','MarkerFaceColor',ConditionColors(c,:))
+        errorbar(x(vv),y(vv),e(vv),'LineStyle','none','LineWidth',2,'Marker','o');
 
         xlabel('log odds')
         ylabel('P(Left)')
         %fit
-        %mdl = fitglm(DV,ChoiceL(:),'Distribution','binomial');
-        %xx=linspace(dvbin(1),dvbin(end),100);
-        %plot(xx,predict(mdl,xx'),'-k')
+        mdl = fitglm(DV,ChoiceL(:),'Distribution','binomial');
+        xx=linspace(dvbin(1),dvbin(end),100);
+        plot(xx,predict(mdl,xx'),'-k')
+        title('psychometric')
 
 
         %% callibration plot
 
-        subplot(3,3,8)
+        subplot(4,3,8)
         hold on
         ndxValid = ~isnan(ChoiceLeft) & EarlyWithdrawal==0;
         ndxValid = ndxValid(:);
@@ -338,8 +339,8 @@ switch SessionData.SettingsFile.GUIMeta.RiskType.String{SessionData.SettingsFile
         ndxBaited = ndxBaited(:);
         left = ChoiceLeft(ndxValid & ~ndxBaited)==1; %?
         corr = ndxExploit(ndxValid & ~ndxBaited); %'correct'
-        FeedbackDel = FeedbackDelay(:);
-        ti = FeedbackDel(ndxValid & ~ndxBaited); ti = ti(:);
+        FeedbackWT = FeedbackWaitingTime(:);
+        ti = FeedbackWT(ndxValid & ~ndxBaited); ti = ti(:);
         edges = linspace(min(ti),max(ti),8);
         [x,y,e]=BinData(ti,corr,edges);
         vv=~isnan(x) & ~isnan(y) & ~isnan(e);
@@ -349,7 +350,7 @@ switch SessionData.SettingsFile.GUIMeta.RiskType.String{SessionData.SettingsFile
         title('callibration plot')
 
       %% plot vevaiometric    
-        subplot(3,3,9)
+        subplot(4,3,9)
         hold on
 
         ndxBaited = (Baited(1,:) & ChoiceLeft==1) | (Baited(2,:) & ChoiceLeft==0);
@@ -358,10 +359,10 @@ switch SessionData.SettingsFile.GUIMeta.RiskType.String{SessionData.SettingsFile
         ndxValid = ndxValid(:);
         ndxExploit = ChoiceLeft(:) == (logodds>0);
         ExploreScatter_XData = logodds(ndxValid & ~ndxBaited & ~ndxExploit);
-        FeedbackDel = FeedbackDelay(:);
-        ExploreScatter_YData = FeedbackDel(ndxValid & ~ndxBaited & ~ndxExploit)';
+        FeedbackWT = FeedbackWaitingTime(:);
+        ExploreScatter_YData = FeedbackWT(ndxValid & ~ndxBaited & ~ndxExploit)';
         ExploitScatter_XData = logodds(ndxValid & ~ndxBaited & ndxExploit);
-        ExploitScatter_YData = FeedbackDel(ndxValid & ~ndxBaited & ndxExploit)';
+        ExploitScatter_YData = FeedbackWT(ndxValid & ~ndxBaited & ndxExploit)';
         [ExploreLine_XData, ExploreLine_YData] = Binvevaio(ExploreScatter_XData,ExploreScatter_YData,10);
         [ExploitLine_XData, ExploitLine_YData] = Binvevaio(ExploitScatter_XData,ExploitScatter_YData,10);
 
@@ -377,8 +378,51 @@ switch SessionData.SettingsFile.GUIMeta.RiskType.String{SessionData.SettingsFile
         xlim([-max(abs([ExploitScatter_XData;ExploreScatter_XData])),max(abs([ExploitScatter_XData;ExploreScatter_XData]))])
         catch
         end
-        title('vevaiometric')
+        title('vevaiometric');
+        xlabel('logodds');
+        ylabel('time investment (s)');
 
+        %% condition psychometry
+
+        subplot(4,3,10)
+        Colors={[0,0,.9];[.5,.5,1]};
+        hold on
+        ChoiceL = ChoiceLeft(ndxValid & ~ndxBaited);
+        ChoiceL = ChoiceL(:);
+        DV = logodds(ndxValid & ~ndxBaited);DV=DV(:);
+        TI = FeedbackWaitingTime(ndxValid & ~ ndxBaited);
+
+        TImed=nanmedian(TI);
+        high = TI>TImed;
+        low = TI<=TImed;
+        dvbin=linspace(-max(abs(DV)),max(abs(DV)),10);
+        %high TI
+        [x,y,e]=BinData(DV(high),ChoiceL(high),dvbin);
+        vv=~isnan(x) & ~isnan(y) & ~isnan(e);
+        h1=errorbar(x(vv),y(vv),e(vv),'LineStyle','none','LineWidth',2,'Marker','o','MarkerFaceColor',Colors{1},'MarkerEdgeColor',Colors{1},'Color',Colors{1});
+        %fit
+        mdl = fitglm(DV(high),ChoiceL(high),'Distribution','binomial');
+        xx=linspace(dvbin(1),dvbin(end),100);
+        plot(xx,predict(mdl,xx'),'-','Color',Colors{1});
+
+        [x,y,e]=BinData(DV(low),ChoiceL(low),dvbin);
+        vv=~isnan(x) & ~isnan(y) & ~isnan(e);
+        h2=errorbar(x(vv),y(vv),e(vv),'LineStyle','none','LineWidth',2,'Marker','o','MarkerFaceColor',Colors{2},'MarkerEdgeColor',Colors{2},'Color',Colors{2});
+        %fit
+        mdl = fitglm(DV(low),ChoiceL(low),'Distribution','binomial');
+        xx=linspace(dvbin(1),dvbin(end),100);
+        plot(xx,predict(mdl,xx'),'-','Color',Colors{2});
+
+        xlim([dvbin(1),dvbin(end)+eps]);
+        ylim([0,1])
+
+        xlabel('log odds')
+        ylabel('P(Left)')
+        title('condition psychometry')
+
+        l=legend([h1,h2],{'High TI','Low TI'});
+        l.Box='off';
+        l.Location='northwest';
 
 
 
@@ -855,7 +899,7 @@ switch SessionData.SettingsFile.GUIMeta.RiskType.String{SessionData.SettingsFile
             'YLim', [0, 0.3],...
             'YAxisLocation', 'right',...
             'FontSize', 10);
-        title('FeedbackDelay Grace Time', 'FontSize', 12)
+        title(sprintf('FeedbackDelay\nGrace Time'), 'FontSize', 12)
         xlabel(LRFeedbackDelayGraceTimeHandle, '')
         ylabel(LRFeedbackDelayGraceTimeHandle, '')
         
@@ -877,55 +921,43 @@ switch SessionData.SettingsFile.GUIMeta.RiskType.String{SessionData.SettingsFile
                                                     'FontSize', 10,...
                                                     'HorizontalAlignment', 'right');
         
+        %% Drinking Time & ITI
+        DrinkingTimeHandle = axes(FigHandle, 'Position', [0.43    0.57    0.09    0.13]);
+        
+        DrinkingTimeScatterHandle = swarmchart(DrinkingTimeHandle, ones(length(DrinkingTime)), DrinkingTime,...
+                                               'Marker', '.',...
+                                               'MarkerEdgeColor', 'k',...
+                                               'XJitter', 'density',...
+                                               'XJitterWidth', 0.8);
+        
+        set(DrinkingTimeHandle,...
+            'TickDir', 'out',...
+            'XLim', [0, 2],...
+            'YLim', [0, 15],...
+            'FontSize', 10);
+        title('Drinking Time', 'FontSize', 12)
+        ylabel(DrinkingTimeHandle, 'Time (s)')
+        
+        %% ITI
+        ITIHandle = axes(FigHandle, 'Position', [0.28    0.57    0.09    0.13]);
+        
+        ITI = SessionData.TrialStartTimestamp(2:end) - SessionData.TrialEndTimestamp(1:end-1);
+        ITIScatterHandle = swarmchart(ITIHandle,...
+                                      ones(length(ITI)), ITI,...
+                                      'Marker', '.',...
+                                      'MarkerEdgeColor', 'k',...
+                                      'XJitter', 'density',...
+                                      'XJitterWidth', 0.8);
+        
+        set(ITIHandle,...
+            'TickDir', 'out',...
+            'XLim', [0, 2],...
+            'YLim', [0, 0.6],...
+            'FontSize', 10);
+        title('ITI', 'FontSize', 12)
+        ylabel(ITIHandle, 'Time (s)')
 
         i;
-        % waiting time of not-baited trials per reward probability
 
-        %get only the actually used reward probabilities
-        %{
-        LightLeftRight = [LightLeft;1-LightLeft];
-        LightRewardProb = RewardProb .* LightLeftRight;
-        RewardProbUsed = LightRewardProb(1,:) + LightRewardProb(2,:);
-
-        if ~isempty(FeedbackWaitingTime) && ~all(isnan(FeedbackWaitingTime))
-
-            %get the waiting time and reward probability for not-baited trials
-
-            indxNotBaited = (IncorrectChoice==0) & any((Baited == 0) .* ChoiceLeftRight, 1); 
-            NotBaitedWT = FeedbackWaitingTime(indxNotBaited==1); 
-            NotBaitedRP = RewardProbUsed(indxNotBaited==1);
-            WaitingTime = NotBaitedWT';
-            RewardProb = NotBaitedRP';
-            NotBaitedWTRP = table(RewardProb,WaitingTime); % does not need to be in this format, can also be an array/matrix
-            WTRPSummary = groupsummary(NotBaitedWTRP,"RewardProb",{"mean","std"}); %then groupstats need to be used instead of groupsummary
-
-            %plot waiting time and reward probability
-
-            subplot(2,2,1)                      %needs adjustment to the final number of plots
-            xdata = WTRPSummary.RewardProb;
-            ydata = WTRPSummary.mean_WaitingTime;
-            swarmchart(NotBaitedWTRP.RewardProb,NotBaitedWTRP.WaitingTime,'cyan','filled')
-            hold on
-            errbar = WTRPSummary.std_WaitingTime;
-            plot(xdata,ydata,'diamond','MarkerSize',8,'MarkerEdgeColor','black','LineWidth',2);
-            title("Not Baited trials")
-            xlabel("reward probability in %");
-            ylabel("time investment in s ");
-            errorbar(xdata,ydata,errbar,'Linestyle','none','Color','k');
-            xdataticks = WTRPSummary.RewardProb';
-            xticks(xdataticks)           
-            xticklabels(string(xdataticks));        %test this?
-            xlim([0 1])
-            counts = string(WTRPSummary.GroupCount);
-            ylabels = ydata + 0.2;   
-            text(xdata,ylabels,counts,'Color','black','FontSize',12)
-            annotation('textbox', [0.77, 0.7, 0.1, 0.1], 'String', "total counts",'Color','black')
-
-        end
-        %}
  
 end
-
-
-
-

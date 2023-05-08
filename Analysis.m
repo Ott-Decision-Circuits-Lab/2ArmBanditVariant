@@ -328,101 +328,110 @@ switch SessionData.SettingsFile.GUIMeta.RiskType.String{SessionData.SettingsFile
 
 
         %% callibration plot
+        
+        if model ~= false && ~all(isnan(FeedbackWaitingTime))
 
-        subplot(4,3,8)
-        hold on
-        ndxValid = ~isnan(ChoiceLeft) & EarlyWithdrawal==0;
-        ndxValid = ndxValid(:);
+            subplot(4,3,8)
+            hold on
+            ndxValid = ~isnan(ChoiceLeft) & EarlyWithdrawal==0;
+            ndxValid = ndxValid(:);
     
-        ndxExploit = ChoiceLeft(:) == (logodds>0);
-        ndxBaited = (Baited(1,:) & ChoiceLeft==1) | (Baited(2,:) & ChoiceLeft==0);
-        ndxBaited = ndxBaited(:);
-        left = ChoiceLeft(ndxValid & ~ndxBaited)==1; %?
-        corr = ndxExploit(ndxValid & ~ndxBaited); %'correct'
-        FeedbackWT = FeedbackWaitingTime(:);
-        ti = FeedbackWT(ndxValid & ~ndxBaited); ti = ti(:);
-        edges = linspace(min(ti),max(ti),8);
-        [x,y,e]=BinData(ti,corr,edges);
-        vv=~isnan(x) & ~isnan(y) & ~isnan(e);
-        errorbar(x(vv),y(vv),e(vv))
-        xlabel('Time investment (s)')
-        ylabel('Percent exploit')
-        title('callibration plot')
+            ndxExploit = ChoiceLeft(:) == (logodds>0);
+            ndxBaited = (Baited(1,:) & ChoiceLeft==1) | (Baited(2,:) & ChoiceLeft==0);
+            ndxBaited = ndxBaited(:);
+            left = ChoiceLeft(ndxValid & ~ndxBaited)==1; %?
+            corr = ndxExploit(ndxValid & ~ndxBaited); %'correct'
+            FeedbackWT = FeedbackWaitingTime(:);
+            ti = FeedbackWT(ndxValid & ~ndxBaited); ti = ti(:);
+            edges = linspace(min(ti),max(ti),8);
+            [x,y,e]=BinData(ti,corr,edges);
+            vv=~isnan(x) & ~isnan(y) & ~isnan(e);
+            errorbar(x(vv),y(vv),e(vv))
+            xlabel('Time investment (s)')
+            ylabel('Percent exploit')
+            title('callibration plot')
 
-      %% plot vevaiometric    
-        subplot(4,3,9)
-        hold on
+        %% plot vevaiometric      
+            subplot(4,3,9)
+            hold on
 
-        ndxBaited = (Baited(1,:) & ChoiceLeft==1) | (Baited(2,:) & ChoiceLeft==0);
-        ndxBaited = ndxBaited(:);
-        ndxValid =  ~isnan(ChoiceLeft) & EarlyWithdrawal==0;
-        ndxValid = ndxValid(:);
-        ndxExploit = ChoiceLeft(:) == (logodds>0);
-        ExploreScatter_XData = logodds(ndxValid & ~ndxBaited & ~ndxExploit);
-        FeedbackWT = FeedbackWaitingTime(:);
-        ExploreScatter_YData = FeedbackWT(ndxValid & ~ndxBaited & ~ndxExploit)';
-        ExploitScatter_XData = logodds(ndxValid & ~ndxBaited & ndxExploit);
-        ExploitScatter_YData = FeedbackWT(ndxValid & ~ndxBaited & ndxExploit)';
-        [ExploreLine_XData, ExploreLine_YData] = Binvevaio(ExploreScatter_XData,ExploreScatter_YData,10);
-        [ExploitLine_XData, ExploitLine_YData] = Binvevaio(ExploitScatter_XData,ExploitScatter_YData,10);
+            ndxBaited = (Baited(1,:) & ChoiceLeft==1) | (Baited(2,:) & ChoiceLeft==0);
+            ndxBaited = ndxBaited(:);
+            ndxValid =  ~isnan(ChoiceLeft) & EarlyWithdrawal==0;
+            ndxValid = ndxValid(:);
+            ndxExploit = ChoiceLeft(:) == (logodds>0);
+            ExploreScatter_XData = logodds(ndxValid & ~ndxBaited & ~ndxExploit);
+            FeedbackWT = FeedbackWaitingTime(:);
+            ExploreScatter_YData = FeedbackWT(ndxValid & ~ndxBaited & ~ndxExploit)';
+            ExploitScatter_XData = logodds(ndxValid & ~ndxBaited & ndxExploit);
+            ExploitScatter_YData = FeedbackWT(ndxValid & ~ndxBaited & ndxExploit)';
+            [ExploreLine_XData, ExploreLine_YData] = Binvevaio(ExploreScatter_XData,ExploreScatter_YData,10);
+            [ExploitLine_XData, ExploitLine_YData] = Binvevaio(ExploitScatter_XData,ExploitScatter_YData,10);
 
-        scatter(ExploitScatter_XData, ExploitScatter_YData,'.g','MarkerFaceColor','g');
-        scatter(ExploreScatter_XData, ExploreScatter_YData,'.r','MarkerFaceColor','r');
-        h1=plot(ExploreLine_XData, ExploreLine_YData, 'r','LineWidth',3);
-        h2=plot(ExploitLine_XData, ExploitLine_YData,'g','LineWidth',3);
-        l=legend([h1,h2],{'Explore','Exploit'});
-        l.Box='off';
-        l.Location='northwest';
-        try
-        ylim([min([ExploitScatter_YData;ExploreScatter_YData]),max([ExploitScatter_YData;ExploreScatter_YData])])
-        xlim([-max(abs([ExploitScatter_XData;ExploreScatter_XData])),max(abs([ExploitScatter_XData;ExploreScatter_XData]))])
-        catch
+            scatter(ExploitScatter_XData, ExploitScatter_YData,'.g','MarkerFaceColor','g');
+            scatter(ExploreScatter_XData, ExploreScatter_YData,'.r','MarkerFaceColor','r');
+            h1=plot(ExploreLine_XData, ExploreLine_YData, 'r','LineWidth',3);
+            h2=plot(ExploitLine_XData, ExploitLine_YData,'g','LineWidth',3);
+            l=legend([h1,h2],{'Explore','Exploit'});
+            l.Box='off';
+            l.Location='northwest';
+            try
+            ylim([min([ExploitScatter_YData;ExploreScatter_YData]),max([ExploitScatter_YData;ExploreScatter_YData])])
+            xlim([-max(abs([ExploitScatter_XData;ExploreScatter_XData])),max(abs([ExploitScatter_XData;ExploreScatter_XData]))])
+            catch
+            end
+            title('vevaiometric');
+            xlabel('logodds');
+            ylabel('time investment (s)');
+
+            %% condition psychometry
+
+            subplot(4,3,10)
+            Colors={[0,0,.9];[.5,.5,1]};
+            hold on
+            ChoiceL = ChoiceLeft(ndxValid & ~ndxBaited);
+            ChoiceL = ChoiceL(:);
+            DV = logodds(ndxValid & ~ndxBaited);DV=DV(:);
+            TI = FeedbackWaitingTime(ndxValid & ~ ndxBaited);
+
+            TImed=nanmedian(TI);
+            high = TI>TImed;
+            low = TI<=TImed;
+            dvbin=linspace(-max(abs(DV)),max(abs(DV)),10);
+            %high TI
+            [x,y,e]=BinData(DV(high),ChoiceL(high),dvbin);
+            vv=~isnan(x) & ~isnan(y) & ~isnan(e);
+            h1=errorbar(x(vv),y(vv),e(vv),'LineStyle','none','LineWidth',2,'Marker','o','MarkerFaceColor',Colors{1},'MarkerEdgeColor',Colors{1},'Color',Colors{1});
+            %fit
+            mdl = fitglm(DV(high),ChoiceL(high),'Distribution','binomial');
+            xx=linspace(dvbin(1),dvbin(end),100);
+            plot(xx,predict(mdl,xx'),'-','Color',Colors{1});
+
+            [x,y,e]=BinData(DV(low),ChoiceL(low),dvbin);
+            vv=~isnan(x) & ~isnan(y) & ~isnan(e);
+            h2=errorbar(x(vv),y(vv),e(vv),'LineStyle','none','LineWidth',2,'Marker','o','MarkerFaceColor',Colors{2},'MarkerEdgeColor',Colors{2},'Color',Colors{2});
+            %fit
+            mdl = fitglm(DV(low),ChoiceL(low),'Distribution','binomial');
+            xx=linspace(dvbin(1),dvbin(end),100);
+            plot(xx,predict(mdl,xx'),'-','Color',Colors{2});
+    
+            xlim([dvbin(1),dvbin(end)+eps]);
+            ylim([0,1])
+
+            xlabel('log odds')
+            ylabel('P(Left)')
+            title('condition psychometry')
+
+            l=legend([h1,h2],{'High TI','Low TI'});
+            l.Box='off';
+            l.Location='northwest';
+
+
         end
-        title('vevaiometric');
-        xlabel('logodds');
-        ylabel('time investment (s)');
 
-        %% condition psychometry
+        %% grace periods
 
-        subplot(4,3,10)
-        Colors={[0,0,.9];[.5,.5,1]};
-        hold on
-        ChoiceL = ChoiceLeft(ndxValid & ~ndxBaited);
-        ChoiceL = ChoiceL(:);
-        DV = logodds(ndxValid & ~ndxBaited);DV=DV(:);
-        TI = FeedbackWaitingTime(ndxValid & ~ ndxBaited);
 
-        TImed=nanmedian(TI);
-        high = TI>TImed;
-        low = TI<=TImed;
-        dvbin=linspace(-max(abs(DV)),max(abs(DV)),10);
-        %high TI
-        [x,y,e]=BinData(DV(high),ChoiceL(high),dvbin);
-        vv=~isnan(x) & ~isnan(y) & ~isnan(e);
-        h1=errorbar(x(vv),y(vv),e(vv),'LineStyle','none','LineWidth',2,'Marker','o','MarkerFaceColor',Colors{1},'MarkerEdgeColor',Colors{1},'Color',Colors{1});
-        %fit
-        mdl = fitglm(DV(high),ChoiceL(high),'Distribution','binomial');
-        xx=linspace(dvbin(1),dvbin(end),100);
-        plot(xx,predict(mdl,xx'),'-','Color',Colors{1});
-
-        [x,y,e]=BinData(DV(low),ChoiceL(low),dvbin);
-        vv=~isnan(x) & ~isnan(y) & ~isnan(e);
-        h2=errorbar(x(vv),y(vv),e(vv),'LineStyle','none','LineWidth',2,'Marker','o','MarkerFaceColor',Colors{2},'MarkerEdgeColor',Colors{2},'Color',Colors{2});
-        %fit
-        mdl = fitglm(DV(low),ChoiceL(low),'Distribution','binomial');
-        xx=linspace(dvbin(1),dvbin(end),100);
-        plot(xx,predict(mdl,xx'),'-','Color',Colors{2});
-
-        xlim([dvbin(1),dvbin(end)+eps]);
-        ylim([0,1])
-
-        xlabel('log odds')
-        ylabel('P(Left)')
-        title('condition psychometry')
-
-        l=legend([h1,h2],{'High TI','Low TI'});
-        l.Box='off';
-        l.Location='northwest';
 
 
 

@@ -20,6 +20,7 @@ StatesThisTrial = TrialStateNames(idxStatesVisited);
 %% Pre-stimulus delivery
 if any(strcmp('StartCIn',StatesThisTrial))
     TrialData.NoTrialStart(iTrial) = false;
+    TrialData.TrialCenterPoke(iTrial) = TrialStates.StartCIn(1,1);
 end
 
 if any(strcmp('BrokeFixation',StatesThisTrial))
@@ -88,8 +89,10 @@ if any(strcmp('StartNewTrialTimeOut', StatesThisTrial))
 end
 
 if any(strcmp('StartLIn', StatesThisTrial))
+    TrialData.TimeChoice(iTrial) = TrialStates.StartLIn(1,1);
     TrialData.ChoiceLeft(iTrial) = true; % True if a choice is made to the left poke (also include incorrect choice)
 elseif any(strcmp('StartRIn', StatesThisTrial))
+    TrialData.TimeChoice(iTrial) = TrialStates.StartRIn(1,1);
     TrialData.ChoiceLeft(iTrial) = false; % True if a choice is made to the left poke (also include incorrect choice)
 end
 
@@ -120,6 +123,7 @@ elseif any(strcmp('StartRIn',StatesThisTrial))
 end
 
 if any(strcmp('SkippedFeedback',StatesThisTrial))
+    TrialData.TimeSkippedFeedback(iTrial) = TrialStates.SkippedFeedback(1, 1);
     TrialData.SkippedFeedback(iTrial) = true; % True if SkippedFeedback
 elseif any(strcmp('WaterL',StatesThisTrial)) || any(strcmp('WaterR',StatesThisTrial)) || any(strcmp('IncorrectChoice',StatesThisTrial))
    TrialData.SkippedFeedback(iTrial) = false;
@@ -149,6 +153,19 @@ if TrialData.Rewarded(iTrial) == true % No change if Skipped Feedback
     elseif TrialData.ChoiceLeft(iTrial) == 0
         TrialData.AvailableReward(2, iTrial) = false;
     end
+end
+
+if TrialData.Rewarded(iTrial) == true
+    if any(strcmp('WaterL', StatesThisTrial))
+        TrialData.TimeReward(iTrial) = TrialStates.WaterL(1, 1);
+    elseif any(strcmp('WaterR', StatesThisTrial))
+        TrialData.TimeReward(iTrial) = TrialStates.WaterR(1, 1);
+    end
+end
+
+NotBaitedAction = TaskParameters.GUIMeta.NotBaitedFeedback.String{TaskParameters.GUI.NotBaitedFeedback};
+if NotBaitedAction == "WhiteNoise" || NotBaitedAction == "Beep"
+    TrialData.TimeUnrewardFeedback(iTrial) = TrialStates.NotBaited(1, 1);
 end
 
 if TrialData.Rewarded(iTrial) == true

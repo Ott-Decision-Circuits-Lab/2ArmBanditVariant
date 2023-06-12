@@ -15,6 +15,7 @@ TrialData = BpodSystem.Data.Custom.TrialData;
 %% Pre-stimulus delivery
 TrialData.NoTrialStart(iTrial) = true; % true = no state StartCIn; false = with state StartCIn.
 
+TrialData.TimeCenterPoke(iTrial) = NaN; % Time when CIn
 TrialData.BrokeFixation(iTrial) = NaN; % NaN = no state StartCIn; true = with state BrokeFixation; false = with state Sampling
 TrialData.StimDelay(iTrial) = TaskParameters.GUI.StimDelay;
 switch TaskParameters.GUIMeta.StimDelayDistribution.String{TaskParameters.GUI.StimDelayDistribution}
@@ -78,6 +79,7 @@ TrialData.MoveTime(iTrial) = NaN; % from CenterPortOut to SidePortIn(or re-Cente
 TrialData.StartNewTrial(iTrial) = NaN; % only concern state 'StartNewTrial'
 TrialData.StartNewTrialSuccessful(iTrial) = NaN; % concern state 'StartNewTrialTimeOut'
 
+TrialData.TimeChoice(iTrial) = NaN;
 TrialData.ChoiceLeft(iTrial) = NaN; % True if a choice is made to the left poke (also include incorrect choice)
 TrialData.IncorrectChoice(iTrial) = NaN; % True if the choice is incorrect (only for 1-arm bandit/GUI.SingleSidePoke);
 % basically = LigthLeft & ChoiceLeft; doesn't necessary in the state of
@@ -123,6 +125,7 @@ TaskParameters.GUI.FeedbackDelay = TrialData.FeedbackDelay(iTrial);
 
 TrialData.FeedbackGrace(1, iTrial) = NaN; % first index for the number of time the state is entered
 TrialData.FeedbackWaitingTime(iTrial) = NaN; % Time spend to wait for feedback
+TrialData.TimeSkippedFeedback(iTrial) = NaN;
 TrialData.SkippedFeedback(iTrial) = NaN; % True if SkippedFeedback
 TrialData.TITrial(iTrial) = NaN; % True if it is included in TimeInvestment
 
@@ -263,6 +266,8 @@ TrialData.RewardMagnitudeR(iTrial) = TrialData.RewardMagnitude(2, iTrial);
 
 TrialData.Rewarded(iTrial) = NaN; % true if a non-zero reward is delivered, NaN if no choice made
 
+TrialData.TimeReward(iTrial) = NaN;
+TrialData.TimeUnrewardFeedback(iTrial) = NaN;
 TrialData.DrinkingTime(iTrial) = NaN;
 %%
 BpodSystem.Data.Custom.TrialData = TrialData;

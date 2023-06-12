@@ -136,7 +136,7 @@ if isempty(fieldnames(TaskParameters))
     
     TaskParameters.GUI.RiskType = 1;
     TaskParameters.GUIMeta.RiskType.Style = 'popupmenu';
-    TaskParameters.GUIMeta.RiskType.String = {'Fix', 'BlockRand', 'BlockFix', 'BlockFixHolding', 'Cued'}; % decide how reward probability is expressed: Fix, based on RewardProbLeft value to express fix RewardProb; BlockRand, randomly draw a value between Min and Max and assign; BlockFix, based on Max and Min and reverse L-R value; Cue, cued by Tone
+    TaskParameters.GUIMeta.RiskType.String = {'Fix', 'BlockRand', 'BlockFix', 'BlockFixHolding', 'Cued', 'BlockCued'}; % decide how reward probability is expressed: Fix, based on RewardProbLeft value to express fix RewardProb; BlockRand, randomly draw a value between Min and Max and assign; BlockFix, based on Max and Min and reverse L-R value; Cue, cued by Tone
     
     TaskParameters.GUI.RewardProbLeft = 0.5; % Reward Probability of Left Poke, only for Fix in RiskType
     TaskParameters.GUI.RewardProbRight = 0.5; % Reward Probability of Left Poke, only for Fix in RiskType

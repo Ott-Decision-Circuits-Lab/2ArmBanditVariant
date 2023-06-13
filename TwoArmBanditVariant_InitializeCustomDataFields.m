@@ -217,6 +217,7 @@ switch TaskParameters.GUIMeta.RiskType.String{TaskParameters.GUI.RiskType}
         
     %{
     based on BlockFixHolding with Risk and Cues based on the GUI.ToneRiskTable,
+    suggested cued are up sweep and down sweep
     in SingleSidePoke, based on block structure to assign reward prob and
     thus cues
     %}

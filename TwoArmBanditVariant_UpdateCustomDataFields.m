@@ -165,7 +165,7 @@ end
 
 NotBaitedAction = TaskParameters.GUIMeta.NotBaitedFeedback.String{TaskParameters.GUI.NotBaitedFeedback};
 if NotBaitedAction == "WhiteNoise" || NotBaitedAction == "Beep"
-    TrialData.TimeUnrewardFeedback(iTrial) = TrialStates.NotBaited(1, 1);
+    TrialData.TimeNotBaitedFeedback(iTrial) = TrialStates.NotBaited(1, 1);
 end
 
 if TrialData.Rewarded(iTrial) == true

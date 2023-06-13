@@ -334,7 +334,7 @@ TrialData.RewardMagnitudeR(iTrial) = TrialData.RewardMagnitude(2, iTrial);
 TrialData.Rewarded(iTrial) = NaN; % true if a non-zero reward is delivered, NaN if no choice made
 
 TrialData.TimeReward(iTrial) = NaN;
-TrialData.TimeUnrewardFeedback(iTrial) = NaN;
+TrialData.TimeNotBaitedFeedback(iTrial) = NaN;
 TrialData.DrinkingTime(iTrial) = NaN;
 %%
 BpodSystem.Data.Custom.TrialData = TrialData;

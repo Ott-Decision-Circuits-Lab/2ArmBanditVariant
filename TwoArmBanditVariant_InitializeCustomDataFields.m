@@ -229,21 +229,21 @@ switch TaskParameters.GUIMeta.RiskType.String{TaskParameters.GUI.RiskType}
             
             if TaskParameters.GUI.SingleSidePoke
                 TrialData.RewardProb(:,iTrial) =  [TaskParameters.GUI.ToneRiskTable.ToneCuedRewardProbability(1), TaskParameters.GUI.ToneRiskTable.ToneCuedRewardProbability(1)]';
-                TrialData.RewardCueLeft(:,iTrial) = [TaskParameters.GUI.ToneRiskTable.ToneStartFreq(1), TaskParameters.GUI.ToneRiskTable.ToneStartFreq(1)]';
-                TrialData.RewardCueRight(:,iTrial) = [TaskParameters.GUI.ToneRiskTable.ToneStartFreq(1), TaskParameters.GUI.ToneRiskTable.ToneStartFreq(1)]';
+                TrialData.RewardCueLeft(:,iTrial) = [TaskParameters.GUI.ToneRiskTable.ToneStartFreq(1), TaskParameters.GUI.ToneRiskTable.ToneEndFreq(1)]';
+                TrialData.RewardCueRight(:,iTrial) = [TaskParameters.GUI.ToneRiskTable.ToneStartFreq(1), TaskParameters.GUI.ToneRiskTable.ToneEndFreq(1)]';
                 if rand < 0.5
                     TrialData.RewardProb(:,iTrial) =  [TaskParameters.GUI.ToneRiskTable.ToneCuedRewardProbability(2), TaskParameters.GUI.ToneRiskTable.ToneCuedRewardProbability(2)]';
-                    TrialData.RewardCueLeft(:,iTrial) = [TaskParameters.GUI.ToneRiskTable.ToneStartFreq(2), TaskParameters.GUI.ToneRiskTable.ToneStartFreq(2)]';
-                    TrialData.RewardCueRight(:,iTrial) = [TaskParameters.GUI.ToneRiskTable.ToneStartFreq(2), TaskParameters.GUI.ToneRiskTable.ToneStartFreq(2)]';
+                    TrialData.RewardCueLeft(:,iTrial) = [TaskParameters.GUI.ToneRiskTable.ToneStartFreq(2), TaskParameters.GUI.ToneRiskTable.ToneEndFreq(2)]';
+                    TrialData.RewardCueRight(:,iTrial) = [TaskParameters.GUI.ToneRiskTable.ToneStartFreq(2), TaskParameters.GUI.ToneRiskTable.ToneEndFreq(2)]';
                 end
             else
                 TrialData.RewardProb(:, iTrial) = [TaskParameters.GUI.ToneRiskTable.ToneCuedRewardProbability(1), TaskParameters.GUI.ToneRiskTable.ToneCuedRewardProbability(2)]';
-                TrialData.RewardCueLeft(:,iTrial) = [TaskParameters.GUI.ToneRiskTable.ToneStartFreq(1), TaskParameters.GUI.ToneRiskTable.ToneStartFreq(1)]';
-                TrialData.RewardCueRight(:,iTrial) = [TaskParameters.GUI.ToneRiskTable.ToneStartFreq(2), TaskParameters.GUI.ToneRiskTable.ToneStartFreq(2)]';
+                TrialData.RewardCueLeft(:,iTrial) = [TaskParameters.GUI.ToneRiskTable.ToneStartFreq(1), TaskParameters.GUI.ToneRiskTable.ToneEndFreq(1)]';
+                TrialData.RewardCueRight(:,iTrial) = [TaskParameters.GUI.ToneRiskTable.ToneStartFreq(2), TaskParameters.GUI.ToneRiskTable.ToneEndFreq(2)]';
                 if rand < 0.5
                     TrialData.RewardProb(:,iTrial) = flip(TrialData.RewardProb(:, iTrial));
-                    TrialData.RewardCueLeft(:,iTrial) = [TaskParameters.GUI.ToneRiskTable.ToneStartFreq(2), TaskParameters.GUI.ToneRiskTable.ToneStartFreq(2)]';
-                    TrialData.RewardCueRight(:,iTrial) = [TaskParameters.GUI.ToneRiskTable.ToneStartFreq(1), TaskParameters.GUI.ToneRiskTable.ToneStartFreq(1)]';
+                    TrialData.RewardCueLeft(:,iTrial) = [TaskParameters.GUI.ToneRiskTable.ToneStartFreq(2), TaskParameters.GUI.ToneRiskTable.ToneEndFreq(2)]';
+                    TrialData.RewardCueRight(:,iTrial) = [TaskParameters.GUI.ToneRiskTable.ToneStartFreq(1), TaskParameters.GUI.ToneRiskTable.ToneEndFreq(1)]';
                 end
             end
         else

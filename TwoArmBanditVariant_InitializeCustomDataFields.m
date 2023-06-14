@@ -263,9 +263,9 @@ switch TaskParameters.GUIMeta.RiskType.String{TaskParameters.GUI.RiskType}
                     RewardToneStartOptions = TaskParameters.GUI.ToneRiskTable.ToneStartFreq(1:2);
                     RewardToneEndOptions = TaskParameters.GUI.ToneRiskTable.ToneEndFreq(1:2);
                     NewBlockRewardProbIdx = RewardProbOptions ~= TrialData.RewardProb(1, iTrial-1);
-                    NewBlockRewardProb = RewardProbOptions * NewBlockRewardProbIdx';
-                    NewStartTone = RewardProbOptions * RewardToneStartOptions';
-                    NewEndTone = RewardProbOptions * RewardToneEndOptions';
+                    NewBlockRewardProb = sum(RewardProbOptions' * NewBlockRewardProbIdx);
+                    NewStartTone = sum(RewardToneStartOptions' * NewBlockRewardProbIdx);
+                    NewEndTone = sum(RewardToneEndOptions' * NewBlockRewardProbIdx);
                     TrialData.RewardProb(:, iTrial) = [NewBlockRewardProb, NewBlockRewardProb]';
                     TrialData.RewardCueLeft(:,iTrial) = [NewStartTone NewEndTone]';
                     TrialData.RewardCueRight(:,iTrial) = [NewStartTone NewEndTone]';

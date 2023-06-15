@@ -20,7 +20,7 @@ StatesThisTrial = TrialStateNames(idxStatesVisited);
 %% Pre-stimulus delivery
 if any(strcmp('StartCIn',StatesThisTrial))
     TrialData.NoTrialStart(iTrial) = false;
-    TrialData.TrialCenterPoke(iTrial) = TrialStates.StartCIn(1,1);
+    TrialData.TimeCenterPoke(iTrial) = TrialStates.StartCIn(1,1);
 end
 
 if any(strcmp('BrokeFixation',StatesThisTrial))

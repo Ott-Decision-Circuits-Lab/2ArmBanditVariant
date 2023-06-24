@@ -6,7 +6,7 @@ function FigHandle = Analysis(DataFile)
 if nargin < 1
     global BpodSystem
     if isempty(BpodSystem) || isempty(BpodSystem.Data)
-        [datafile, datapath] = uigetfile();
+        [datafile, datapath] = uigetfile('\\ottlabfs.bccn-berlin.pri\ottlab\data\');
         load(fullfile(datapath, datafile));
     else
         SessionData = BpodSystem.Data;
@@ -52,7 +52,7 @@ ChoiceLeftRight = [ChoiceLeft; 1-ChoiceLeft];
 try
     DrinkingTime = SessionData.Custom.TrialData.DrinkingTime(1:nTrials);
 catch
-    DrinkingTime = zeros(1, nTrials);
+    DrinkingTime = nan(1, nTrials);
 end
 
 LeftFeedbackDelayGraceTime = [];
@@ -519,6 +519,7 @@ LRFeedbackDelayGraceTimeStatsHandle = text(LRFeedbackDelayGraceTimeHandle, -0.5,
 %% Drinking Time
 DrinkingTimeHandle = axes(FigHandle, 'Position', [0.46    0.09    0.05    0.13]);
 
+DrinkingTime = DrinkingTime(~isnan(DrinkingTime)); % remove unnecesary plotting
 DrinkingTimeScatterHandle = swarmchart(DrinkingTimeHandle, ones(length(DrinkingTime)), DrinkingTime,...
                                        'Marker', '.',...
                                        'MarkerEdgeColor', 'k',...
@@ -538,6 +539,10 @@ ylabel(DrinkingTimeHandle, 'Drinking Time (s)', 'FontSize', 12, 'FontWeight', 'b
 ITIHandle = axes(FigHandle, 'Position', [0.35    0.09    0.05    0.13]);
 
 ITI = SessionData.TrialStartTimestamp(2:end) - SessionData.TrialEndTimestamp(1:end-1);
+ITI = ITI(ITI>0 & ITI<5); % remove outlier in case of multi-section analysis
+if length(ITI) > 2000 % down sample in case of multi-section analysis
+    ITI = ITI(rand(size(ITI)) > 0.95);
+end
 ITIScatterHandle = swarmchart(ITIHandle,...
                               ones(length(ITI)), ITI,...
                               'Marker', '.',...

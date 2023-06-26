@@ -472,6 +472,13 @@ LRFeedbackWaitingTimeStatsHandle(i+1) = text(LRFeedbackWaitingTimeHandle, -0.5, 
 LRFeedbackDelayGraceTimeHandle = axes(FigHandle, 'Position', [0.57    0.57    0.10    0.13]);
 hold(LRFeedbackDelayGraceTimeHandle, 'on');
 
+if length(LeftFeedbackDelayGraceTime) > 2000 % down sample in case of multi-section analysis
+    LeftFeedbackDelayGraceTime = LeftFeedbackDelayGraceTime(rand(size(LeftFeedbackDelayGraceTime)) > 0.95);
+end
+
+if length(RightFeedbackDelayGraceTime) > 2000 % down sample in case of multi-section analysis
+    RightFeedbackDelayGraceTime = RightFeedbackDelayGraceTime(rand(size(RightFeedbackDelayGraceTime)) > 0.95);
+end
 LeftFeedbackDelayGraceTimeScatterHandle = swarmchart(LRFeedbackDelayGraceTimeHandle,...
                                                      zeros(length(LeftFeedbackDelayGraceTime)), LeftFeedbackDelayGraceTime,...
                                                      'Marker', '.',...
@@ -520,6 +527,9 @@ LRFeedbackDelayGraceTimeStatsHandle = text(LRFeedbackDelayGraceTimeHandle, -0.5,
 DrinkingTimeHandle = axes(FigHandle, 'Position', [0.46    0.09    0.05    0.13]);
 
 DrinkingTime = DrinkingTime(~isnan(DrinkingTime)); % remove unnecesary plotting
+if length(DrinkingTime) > 2000 % down sample in case of multi-section analysis
+    DrinkingTime = DrinkingTime(rand(size(DrinkingTime)) > 0.95);
+end
 DrinkingTimeScatterHandle = swarmchart(DrinkingTimeHandle, ones(length(DrinkingTime)), DrinkingTime,...
                                        'Marker', '.',...
                                        'MarkerEdgeColor', 'k',...

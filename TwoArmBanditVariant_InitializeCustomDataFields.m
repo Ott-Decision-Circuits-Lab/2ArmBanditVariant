@@ -297,7 +297,7 @@ switch TaskParameters.GUIMeta.RiskType.String{TaskParameters.GUI.RiskType}
         end
         
     case 'BlockCued'
-        if TrialData.BlockTrialNumber(iTrial) ~= 1
+        if ~TaskParameters.GUI.SingleSidePoke && TrialData.BlockTrialNumber(iTrial) ~= 1
             TrialData.Baited(:, iTrial) = TrialData.Baited(:, iTrial) | TrialData.AvailableReward(:, iTrial-1);
         end
     

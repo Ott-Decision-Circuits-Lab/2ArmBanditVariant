@@ -192,11 +192,13 @@ for iAnimal = 1:length(p.Animal)
     ConcatenatedDataHolder.SettingsFile = DataHolder{iSession}.SettingsFile;
     
     SessionData = ConcatenatedDataHolder;
-    ConcatenatedDataFilePath = fullfile(SelectedDataFolderPath, '\Concatenated_Data.mat');
+    ConcatenatedDataFilePath = fullfile(SelectedDataFolderPath, 'Concatenated_Data.mat');
     save(ConcatenatedDataFilePath, 'SessionData')
 
     FigHandle = Analysis(ConcatenatedDataFilePath);
-    SessionData;
+    saveas(FigHandle, fullfile(SelectedDataFolderPath, 'Analysis.fig'))
+    saveas(FigHandle, fullfile(SelectedDataFolderPath, 'Analysis.png'))
+    
 end % iAnimal
 
 end % function

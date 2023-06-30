@@ -102,15 +102,18 @@ if ~isnan(TrialData.LightLeft(iTrial))
     end
 end
 
+RegisteredWithdrawals = [];
 if any(strcmp('LInGrace', StatesThisTrial))
     RegisteredWithdrawals = TrialStates.LInGrace;
 elseif any(strcmp('RInGrace', StatesThisTrial))
     RegisteredWithdrawals = TrialStates.RInGrace;
 end
-for iExit = 1:size(RegisteredWithdrawals, 1) % one may enter SamplingGrace multiple time, i_exit is the number of time
-    ExitTime = RegisteredWithdrawals(iExit, 1);
-    ReturnTime = RegisteredWithdrawals(iExit, 2);
-    TrialData.FeedbackGrace(iExit, iTrial) = (ReturnTime - ExitTime);
+if ~isempty(RegisteredWithdrawals)
+    for iExit = 1:size(RegisteredWithdrawals, 1) % one may enter SamplingGrace multiple time, i_exit is the number of time
+        ExitTime = RegisteredWithdrawals(iExit, 1);
+        ReturnTime = RegisteredWithdrawals(iExit, 2);
+        TrialData.FeedbackGrace(iExit, iTrial) = (ReturnTime - ExitTime);
+    end
 end
 
 if any(strcmp('StartLIn', StatesThisTrial))

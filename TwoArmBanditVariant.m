@@ -9,12 +9,12 @@ global TaskParameters
 
 %% initialize GUI and plot
 TaskParameters = TwoArmBanditVariant_SetupGUI();  % Set experiment parameters in GUISetup.m
-TwoArmBanditVariant_PlotSideOutcome(BpodSystem.GUIHandles,'init');
+TwoArmBanditVariant_PlotSideOutcome(BpodSystem.GUIHandles, 'init');
 
 %% set up additional bpod module(s) and load waveform
 if ~BpodSystem.EmulatorMode % Sound/laser waveform generation is not compulsory in this protocol
     if ~isfield(BpodSystem.ModuleUSB, 'WavePlayer1') && ~isfield(BpodSystem.ModuleUSB, 'HiFi1')
-        warning('Warning: To run this protocol with sound or laser, you will need to pair an Analog Output Module or a HiFi Module(hardware) with its USB port. Click the USB config button on the Bpod console.')
+        disp('Warning: To run this protocol with sound or laser, you will need to pair an Analog Output Module or a HiFi Module(hardware) with its USB port. Click the USB config button on the Bpod console.')
     else
         if isfield(BpodSystem.ModuleUSB, 'HiFi1')
             [Player, ~] = SetupHiFi(192000); % 192kHz = max sampling rate
@@ -30,7 +30,7 @@ end
 
 %% set up photometry module
 if TaskParameters.GUI.Photometry
-    [FigNidaq1,FigNidaq2] = InitializeNidaq();
+    [FigNidaq1, FigNidaq2] = InitializeNidaq();
 end
 
 % --------------------------Main loop------------------------------ %
@@ -41,7 +41,7 @@ while RunSession
     %% initialize trial settings and plot
     TwoArmBanditVariant_InitializeCustomDataFields(iTrial); % Initialize data (trial type) vectors and first values, potentially updated TaskParameters
     TaskParameters = BpodParameterGUI('sync', TaskParameters);
-    TwoArmBanditVariant_PlotSideOutcome(BpodSystem.GUIHandles.OutcomePlot,'UpdateTrial',iTrial);
+    TwoArmBanditVariant_PlotSideOutcome(BpodSystem.GUIHandles.OutcomePlot, 'UpdateTrial', iTrial);
     
     %% load waveform to auxillary bpod modules
     if ~BpodSystem.EmulatorMode
@@ -58,7 +58,7 @@ while RunSession
     end
     
     %% run trial
-    RawEvents = RunStateMatrix; % run Trial
+    RawEvents = RunStateMatrix;
     
     %% NIDAQ stop acquisition and save data
     if TaskParameters.GUI.Photometry
@@ -77,14 +77,14 @@ while RunSession
             if ~isdir(NidaqDataFolder)
                 mkdir(NidaqDataFolder)
             end
-            fname = fullfile(NidaqDataFolder, ['NidaqData',num2str(iTrial),'.mat']);
-            save(fname,'NidaqData','Nidaq2Data')
+            fname = fullfile(NidaqDataFolder, ['NidaqData', num2str(iTrial), '.mat']);
+            save(fname, 'NidaqData', 'Nidaq2Data')
         end
     end
     
     %% bpod save & update fields
     if ~isempty(fieldnames(RawEvents))
-        BpodSystem.Data = AddTrialEvents(BpodSystem.Data,RawEvents);
+        BpodSystem.Data = AddTrialEvents(BpodSystem.Data, RawEvents);
         TwoArmBanditVariant_InsertSessionDescription(iTrial);
         TwoArmBanditVariant_UpdateCustomDataFields(iTrial);
         SaveBpodSessionData();
@@ -98,11 +98,11 @@ while RunSession
     end
 
     %% update figures
-    TwoArmBanditVariant_PlotSideOutcome(BpodSystem.GUIHandles.OutcomePlot,'UpdateResult',iTrial);
+    TwoArmBanditVariant_PlotSideOutcome(BpodSystem.GUIHandles.OutcomePlot, 'UpdateResult', iTrial);
     
     %% update photometry plots
     if TaskParameters.GUI.Photometry
-        TwoArmBanditVariant_PlotPhotometryData(iTrial, FigNidaq1,FigNidaq2, PhotoData, Photo2Data);
+        TwoArmBanditVariant_PlotPhotometryData(iTrial, FigNidaq1, FigNidaq2, PhotoData, Photo2Data);
     end
     
     iTrial = iTrial + 1;

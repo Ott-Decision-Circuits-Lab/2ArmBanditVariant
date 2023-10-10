@@ -1010,5 +1010,12 @@ switch SessionData.SettingsFile.GUIMeta.RiskType.String{SessionData.SettingsFile
                                           sprintf('Count\nMean\nStd'),...
                                           'FontSize', 10,...
                                           'HorizontalAlignment', 'right');
- 
+
+    case 'BlockCued' % currently only designed for 1-arm
+        %% 
+        title(TrialOverviewHandle, strcat(num2str(Animal), '\_', Date, '\_BlockCued'))
+
+    case 'CuedBlockRatio' % currently only designed for 1-arm
+        %% 
+        title(TrialOverviewHandle, strcat(num2str(Animal), '\_', Date, '\_BlockCued'))
 end

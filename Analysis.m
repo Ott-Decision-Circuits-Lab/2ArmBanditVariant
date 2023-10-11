@@ -1017,5 +1017,5 @@ switch SessionData.SettingsFile.GUIMeta.RiskType.String{SessionData.SettingsFile
 
     case 'CuedBlockRatio' % currently only designed for 1-arm
         %% 
-        title(TrialOverviewHandle, strcat(num2str(Animal), '\_', Date, '\_BlockCued'))
+        title(TrialOverviewHandle, strcat(num2str(Animal), '\_', Date, '\_CuedBlockRatio'))
 end

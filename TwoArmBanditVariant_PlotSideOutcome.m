@@ -445,11 +445,11 @@ switch Action
 end % switch end
 end % function end
 
-function [mn,mx] = rescaleX(AxesHandle,CurrentTrial,nTrialsToShow)
+function [mn, mx] = rescaleX(AxesHandle, CurrentTrial, nTrialsToShow)
 FractionWindowStickpoint = .75; % After this fraction of visible trials, the trial position in the window "sticks" and the window begins to slide through trials.
-mn = max(round(CurrentTrial - FractionWindowStickpoint*nTrialsToShow),1);
+mn = max(round(CurrentTrial - FractionWindowStickpoint * nTrialsToShow), 1);
 mx = mn + nTrialsToShow - 1;
-set(AxesHandle,'XLim',[mn-1 mx+1]);
+set(AxesHandle, 'XLim', [mn-1 mx+1]);
 end
 
 % function cornertext(h,str) % Not in use due to long computation time

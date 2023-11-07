@@ -13,7 +13,6 @@ neon_purple = [168, 12, 180]/255; % for SkippedBaited
 
 sand = [225, 190 106]/255; % for left-right
 turquoise = [64, 176, 166]/255;
-LRPalette = [sand; turquoise];
 
 switch Action
     case 'init'
@@ -320,19 +319,23 @@ switch Action
             BpodSystem.GUIHandles.OutcomePlot.HistMTLeft.BinWidth = 50;
             BpodSystem.GUIHandles.OutcomePlot.HistMTLeft.FaceColor = sand;
             BpodSystem.GUIHandles.OutcomePlot.HistMTLeft.EdgeColor = 'none';
+
             BpodSystem.GUIHandles.OutcomePlot.HistMTRight = histogram(AxesHandles.HandleMoveTime,MoveTime(ChoiceLeft==0)*1000);
             BpodSystem.GUIHandles.OutcomePlot.HistMTRight.BinWidth = 50;
             BpodSystem.GUIHandles.OutcomePlot.HistMTRight.FaceColor = turquoise;
             BpodSystem.GUIHandles.OutcomePlot.HistMTRight.EdgeColor = 'none';
+
             BpodSystem.GUIHandles.OutcomePlot.HistMTStartNew = histogram(AxesHandles.HandleMoveTime,MoveTime(StartNewTrialSuccessful==1)*1000);
             BpodSystem.GUIHandles.OutcomePlot.HistMTStartNew.BinWidth = 50;
             BpodSystem.GUIHandles.OutcomePlot.HistMTStartNew.FaceColor = 'none';
             BpodSystem.GUIHandles.OutcomePlot.HistMTStartNew.EdgeColor = denim;
+
             LeftP = 100*sum(ChoiceLeft==1)/sum(EarlyWithdrawal==0);
             RightP = 100*sum(ChoiceLeft==0)/sum(EarlyWithdrawal==0);
             StartNewP = 100*sum(StartNewTrialSuccessful==1)/sum(EarlyWithdrawal==0);
             NoDeciP = 100*sum(NoDecision==1)/sum(EarlyWithdrawal==0);
             IncorrectP = 100*sum(IncorrectChoice==1)/sum(~isnan(ChoiceLeft));
+
             BpodSystem.GUIHandles.OutcomePlot.LeftP = text(AxesHandles.HandleMoveTime,0,1.00,['LeftP = ' sprintf('%1.1f',LeftP) '%'],...
                 'Color',sand,'FontSize',8,'Units','normalized');
             BpodSystem.GUIHandles.OutcomePlot.RightP = text(AxesHandles.HandleMoveTime,0,0.95,['RightP = ' sprintf('%1.1f',RightP) '%'],...
@@ -373,11 +376,12 @@ switch Action
             BpodSystem.GUIHandles.OutcomePlot.HistSFRight.BinWidth = 1;
             BpodSystem.GUIHandles.OutcomePlot.HistSFRight.FaceColor = turquoise;
             BpodSystem.GUIHandles.OutcomePlot.HistSFRight.EdgeColor = 'none';
-            
+
             SFLeftP = 100*sum(SkippedFeedback==1 & ChoiceLeft==1)/sum(~isnan(ChoiceLeft)); % skipped feedback left
             SFRightP = 100*sum(SkippedFeedback==1 & ChoiceLeft==0)/sum(~isnan(ChoiceLeft));
             RFLeftP = 100*sum(SkippedFeedback==0 & ChoiceLeft==1)/sum(~isnan(ChoiceLeft)); % received feedback left (incl. IncorrectChoice)
             RFRightP = 100*sum(SkippedFeedback==0 & ChoiceLeft==0)/sum(~isnan(ChoiceLeft));
+
             BpodSystem.GUIHandles.OutcomePlot.SFLeftP = text(AxesHandles.HandleFeedback,0,1.00,['SkippedLeftP = ' sprintf('%1.1f',SFLeftP) '%'],...
                 'FontSize',8,'Units','normalized');
             BpodSystem.GUIHandles.OutcomePlot.SFRightP = text(AxesHandles.HandleFeedback,0,0.95,['SkippedRightP = ' sprintf('%1.1f',SFRightP) '%'],...

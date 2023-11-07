@@ -8,6 +8,13 @@ scarlet = [254, 60, 60]/255; % for incorrect/unbaited sign, contracting with azu
 denim = [31, 54, 104]/255; % mainly for neutral signs
 azure = [0, 162, 254]/255; % for rewarded sign
 
+neon_green = [26, 255, 26]/255; % for NotBaited
+neon_purple = [168, 12, 180]/255; % for SkippedBaited
+
+sand = [225, 190 106]/255; % for left-right
+turquoise = [64, 176, 166]/255;
+LRPalette = [sand; turquoise];
+
 switch Action
     case 'init'
         %% initialize Outcome Figure
@@ -108,12 +115,12 @@ switch Action
         
         %% TimeInvestment
         hold(AxesHandles.HandleTimeInvestment,'on')
-        BpodSystem.GUIHandles.OutcomePlot.TimeInvestmentPointsSkippedBaited = line(AxesHandles.HandleTimeInvestment,-1,0, 'LineStyle','none','Marker','.','MarkerEdge',denim,'MarkerFace','none', 'MarkerSize',6);
-        BpodSystem.GUIHandles.OutcomePlot.TimeInvestmentSkippedBaited = errorbar(AxesHandles.HandleTimeInvestment,-1,0,1, 'LineStyle','-','Marker','o','MarkerEdge',denim,'MarkerFace','none', 'MarkerSize',8);
-        BpodSystem.GUIHandles.OutcomePlot.TimeInvestmentPointsNotBaited = line(AxesHandles.HandleTimeInvestment,-1,0, 'LineStyle','none','Marker','.','MarkerEdge',azure,'MarkerFace','none', 'MarkerSize',6);
-        BpodSystem.GUIHandles.OutcomePlot.TimeInvestmentNotBaited = errorbar(AxesHandles.HandleTimeInvestment,-1,0,1, 'LineStyle','-','Marker','o','MarkerEdge',azure,'MarkerFace','none', 'MarkerSize',8);
+        BpodSystem.GUIHandles.OutcomePlot.TimeInvestmentPointsSkippedBaited = line(AxesHandles.HandleTimeInvestment,-1,0, 'LineStyle','none','Marker','.','MarkerEdge',neon_purple,'MarkerFace','none', 'MarkerSize',6);
+        BpodSystem.GUIHandles.OutcomePlot.TimeInvestmentSkippedBaited = errorbar(AxesHandles.HandleTimeInvestment,-1,0,1, 'Color',neon_purple,'LineStyle','-','Marker','o','MarkerEdge',neon_purple,'MarkerFace','none', 'MarkerSize',8);
+        BpodSystem.GUIHandles.OutcomePlot.TimeInvestmentPointsNotBaited = line(AxesHandles.HandleTimeInvestment,-1,0, 'LineStyle','none','Marker','.','MarkerEdge',neon_green,'MarkerFace','none', 'MarkerSize',6);
+        BpodSystem.GUIHandles.OutcomePlot.TimeInvestmentNotBaited = errorbar(AxesHandles.HandleTimeInvestment,-1,0,1, 'Color',neon_green,'LineStyle','-','Marker','o','MarkerEdge',neon_green,'MarkerFace','none', 'MarkerSize',8);
         BpodSystem.GUIHandles.OutcomePlot.TimeInvestmentPointsIncorrect = line(AxesHandles.HandleTimeInvestment,-1,0, 'LineStyle','none','Marker','.','MarkerEdge',scarlet,'MarkerFace','none', 'MarkerSize',6);
-        BpodSystem.GUIHandles.OutcomePlot.TimeInvestmentIncorrect = errorbar(AxesHandles.HandleTimeInvestment,-1,0,1, 'LineStyle','-','Marker','o','MarkerEdge',scarlet,'MarkerFace','none', 'MarkerSize',8);
+        BpodSystem.GUIHandles.OutcomePlot.TimeInvestmentIncorrect = errorbar(AxesHandles.HandleTimeInvestment,-1,0,1, 'Color',scarlet,'LineStyle','-','Marker','o','MarkerEdge',scarlet,'MarkerFace','none', 'MarkerSize',8);
         AxesHandles.HandleTimeInvestment.XLabel.String = 'RewardProb';
         AxesHandles.HandleTimeInvestment.YLabel.String = 'Time (s)';
         AxesHandles.HandleTimeInvestment.Title.String = 'Time Investment';
@@ -311,11 +318,11 @@ switch Action
             cla(AxesHandles.HandleMoveTime)
             BpodSystem.GUIHandles.OutcomePlot.HistMTLeft = histogram(AxesHandles.HandleMoveTime,MoveTime(ChoiceLeft==1)*1000);
             BpodSystem.GUIHandles.OutcomePlot.HistMTLeft.BinWidth = 50;
-            BpodSystem.GUIHandles.OutcomePlot.HistMTLeft.FaceColor = azure;
+            BpodSystem.GUIHandles.OutcomePlot.HistMTLeft.FaceColor = sand;
             BpodSystem.GUIHandles.OutcomePlot.HistMTLeft.EdgeColor = 'none';
             BpodSystem.GUIHandles.OutcomePlot.HistMTRight = histogram(AxesHandles.HandleMoveTime,MoveTime(ChoiceLeft==0)*1000);
             BpodSystem.GUIHandles.OutcomePlot.HistMTRight.BinWidth = 50;
-            BpodSystem.GUIHandles.OutcomePlot.HistMTRight.FaceColor = scarlet;
+            BpodSystem.GUIHandles.OutcomePlot.HistMTRight.FaceColor = turquoise;
             BpodSystem.GUIHandles.OutcomePlot.HistMTRight.EdgeColor = 'none';
             BpodSystem.GUIHandles.OutcomePlot.HistMTStartNew = histogram(AxesHandles.HandleMoveTime,MoveTime(StartNewTrialSuccessful==1)*1000);
             BpodSystem.GUIHandles.OutcomePlot.HistMTStartNew.BinWidth = 50;
@@ -327,15 +334,15 @@ switch Action
             NoDeciP = 100*sum(NoDecision==1)/sum(EarlyWithdrawal==0);
             IncorrectP = 100*sum(IncorrectChoice==1)/sum(~isnan(ChoiceLeft));
             BpodSystem.GUIHandles.OutcomePlot.LeftP = text(AxesHandles.HandleMoveTime,0,1.00,['LeftP = ' sprintf('%1.1f',LeftP) '%'],...
-                'FontSize',8,'Units','normalized');
+                'Color',sand,'FontSize',8,'Units','normalized');
             BpodSystem.GUIHandles.OutcomePlot.RightP = text(AxesHandles.HandleMoveTime,0,0.95,['RightP = ' sprintf('%1.1f',RightP) '%'],...
-                'FontSize',8,'Units','normalized');
+                'Color',turquoise,'FontSize',8,'Units','normalized');
             BpodSystem.GUIHandles.OutcomePlot.StartNewP = text(AxesHandles.HandleMoveTime,0,0.90,['StartNewP = ' sprintf('%1.1f',StartNewP) '%'],...
-                'FontSize',8,'Units','normalized');
+                'Color',denim,'FontSize',8,'Units','normalized');
             BpodSystem.GUIHandles.OutcomePlot.NoDeciP = text(AxesHandles.HandleMoveTime,0,0.85,['NoDeciP = ' sprintf('%1.1f',NoDeciP) '%'],...
-                'FontSize',8,'Units','normalized');
+                'Color',denim,'FontSize',8,'Units','normalized');
             BpodSystem.GUIHandles.OutcomePlot.IncorrectP = text(AxesHandles.HandleMoveTime,0,0.80,['IncorrectP = ' sprintf('%1.1f',IncorrectP) '%'],...
-                'FontSize',8,'Units','normalized');
+                'Color',scarlet,'FontSize',8,'Units','normalized');
 %             cornertext(AxesHandles.HandleMoveTime,{sprintf('LeftP=%1.2f',LeftP),sprintf('RightP=%1.2f',RightP),...
 %                                                    sprintf('StartNewP=%1.2f',StartNewP),sprintf('NoDeciP=%1.2f',NoDeciP),...
 %                                                    sprintf('IncorrectP=%1.2f',IncorrectP)})
@@ -346,26 +353,27 @@ switch Action
             BpodSystem.GUIHandles.OutcomePlot.HandleFeedback.Visible = 'on';
             set(get(BpodSystem.GUIHandles.OutcomePlot.HandleFeedback,'Children'),'Visible','on');
             cla(AxesHandles.HandleFeedback)
-            BpodSystem.GUIHandles.OutcomePlot.HistSFLeft = histogram(AxesHandles.HandleFeedback,FeedbackWaitingTime(SkippedFeedback==1 & ChoiceLeft==1));
-            BpodSystem.GUIHandles.OutcomePlot.HistSFLeft.BinWidth = 1;
-            BpodSystem.GUIHandles.OutcomePlot.HistSFLeft.FaceColor = scarlet;
-            BpodSystem.GUIHandles.OutcomePlot.HistSFLeft.EdgeColor = 'none';
-
-            BpodSystem.GUIHandles.OutcomePlot.HistSFRight = histogram(AxesHandles.HandleFeedback,FeedbackWaitingTime(SkippedFeedback==1 & ChoiceLeft==0));
-            BpodSystem.GUIHandles.OutcomePlot.HistSFRight.BinWidth = 1;
-            BpodSystem.GUIHandles.OutcomePlot.HistSFRight.FaceColor = azure;
-            BpodSystem.GUIHandles.OutcomePlot.HistSFRight.EdgeColor = 'none';
 
             BpodSystem.GUIHandles.OutcomePlot.HistRFLeft = histogram(AxesHandles.HandleFeedback,FeedbackWaitingTime(SkippedFeedback==0 & ChoiceLeft==1));
             BpodSystem.GUIHandles.OutcomePlot.HistRFLeft.BinWidth = 1;
             BpodSystem.GUIHandles.OutcomePlot.HistRFLeft.FaceColor = 'none';
-            BpodSystem.GUIHandles.OutcomePlot.HistRFLeft.EdgeColor = scarlet;
+            BpodSystem.GUIHandles.OutcomePlot.HistRFLeft.EdgeColor = sand;
 
             BpodSystem.GUIHandles.OutcomePlot.HistRFRight = histogram(AxesHandles.HandleFeedback,FeedbackWaitingTime(SkippedFeedback==0 & ChoiceLeft==0));
             BpodSystem.GUIHandles.OutcomePlot.HistRFRight.BinWidth = 1;
             BpodSystem.GUIHandles.OutcomePlot.HistRFRight.FaceColor = 'none';
-            BpodSystem.GUIHandles.OutcomePlot.HistRFRight.EdgeColor = azure;
+            BpodSystem.GUIHandles.OutcomePlot.HistRFRight.EdgeColor = turquoise;
 
+            BpodSystem.GUIHandles.OutcomePlot.HistSFLeft = histogram(AxesHandles.HandleFeedback,FeedbackWaitingTime(SkippedFeedback==1 & ChoiceLeft==1));
+            BpodSystem.GUIHandles.OutcomePlot.HistSFLeft.BinWidth = 1;
+            BpodSystem.GUIHandles.OutcomePlot.HistSFLeft.FaceColor = sand;
+            BpodSystem.GUIHandles.OutcomePlot.HistSFLeft.EdgeColor = 'none';
+
+            BpodSystem.GUIHandles.OutcomePlot.HistSFRight = histogram(AxesHandles.HandleFeedback,FeedbackWaitingTime(SkippedFeedback==1 & ChoiceLeft==0));
+            BpodSystem.GUIHandles.OutcomePlot.HistSFRight.BinWidth = 1;
+            BpodSystem.GUIHandles.OutcomePlot.HistSFRight.FaceColor = turquoise;
+            BpodSystem.GUIHandles.OutcomePlot.HistSFRight.EdgeColor = 'none';
+            
             SFLeftP = 100*sum(SkippedFeedback==1 & ChoiceLeft==1)/sum(~isnan(ChoiceLeft)); % skipped feedback left
             SFRightP = 100*sum(SkippedFeedback==1 & ChoiceLeft==0)/sum(~isnan(ChoiceLeft));
             RFLeftP = 100*sum(SkippedFeedback==0 & ChoiceLeft==1)/sum(~isnan(ChoiceLeft)); % received feedback left (incl. IncorrectChoice)

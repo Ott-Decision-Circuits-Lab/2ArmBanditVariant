@@ -13,6 +13,10 @@ if isempty(fieldnames(TaskParameters))
     TaskParameters.GUI.Ports_LMR = '123'; % bpod port number for poke connection
     TaskParameters.GUI.EphysSession = false;
     TaskParameters.GUIMeta.EphysSession.Style = 'checkbox';
+    TaskParameters.GUI.Wire1VideoTrigger = 1;
+    TaskParameters.GUIMeta.Wire1VideoTrigger.Style = 'popupmenu';
+    TaskParameters.GUIMeta.Wire1VideoTrigger.String = {'None', 'Investment', 'All'};
+
     TaskParameters.GUI.PreITI = 0.5; % before wait_Cin
     TaskParameters.GUI.WaitCInMax = 20; % max waiting time for C_in before a new trial starts, useful to track progress
     TaskParameters.GUI.ChoiceDeadline = 10; % max waiting time for S_in after stimuli
@@ -42,6 +46,7 @@ if isempty(fieldnames(TaskParameters))
     TaskParameters.GUIMeta.VI.Style = 'checkbox';
     
     TaskParameters.GUIPanels.General = {'SessionDescription', 'Ports_LMR', 'EphysSession',...
+                                        'Wire1VideoTrigger',...
                                         'PreITI', 'WaitCInMax', 'ChoiceDeadline',...
                                         'NoDecisionTimeOut', 'NoDecisionFeedback',...
                                         'SingleSidePoke',...

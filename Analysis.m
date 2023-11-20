@@ -1081,7 +1081,7 @@ switch SessionData.SettingsFile.GUIMeta.RiskType.String{SessionData.SettingsFile
                     'YAxisLocation', 'right',...
                     'FontSize', 10);
                 ylabel('Invested Time (s)')
-                disp('YOu aRE fuNNy.')
+                disp('YOu aRE a bEAutIFul HUmaN BeiNG.')
                 % title('Block switching behaviour')
             end
             

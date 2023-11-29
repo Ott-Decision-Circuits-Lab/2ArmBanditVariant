@@ -87,9 +87,9 @@ end
 LatestRewardTime = SessionData.TrialStartTimestamp - LatestRewardTimestamp;
 
 LeftFeedbackDelayGraceTime = LeftFeedbackDelayGraceTime(~isnan(LeftFeedbackDelayGraceTime))';
-LeftFeedbackDelayGraceTime = LeftFeedbackDelayGraceTime(LeftFeedbackDelayGraceTime > 0.00011);
+LeftFeedbackDelayGraceTime = LeftFeedbackDelayGraceTime(LeftFeedbackDelayGraceTime < SessionData.SettingsFile.GUI.FeedbackDelayGrace - 0.0001);
 RightFeedbackDelayGraceTime = RightFeedbackDelayGraceTime(~isnan(RightFeedbackDelayGraceTime))';
-RightFeedbackDelayGraceTime = RightFeedbackDelayGraceTime(RightFeedbackDelayGraceTime > 0.00011);
+RightFeedbackDelayGraceTime = RightFeedbackDelayGraceTime(RightFeedbackDelayGraceTime < SessionData.SettingsFile.GUI.FeedbackDelayGrace - 0.0001);
 
 %% Common plots regardless of task design/ risk type
 % colour palette for events (suitable for most colourblind people)
@@ -748,6 +748,7 @@ switch SessionData.SettingsFile.GUIMeta.RiskType.String{SessionData.SettingsFile
         Choices = ChoiceLeft';
         Choices(Choices==0) = -1; %1 = left; -1 = right
         Rewards = Rewarded';
+        Rewards(Rewards==0) = -1;
         Rewards = Rewards .* Choices; % reward per choice +/-1   % 1 = left and rewarded; -1 = right and rewarded
     
         % build trial history kernels (n=5)

@@ -748,7 +748,6 @@ switch SessionData.SettingsFile.GUIMeta.RiskType.String{SessionData.SettingsFile
         Choices = ChoiceLeft';
         Choices(Choices==0) = -1; %1 = left; -1 = right
         Rewards = Rewarded';
-        Rewards(Rewards==0) = -1;
         Rewards = Rewards .* Choices; % reward per choice +/-1   % 1 = left and rewarded; -1 = right and rewarded
     
         % build trial history kernels (n=5)

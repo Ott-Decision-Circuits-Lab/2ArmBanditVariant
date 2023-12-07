@@ -34,16 +34,16 @@ RightValveTime  = GetValveTimes(TrialData.RewardMagnitude(2,iTrial), RightPort);
 sma = NewStateMatrix();
 
 PreITIAction = {};
-if isfield(TaskParameters.GUI, 'Wire1VideoTrigger')
-    switch TaskParameters.GUI.Wire1VideoTrigger
-        case 1 % None
-
-        case 2 % Investment
-
-        case 3 % All
-            PreITIAction =	{'WireState', 1};
-            
-end
+% if isfield(TaskParameters.GUI, 'Wire1VideoTrigger')
+%     switch TaskParameters.GUI.Wire1VideoTrigger
+%         case 1 % None
+% 
+%         case 2 % Investment
+% 
+%         case 3 % All
+%             PreITIAction =	{'WireState', 1};
+%             
+% end
 sma = AddState(sma, 'Name', 'PreITI',...
     'Timer', TaskParameters.GUI.PreITI,...
     'StateChangeConditions', {'Tup', 'WaitCIn'},...

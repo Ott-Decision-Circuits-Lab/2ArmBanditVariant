@@ -603,22 +603,23 @@ switch SessionData.SettingsFile.GUIMeta.RiskType.String{SessionData.SettingsFile
     title(TrialOverviewAxes, strcat(num2str(Animal), '\_', Date, '\_Matching'))
 
     %% Block switching behaviour across session
-    BlockSwitchHandle = axes(FigHandle, 'Position', [0.01    0.62    0.48    0.09]);
+    BlockSwitchHandle = axes(FigHandle, 'Position', [0.01    0.60    0.48    0.11]);
     hold(BlockSwitchHandle, 'on');
     if ~isempty(ChoiceLeft) && ~all(isnan(ChoiceLeft))
         xdata = 1:nTrials;
         RewardProbLeft = RewardProb(1,:);
-        BlockDesignHandle = plot(BlockSwitchHandle, xdata, RewardProbLeft, '-', 'Color', [.5,.5,.5], 'LineWidth', 1);
+        BlockDesignHandle = plot(BlockSwitchHandle, xdata, RewardProbLeft, '-', 'Color', [.5,.5,.5], 'LineWidth', 2);
         
-        BinWidth = 20;
+        BinWidth = 10;
         ChoiceLeftSmoothed = smooth(ChoiceLeft, BinWidth, 'moving','omitnan'); %current bin width: 10 trials
-        BlockChoiceHandle = plot(BlockSwitchHandle, xdata, ChoiceLeftSmoothed, '-k', 'LineWidth', 1.5);
-        
+        BlockChoiceHandle = plot(BlockSwitchHandle, xdata, ChoiceLeftSmoothed, '-k', 'LineWidth', 1);
+        TrialChoicePlot = plot(BlockSwitchHandle, 1:nTrials, ChoiceLeft, '|', 'Color', 'k', 'MarkerSize', 1);
+
         set(BlockSwitchHandle,...
             'TickDir', 'out',...
             'XTickLabel', [],...
             'XAxisLocation', 'top',...
-            'YLim', [0 1],...
+            'YLim', [-0.2 1.2],...
             'YTick', [0 0.5 1],...
             'YAxisLocation', 'right',...
             'FontSize', 10);
@@ -771,9 +772,11 @@ switch SessionData.SettingsFile.GUIMeta.RiskType.String{SessionData.SettingsFile
         Ppredict = mdl.Fitted.Response;
         logodds = mdl.Fitted.LinearPredictor;   %logodds for both: left and right
         
-        PredictedChoice = Ppredict>=0.5;
+        PredictedChoice = double(Ppredict>=0.5);
+        PredictedChoice(isnan(ChoiceLeft)) = nan;
+        PredictedChoicePlot = plot(BlockSwitchHandle, 1:nTrials, PredictedChoice*1.2 -0.1, '|', 'Color', 'r', 'MarkerSize', 1);
         SmoothedPredictedChoiceLeft = smooth(PredictedChoice, BinWidth, 'moving','omitnan');
-        PredictedChoicePlot = plot(BlockSwitchHandle, xdata, SmoothedPredictedChoiceLeft, '-r', 'LineWidth', 0.5);
+        SmoothedPredictedChoicePlot = plot(BlockSwitchHandle, xdata, SmoothedPredictedChoiceLeft, '-r', 'LineWidth', 0.5);
         
         % odds based on reward or choice only
 %         C0 = zeros(size(Choices));
@@ -821,6 +824,9 @@ switch SessionData.SettingsFile.GUIMeta.RiskType.String{SessionData.SettingsFile
                                  'NumColumns', 1,...
                                  'Box', 'off');
     end
+    
+    %% Model Residuals
+    %ModelResidualsAxes = axes(FigHandle, 'Position', [0.06    0.41    0.20    0.09]);
 
     %% psychometric
     PsychometricHandle = axes(FigHandle, 'Position', [0.06    0.41    0.20    0.09]);

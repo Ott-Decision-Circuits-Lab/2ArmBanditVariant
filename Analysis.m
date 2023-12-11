@@ -921,7 +921,7 @@ switch SessionData.SettingsFile.GUIMeta.RiskType.String{SessionData.SettingsFile
     ylabel(VevaiometricHandle, 'Invested Time (s)');
     
     if model ~= false
-        ndxExploit = ChoiceLeft == (logodds>0);
+        ndxExploit = ChoiceLeft == (logodds'>0);
         FeedbackWT = FeedbackWaitingTime(:);
 
         ExploreScatter_XData = logodds(ndxValid & ~ndxBaited & ~ndxExploit);

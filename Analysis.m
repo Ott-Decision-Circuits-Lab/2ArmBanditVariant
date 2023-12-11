@@ -768,22 +768,25 @@ switch SessionData.SettingsFile.GUIMeta.RiskType.String{SessionData.SettingsFile
         mdl = fitglm(X, ChoiceLeft', 'distribution', 'binomial');
     
         % predict choices
-        Ppredict = mdl.predict(X);
-        Ppredict = Ppredict';
-        logodds = log(Ppredict) - log(1 - Ppredict);   %logodds for both: left and right
-    
+        Ppredict = mdl.Fitted.Response;
+        logodds = mdl.Fitted.LinearPredictor;   %logodds for both: left and right
+        
+        PredictedChoice = Ppredict>=0.5;
+        SmoothedPredictedChoiceLeft = smooth(PredictedChoice, BinWidth, 'moving','omitnan');
+        PredictedChoicePlot = plot(BlockSwitchHandle, xdata, SmoothedPredictedChoiceLeft, '-r', 'LineWidth', 0.5);
+        
         % odds based on reward or choice only
-        C0 = zeros(size(Choices));
-        R0 = zeros(size(Rewards));
-        X = [Choices,R0];
-        Ppredict = mdl.predict(X);
-        Ppredict = Ppredict';
-        logoddsChoice = log(Ppredict) - log(1 - Ppredict);
-    
-        X = [C0,Rewards];
-        Ppredict = mdl.predict(X);
-        Ppredict = Ppredict';
-        logoddsReward = log(Ppredict) - log(1 - Ppredict);
+%         C0 = zeros(size(Choices));
+%         R0 = zeros(size(Rewards));
+%         X = [Choices,R0];
+%         Ppredict = mdl.predict(X);
+%         Ppredict = Ppredict';
+%         logoddsChoice = log(Ppredict) - log(1 - Ppredict);
+%     
+%         X = [C0,Rewards];
+%         Ppredict = mdl.predict(X);
+%         Ppredict = Ppredict';
+%         logoddsReward = log(Ppredict) - log(1 - Ppredict);
         model = true;
         
     catch

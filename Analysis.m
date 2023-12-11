@@ -610,7 +610,7 @@ switch SessionData.SettingsFile.GUIMeta.RiskType.String{SessionData.SettingsFile
         RewardProbLeft = RewardProb(1,:);
         BlockDesignHandle = plot(BlockSwitchHandle, xdata, RewardProbLeft, '-', 'Color', [.5,.5,.5], 'LineWidth', 1);
         
-        BinWidth = 10;
+        BinWidth = 20;
         ChoiceLeftSmoothed = smooth(ChoiceLeft, BinWidth, 'moving','omitnan'); %current bin width: 10 trials
         BlockChoiceHandle = plot(BlockSwitchHandle, xdata, ChoiceLeftSmoothed, '-k', 'LineWidth', 1.5);
         
@@ -1030,7 +1030,7 @@ switch SessionData.SettingsFile.GUIMeta.RiskType.String{SessionData.SettingsFile
                                         'HorizontalAlignment', 'right');
         
         %% Single-session analysis
-        if nTrials <= 2000 && nTrials >= 200
+        if nTrials <= 2500 && nTrials >= 200
             %% Invested time per cue across session
             TrialInvestedTimeAxes = axes(FigHandle, 'Position', [0.01    0.60    0.48    0.11]);
             hold(TrialInvestedTimeAxes, 'on');

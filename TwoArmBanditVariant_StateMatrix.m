@@ -42,6 +42,7 @@ if isfield(TaskParameters.GUI, 'Wire1VideoTrigger')
 
         case 3 % All
             PreITIAction =	{'WireState', 1};
+    end
             
 end
 sma = AddState(sma, 'Name', 'PreITI',...

@@ -452,7 +452,7 @@ sma = AddState(sma, 'Name', 'DrinkingGrace',... % serve as time buffer before ne
 
 ITITimer = TaskParameters.GUI.ITI;
 if TaskParameters.GUI.VI
-    ITITimer = min(exprnd(TaskParameters.GUI.ITI), TaskParameters.GUI.ITI * 5); % exp(-5) = 0.0067
+    ITITimer = min([exprnd(TaskParameters.GUI.ITI), TaskParameters.GUI.ITI * 5]); % exp(-5) = 0.0067
 end
 sma = AddState(sma, 'Name', 'ITI',...
     'Timer', ITITimer,...

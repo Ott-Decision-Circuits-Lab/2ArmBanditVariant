@@ -18,21 +18,21 @@ TrialStateNames = RawData.OriginalStateNamesByNumber{iTrial};
 StatesThisTrial = TrialStateNames(idxStatesVisited);
 
 %% Pre-stimulus delivery
-if any(strcmp('StartCIn',StatesThisTrial))
+if any(strcmp('StartCIn', StatesThisTrial))
     TrialData.NoTrialStart(iTrial) = false;
-    TrialData.TimeCenterPoke(iTrial) = TrialStates.StartCIn(1,1);
+    TrialData.TimeCenterPoke(iTrial) = TrialStates.StartCIn(end, 1); % last one should be the actual one for the trial
 end
 
-if any(strcmp('BrokeFixation',StatesThisTrial))
+if any(strcmp('BrokeFixation', StatesThisTrial))
     TrialData.BrokeFixation(iTrial) = true;
-elseif any(strcmp('Sampling',StatesThisTrial))
+elseif any(strcmp('Sampling', StatesThisTrial))
     TrialData.BrokeFixation(iTrial) = false;
 end
 
 % Get total amount of time spent waiting for stimulus
-if any(strcmp('StimulusDelay',StatesThisTrial))
-    WaitBegin = TrialStates.StimulusDelay(1,1);
-    WaitEnd = TrialStates.StimulusDelay(1,2); 
+if any(strcmp('StimulusDelay', StatesThisTrial))
+    WaitBegin = TrialStates.StimulusDelay(end, 1); % last one should be the actual one
+    WaitEnd = TrialStates.StimulusDelay(end, 2); 
     TrialData.StimWaitingTime(iTrial) = WaitEnd - WaitBegin;
 end
 
@@ -41,24 +41,24 @@ end
 if any(strcmp('SamplingGrace', StatesThisTrial))
     RegisteredWithdrawals = TrialStates.SamplingGrace;
 
-    for iExit = 1:size(RegisteredWithdrawals,1) % one may enter SamplingGrace multiple time, i_exit is the number of time
-        ExitTime = RegisteredWithdrawals(iExit,1);
-        ReturnTime = RegisteredWithdrawals(iExit,2);
-        TrialData.SamplingGrace(iExit, iTrial) = (ReturnTime - ExitTime);
+    for iExit = 1:size(RegisteredWithdrawals, 1) % one may enter SamplingGrace multiple time, i_exit is the number of time
+        ExitTime = RegisteredWithdrawals(iExit, 1);
+        ReturnTime = RegisteredWithdrawals(iExit, 2);
+        TrialData.SamplingGrace(iExit, iTrial) = ReturnTime - ExitTime;
     end
 end  
 
-if any(strcmp('EarlyWithdrawal',StatesThisTrial))
+if any(strcmp('EarlyWithdrawal', StatesThisTrial))
     TrialData.EarlyWithdrawal(iTrial) = true;
-elseif any(strcmp('StillSampling',StatesThisTrial))
+elseif any(strcmp('StillSampling', StatesThisTrial))
     TrialData.EarlyWithdrawal(iTrial) = false;
 end
 
 % Get total amount of time spent sampling
 if any(strcmp('Sampling', StatesThisTrial)) % Not From StimulusDelay
-    SamplingBegin = TrialStates.Sampling(1,1);
+    SamplingBegin = TrialStates.Sampling(end, 1);
     if any(strcmp('StillSampling', StatesThisTrial))
-        SamplingEnd = TrialStates.StillSampling(1,2);
+        SamplingEnd = TrialStates.StillSampling(end, 2);
     elseif any(strcmp('EarlyWithdrawal', StatesThisTrial))
         SamplingEnd = TrialStates.SamplingGrace(end,end); 
     end
@@ -68,7 +68,7 @@ end
 %% Peri-decision and pre-outcome
 if any(strcmp('NoDecision', StatesThisTrial))
     TrialData.NoDecision(iTrial) = true;
-elseif any(strcmp('StartNewTrial', StatesThisTrial)) || any(strcmp('StartLIn', StatesThisTrial)) || any(strcmp('StartRIn',StatesThisTrial))
+elseif any(strcmp('StartNewTrial', StatesThisTrial)) || any(strcmp('StartLIn', StatesThisTrial)) || any(strcmp('StartRIn', StatesThisTrial))
     TrialData.NoDecision(iTrial) = false;
 end
 

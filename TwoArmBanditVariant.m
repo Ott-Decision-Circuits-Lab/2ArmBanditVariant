@@ -31,7 +31,7 @@ if ~BpodSystem.EmulatorMode % Sound/laser waveform generation is not compulsory 
             end
         end
 
-        NosePoke_LoadWaveform(Player, 'TrialIndependent'); %Taking the last Player for now as the WaveformPlayer
+        TwoArmBanditVariant_LoadWaveform(Player, 'TrialIndependent'); %Taking the last Player for now as the WaveformPlayer
     end
 else
     disp('Warning: Sound or laser will not be played in emulator mode.')

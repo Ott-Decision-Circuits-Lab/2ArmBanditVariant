@@ -60,7 +60,9 @@ if any(strcmp('Sampling', StatesThisTrial)) % Not From StimulusDelay
     if any(strcmp('StillSampling', StatesThisTrial))
         SamplingEnd = TrialStates.StillSampling(end, 2);
     elseif any(strcmp('EarlyWithdrawal', StatesThisTrial))
-        SamplingEnd = TrialStates.SamplingGrace(end,end); 
+        SamplingEnd = TrialStates.SamplingGrace(end, end);
+    else
+        SamplingEnd = TrialStates.Sampling(end, end);
     end
     TrialData.SampleTime(iTrial) = SamplingEnd - SamplingBegin;
 end

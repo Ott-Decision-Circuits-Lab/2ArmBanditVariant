@@ -18,9 +18,18 @@ TrialStateNames = RawData.OriginalStateNamesByNumber{iTrial};
 StatesThisTrial = TrialStateNames(idxStatesVisited);
 
 %% Pre-stimulus delivery
-if any(strcmp('StartCIn', StatesThisTrial))
+if ~any(strcmp('NoTrialStart', StatesThisTrial)) % for RestartInvalidTrial, one may start CIn, looped back with BF/EW, then NoTrialStart
     TrialData.NoTrialStart(iTrial) = false;
+end
+
+if any(strcmp('StartCIn', StatesThisTrial)) % for RestartInvalidTrial, one may start CIn, looped back with BF/EW, then NoTrialStart
     TrialData.TimeCenterPoke(iTrial) = TrialStates.StartCIn(end, 1); % last one should be the actual one for the trial
+end
+
+if any(strcmp('InvalidTrial', StatesThisTrial))
+    TrialData.InvalidTrialRestarted(iTrial) = true;
+elseif TaskParameters.GUI.RestartInvalidTrial % if false, then it remains nan (non-loop style)
+    TrialData.InvalidTrialRestarted(iTrial) = false;
 end
 
 if any(strcmp('BrokeFixation', StatesThisTrial))

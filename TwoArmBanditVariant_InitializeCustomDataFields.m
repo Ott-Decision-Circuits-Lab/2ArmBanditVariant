@@ -16,6 +16,8 @@ TrialData = BpodSystem.Data.Custom.TrialData;
 TrialData.NoTrialStart(iTrial) = true; % true = no state StartCIn; false = with state StartCIn.
 
 TrialData.TimeCenterPoke(iTrial) = NaN; % Time when CIn
+TrialData.InvalidTrialRestarted(iTrial) = NaN;
+
 TrialData.BrokeFixation(iTrial) = NaN; % NaN = no state StartCIn; true = with state BrokeFixation; false = with state Sampling
 TrialData.StimDelay(iTrial) = TaskParameters.GUI.StimDelay;
 switch TaskParameters.GUIMeta.StimDelayDistribution.String{TaskParameters.GUI.StimDelayDistribution}

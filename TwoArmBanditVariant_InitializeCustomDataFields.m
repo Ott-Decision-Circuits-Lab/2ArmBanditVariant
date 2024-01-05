@@ -14,6 +14,8 @@ TrialData = BpodSystem.Data.Custom.TrialData;
 
 %% Pre-stimulus delivery
 TrialData.NoTrialStart(iTrial) = true; % true = no state StartCIn; false = with state StartCIn.
+% from 20240105, NoTrialStart has an independent state then rely on
+% StartCIn
 
 TrialData.TimeCenterPoke(iTrial) = NaN; % Time when CIn
 TrialData.InvalidTrialRestarted(iTrial) = NaN;
@@ -323,12 +325,20 @@ TrialData.Baited(:, iTrial) = rand(2, 1) < TrialData.RewardProb(:, iTrial); % on
 switch TaskParameters.GUIMeta.RiskType.String{TaskParameters.GUI.RiskType}
     case 'BlockFixHolding'
         if TrialData.BlockTrialNumber(iTrial) ~= 1
-            TrialData.Baited(:, iTrial) = TrialData.Baited(:, iTrial) | TrialData.AvailableReward(:, iTrial-1);
+            if isnan(TrialData.ChoiceLeft(iTrial-1))
+                TrialData.Baited(:, iTrial) = TrialData.AvailableReward(:, iTrial-1);
+            else
+                TrialData.Baited(:, iTrial) = TrialData.Baited(:, iTrial) | TrialData.AvailableReward(:, iTrial-1);
+            end
         end
         
-    case 'BlockCued'
+    case 'BlockCued' % for 2-arm version, it has WithHolding as a guide for matching (not used at the moment)
         if ~TaskParameters.GUI.SingleSidePoke && TrialData.BlockTrialNumber(iTrial) ~= 1
-            TrialData.Baited(:, iTrial) = TrialData.Baited(:, iTrial) | TrialData.AvailableReward(:, iTrial-1);
+            if isnan(TrialData.ChoiceLeft(iTrial-1))
+                TrialData.Baited(:, iTrial) = TrialData.AvailableReward(:, iTrial-1);
+            else
+                TrialData.Baited(:, iTrial) = TrialData.Baited(:, iTrial) | TrialData.AvailableReward(:, iTrial-1);
+            end
         end
     
 end

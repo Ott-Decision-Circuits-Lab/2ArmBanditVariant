@@ -44,6 +44,14 @@ try
     InvalidTrialRestarted = SessionData.Custom.TrialData.InvalidTrialRestarted(1:nTrials);
 catch
     InvalidTrialRestarted = nan(1, nTrials);
+    for iTrial = 1:nTrials
+        if isfield(SessionData.RawEvents.Trial{iTrial}.States, 'InvalidTrial')
+            InvalidTrialRestarted(iTrial) = 0;
+            if ~isnan(SessionData.RawEvents.Trial{iTrial}.States.InvalidTrial(1,1))
+                InvalidTrialRestarted(iTrial) = 1;
+            end
+        end
+    end
 end
 
 SampleTime = SessionData.Custom.TrialData.SampleTime(1:nTrials);
@@ -1086,7 +1094,7 @@ switch SessionData.SettingsFile.GUIMeta.RiskType.String{SessionData.SettingsFile
             InvalidBFAxes = axes(FigHandle, 'Position', [0.40    0.28    0.11    0.20]);
             InvalidBFBar = barh(InvalidBFAxes, nAttemptRewardProbSortedBFCount(:,1), nAttemptRewardProbSortedBFCount(:,2:end));
             
-            xlabel('BF Attempt')
+            xlabel('BF')
             ylabel('iAttempt')
             set(InvalidBFAxes,...
                 'YLim', [0 MaxAttempt+1],...
@@ -1103,7 +1111,7 @@ switch SessionData.SettingsFile.GUIMeta.RiskType.String{SessionData.SettingsFile
             InvalidEWAxes = axes(FigHandle, 'Position', [0.24    0.28    0.11    0.20]);
             InvalidEWBar = barh(InvalidEWAxes, nAttemptRewardProbSortedEWCount(:,1), nAttemptRewardProbSortedEWCount(:,2:end));
             
-            xlabel('EW Attempt')
+            xlabel('EW')
             set(InvalidEWAxes,...
                 'XDir', 'reverse',...
                 'YAxisLocation', 'right',...

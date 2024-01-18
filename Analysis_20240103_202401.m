@@ -624,7 +624,67 @@ switch SessionData.SettingsFile.GUIMeta.RiskType.String{SessionData.SettingsFile
     case 'BlockFixHolding'
     %% overview of events across session
     title(TrialOverviewAxes, strcat(num2str(Animal), '\_', Date, '\_Matching'))
+    
+    %% RestartInvalidTrial Analysis
+    if SessionData.SettingsFile.GUI.RestartInvalidTrial % only make sense if not loop
+        % Stats for InvalidAttempt
+        InvalidCInTime = [];
+        InvalidTrialRestartIdx = [];
+        InvalidEW = [];
+        InvalidBF = [];
+        InvalidTrialRewardProb = [];
 
+        for iTrial = 1:SessionData.nTrials
+            if ~isnan(SessionData.RawEvents.Trial{iTrial}.States.InvalidTrial(1,1))
+                iTrialnInvalidTrial = height(SessionData.RawEvents.Trial{iTrial}.States.InvalidTrial);
+                iTrialInvalidCInTime = SessionData.RawEvents.Trial{iTrial}.States.InvalidTrial(:,1) - ...
+                                       SessionData.RawEvents.Trial{iTrial}.States.StartCIn(1:iTrialnInvalidTrial,1);
+                InvalidCInTime = [InvalidCInTime; iTrialInvalidCInTime];
+                InvalidTrialRestartIdx = [InvalidTrialRestartIdx; (1:iTrialnInvalidTrial)'];
+                InvalidTrialRewardProb = [InvalidTrialRewardProb; TrialRewardProb(iTrial) * ones(iTrialnInvalidTrial,1)];
+                InvalidBF = [InvalidBF; iTrialInvalidCInTime < SessionData.Custom.TrialData.StimDelay(iTrial)];
+                InvalidEW = [InvalidEW; iTrialInvalidCInTime > SessionData.Custom.TrialData.StimDelay(iTrial)];
+            end
+        end
+        
+        InvalidAttemptTable = table(InvalidTrialRestartIdx, InvalidTrialRewardProb,...
+                                    InvalidBF, InvalidEW,...
+                                    'VariableNames', {'Idx', 'Pr', 'BF', 'EW'});
+        MaxAttempt = max(InvalidAttemptTable.Idx);
+        
+        % Attempt with BrokeFixation (Cue not being played)
+        nAttemptRewardProbSortedBFCount = pivot(InvalidAttemptTable(InvalidAttemptTable.BF==1, :), Rows='Idx');
+        nAttemptRewardProbSortedBFCount = nAttemptRewardProbSortedBFCount.Variables;
+        InvalidBFAxes = axes(FigHandle, 'Position', [0.90    0.57    0.08    0.13]);
+        InvalidBFBar = barh(InvalidBFAxes, nAttemptRewardProbSortedBFCount(:,1), nAttemptRewardProbSortedBFCount(:,2:end),...
+                            'FaceColor' ,[1 1 1]);
+        
+        xlabel('BF')
+        ylabel('iAttempt')
+        set(InvalidBFAxes,...
+            'YLim', [0 MaxAttempt+1],...
+            'YTickLabel', {},...
+            'FontSize', 10);
+        
+        % Attempt with EarlyWithdrawl (Cue being played)
+        nAttemptRewardProbSortedEWCount = pivot(InvalidAttemptTable(InvalidAttemptTable.EW==1, :), Rows='Idx');
+        nAttemptRewardProbSortedEWCount = nAttemptRewardProbSortedEWCount.Variables;
+        InvalidEWAxes = axes(FigHandle, 'Position', [0.76    0.57    0.08    0.13]);
+        InvalidEWBar = barh(InvalidEWAxes, nAttemptRewardProbSortedEWCount(:,1), nAttemptRewardProbSortedEWCount(:,2:end),...
+                            'FaceColor' ,[1 1 1]);
+        
+        xlabel('EW')
+        set(InvalidEWAxes,...
+            'XDir', 'reverse',...
+            'YAxisLocation', 'right',...
+            'YLim', [0 MaxAttempt+1],...
+            'YTick', 1:MaxAttempt,...
+            'YTickLabel', cellstr(num2str((1:MaxAttempt)')),...
+            'FontSize', 10);
+        
+        disp('YOu aRE a bEAutIFul HUmaN BeiNG.')
+    end
+    
     %% Block switching behaviour across session
     BlockSwitchAxes = axes(FigHandle, 'Position', [0.01    0.60    0.48    0.11]);
     hold(BlockSwitchAxes, 'on');

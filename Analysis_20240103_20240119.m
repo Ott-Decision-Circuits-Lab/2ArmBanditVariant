@@ -1,4 +1,4 @@
-function FigHandle = Analysis_20240103_202401(DataFile)
+function FigHandle = Analysis_20240103_20240119(DataFile)
 % 2ArmBanditVariant Analysis Function
 % Developed by Nina Grimme & Antonio Lee @ BCCN Berlin
 % Version 1.1 ~ Mainly analysing loop style (if looping EW make sense)

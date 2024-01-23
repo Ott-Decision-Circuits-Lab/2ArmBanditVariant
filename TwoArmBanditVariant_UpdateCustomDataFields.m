@@ -26,12 +26,6 @@ if any(strcmp('StartCIn', StatesThisTrial)) % for RestartInvalidTrial, one may s
     TrialData.TimeCenterPoke(iTrial) = TrialStates.StartCIn(end, 1); % last one should be the actual one for the trial
 end
 
-if any(strcmp('InvalidTrial', StatesThisTrial))
-    TrialData.InvalidTrialRestarted(iTrial) = true;
-elseif TaskParameters.GUI.RestartInvalidTrial % if false, then it remains nan (non-loop style)
-    TrialData.InvalidTrialRestarted(iTrial) = false;
-end
-
 if any(strcmp('BrokeFixation', StatesThisTrial))
     TrialData.BrokeFixation(iTrial) = true;
 elseif any(strcmp('Sampling', StatesThisTrial))

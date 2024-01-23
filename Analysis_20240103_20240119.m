@@ -346,7 +346,7 @@ MoveTimeStatsText(i+1) = text(MoveTimeAxes, 0, -0.35,...
 FeedbackWaitingTimeAxes = axes(FigHandle, 'Position', [0.76    0.09    0.22    0.16]);
 hold(FeedbackWaitingTimeAxes, 'on');
 
-NotBaitedTrialData = TrialDataTable(TrialDataTable.NotBaited==1, :);
+NotBaitedTrialData = TrialDataTable(TrialDataTable.NotBaited==1 & TrialDataTable.EarlyWithdrawal==0, :);
 FeedbackWaitingTimeSwarmchart = [];
 for i = 1:length(RewardProbCategories)
     FeedbackWaitingTimeSwarmchart(i) = swarmchart(FeedbackWaitingTimeAxes, NotBaitedTrialData(NotBaitedTrialData.TrialRewardProb == RewardProbCategories(i), :),...
@@ -362,7 +362,7 @@ set(FeedbackWaitingTimeAxes,...
     'XLim', [0, 1],...
     'YLim', [0, max(1, SessionData.SettingsFile.GUI.FeedbackDelayMax * 1.5)],...
     'FontSize', 10);
-% title('NotBaited Invested Time', 'FontSize', 12)
+title('Clean Trial', 'FontSize', 12)
 xlabel(FeedbackWaitingTimeAxes, 'Reward Prob', 'FontSize', 12, 'FontWeight', 'bold')
 ylabel(FeedbackWaitingTimeAxes, 'NotBaited Invested Time (s)', 'FontSize', 12, 'FontWeight', 'bold')
 

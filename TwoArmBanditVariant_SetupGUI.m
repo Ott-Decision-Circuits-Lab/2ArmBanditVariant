@@ -19,9 +19,7 @@ if isempty(fieldnames(TaskParameters))
 
     TaskParameters.GUI.PreITI = 0.5; % before wait_Cin
     TaskParameters.GUI.WaitCInMax = 20; % max waiting time for C_in before a new trial starts, useful to track progress
-    TaskParameters.GUI.RestartInvalidTrial = false;
-    TaskParameters.GUIMeta.RestartInvalidTrial.Style = 'checkbox';
-
+    
     TaskParameters.GUI.ChoiceDeadline = 10; % max waiting time for S_in after stimuli
     TaskParameters.GUI.NoDecisionTimeOut = 1; % (s) where subject chooses the side poke without light
     TaskParameters.GUI.NoDecisionFeedback = 1; % feedback for NoDecision
@@ -50,7 +48,7 @@ if isempty(fieldnames(TaskParameters))
     
     TaskParameters.GUIPanels.General = {'SessionDescription', 'Ports_LMR', 'EphysSession',...
                                         'Wire1VideoTrigger',...
-                                        'PreITI', 'WaitCInMax', 'RestartInvalidTrial', 'ChoiceDeadline',...
+                                        'PreITI', 'WaitCInMax', 'ChoiceDeadline',...
                                         'NoDecisionTimeOut', 'NoDecisionFeedback',...
                                         'SingleSidePoke',...
                                         'IncorrectChoiceTimeOut', 'IncorrectChoiceFeedback',...
@@ -79,6 +77,9 @@ if isempty(fieldnames(TaskParameters))
     TaskParameters.GUI.BrokeFixationFeedback = 1; % feedback for BrokeFixation
     TaskParameters.GUIMeta.BrokeFixationFeedback.Style = 'popupmenu';
     TaskParameters.GUIMeta.BrokeFixationFeedback.String = {'None', 'WhiteNoise'};
+    
+    TaskParameters.GUI.RenewBrokeFixation = false; % if true, BrokeFixation state transits to WaitCIn instead of ITI
+    TaskParameters.GUIMeta.RenewBrokeFixation.Style = 'checkbox';
 
     TaskParameters.GUI.StimulusTime = 0.35; % legnth of stimulus reception, also how long the animal is required to sample (to avoid random decision)
     
@@ -87,14 +88,19 @@ if isempty(fieldnames(TaskParameters))
     TaskParameters.GUI.EarlyWithdrawalFeedback = 1; % feedback for EarlyWithdrawal
     TaskParameters.GUIMeta.EarlyWithdrawalFeedback.Style = 'popupmenu';
     TaskParameters.GUIMeta.EarlyWithdrawalFeedback.String = {'None', 'WhiteNoise'};
-
+    
+    TaskParameters.GUI.RenewEarlyWithdrawal = false; % if true, EarlyWithdrawal state transits to WaitCIn instead of ITI
+    TaskParameters.GUIMeta.RenewEarlyWithdrawal.Style = 'checkbox';
+    
     TaskParameters.GUIPanels.Sampling = {'StimDelay', 'StimDelayDistribution',...
                                          'StimDelayMin', 'StimDelayMax',...
                                          'StimDelayIncrStepSize', 'StimDelayDecrStepSize',...
                                          'StimDelayTau', 'StimDelayAlpha', 'StimDelayBeta',...
                                          'BrokeFixationTimeOut', 'BrokeFixationFeedback',...
+                                         'RenewBrokeFixation',...
                                          'StimulusTime', 'SamplingGrace',...
-                                         'EarlyWithdrawalTimeOut', 'EarlyWithdrawalFeedback'};
+                                         'EarlyWithdrawalTimeOut', 'EarlyWithdrawalFeedback',...
+                                         'RenewEarlyWithdrawal'};
                                      
     %% FeedbackDelay, original named "Side Ports" ("waiting for feedback(either reward or punishment)")
     TaskParameters.GUI.FeedbackDelayDistribution = 1;

@@ -35,7 +35,7 @@ try
     DataTable.StimWaitingTime = TrialData.StimWaitingTime(1:nTrials).';
 
     %% Peri-stimulus delivery and Pre-decision
-    DataTable.SamplingGrace = TrialData.SamplingGrace(1, 1:nTrials).'; % only first row is exported
+    % DataTable.SamplingGrace = TrialData.SamplingGrace(1, 1:nTrials).'; % only first row is exported
     DataTable.EarlyWithdrawal = TrialData.EarlyWithdrawal(1:nTrials).';
     DataTable.SampleTime = TrialData.SampleTime(1:nTrials).';
     DataTable.LightLeft = TrialData.LightLeft(1:nTrials).';
@@ -100,7 +100,8 @@ end
 try
     [~, session_name, ~] = fileparts(BpodSystem.Path.CurrentDataFile);
     csv_name = "_trial_custom_data_and_params.csv";
-    file_name = string(strcat("O:\data\", session_name, csv_name));
+    ServerPath = OttLabDataServerFolderPath();
+    file_name = string(strcat(ServerPath, session_name, csv_name));
     writetable(FullTable, file_name)
 catch
     warning('Error: writetable malfunction. No .csv file is saved.')

@@ -281,7 +281,10 @@ switch TaskParameters.GUIMeta.RiskType.String{TaskParameters.GUI.RiskType}
         end
         
     %{
-    Only consider first 2 cues
+    Only consider first 2 cues, in the future, a separate protocol shall be
+    made to give a full range of cross modality cueing different aspects in
+    value-based decision making. Here is only a temporary version for quick
+    experimental testing
     %}
     case 'CuedBlockRatio'
         if iTrial == 1
@@ -299,7 +302,11 @@ switch TaskParameters.GUIMeta.RiskType.String{TaskParameters.GUI.RiskType}
                 TrialData.BlockTrialNumber(iTrial) = 1;
                 TaskParameters.GUI.BlockLen = randi([TaskParameters.GUI.BlockLenMin, TaskParameters.GUI.BlockLenMax]);
                 TaskParameters.GUI.NextBlockTrialNumber = (iTrial-1) + TaskParameters.GUI.BlockLen + 1;
-                TrialData.CueRatio(iTrial) = 1.3 - TrialData.CueRatio(iTrial-1); % hard-coded as 80/20 and 50/50
+                if mod(TrialData.BlockNumber(iTrial), 2) == 1
+                    TrialData.CueRatio(iTrial) = 0.25; % more Cue 2 (usually P_{low} = 0.1)
+                else
+                    TrialData.CueRatio(iTrial) = 0.75; % more Cue 1 (usually P_{high} = 0.8)
+                end
             end
         end
         

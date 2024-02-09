@@ -235,7 +235,34 @@ switch Mode
                 elseif isfield(BpodSystem.ModuleUSB, 'HiFi1')
                     Player.load(SoundIndex, [LeftSound; RightSound]);
                 end
+            
+            case "CuedBlockRatio"
+                TrialData = BpodSystem.Data.Custom.TrialData;
+                StimulusTime = TaskParameters.GUI.StimulusTime;
+                                
+                SoundIndex = 8;
+                LeftSound = [];
+                RightSound = [];
+                if StimulusTime > 0
+                    LeftSound = GenerateRiskCue(fs, StimulusTime, 'Freq', TrialData.RewardCueLeft(1,iTrial), TrialData.RewardCueLeft(2,iTrial));
+                    RightSound = GenerateRiskCue(fs, StimulusTime, 'Freq', TrialData.RewardCueRight(1,iTrial), TrialData.RewardCueRight(2,iTrial));
+                else
+                    disp('StimulusTime in GUI should be a positive number. Empty track will be loaded.')
+                end
+                
+                if TrialData.LightLeft(iTrial) == 0
+                    LeftSound = [0];
+                elseif TrialData.LightLeft(iTrial) == 1
+                    RightSound = [0];
+                end
 
+                if isfield(BpodSystem.ModuleUSB, 'WavePlayer1')
+                    Player.loadWaveform(SoundIndex, LeftSound);
+                    Player.loadWaveform(SoundIndex+1, RightSound);
+                    Player.TriggerProfiles(SoundIndex, 1:2) = [SoundIndex SoundIndex+1];
+                elseif isfield(BpodSystem.ModuleUSB, 'HiFi1')
+                    Player.load(SoundIndex, [LeftSound; RightSound]);
+                end
         end
 end % switch
 end % function

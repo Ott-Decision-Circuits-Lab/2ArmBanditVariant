@@ -98,10 +98,12 @@ catch
 end
   
 try
-    [~, session_name, ~] = fileparts(BpodSystem.Path.CurrentDataFile);
-    csv_name = "_trial_custom_data_and_params.csv";
+    [~, SessionName, ~] = fileparts(BpodSystem.Path.CurrentDataFile);
+    CSVName = "_trial_custom_data_and_params.csv";
     ServerPath = OttLabDataServerFolderPath();
-    file_name = string(strcat(ServerPath, session_name, csv_name));
+    file_name = string(strcat(ServerPath, BpodSystem.Data.Info.Subject,...
+                       '\bpod_session\', SessionName(end-14:end),...
+                       '\', SessionName, CSVName));
     writetable(FullTable, file_name)
 catch
     warning('Error: writetable malfunction. No .csv file is saved.')

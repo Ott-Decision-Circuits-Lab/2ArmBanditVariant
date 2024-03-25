@@ -814,7 +814,7 @@ switch SessionData.SettingsFile.GUIMeta.RiskType.String{SessionData.SettingsFile
 
     set(HistoryCorrelationHandle, 'FontSize', 10)
     xlabel(HistoryCorrelationHandle, 'nTrials back');
-    ylabel(HistoryCorrelationHandle, 'Correlation Coeff.');
+    ylabel(HistoryCorrelationHandle, 'Coeff.');
     title(HistoryCorrelationHandle, 'Trial History GLM Fit')
 
     if model ~= false

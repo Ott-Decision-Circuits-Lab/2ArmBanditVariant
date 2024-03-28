@@ -478,6 +478,12 @@ ITITimer = TaskParameters.GUI.ITI;
 if TaskParameters.GUI.VI
     ITITimer = min([exprnd(TaskParameters.GUI.ITI), TaskParameters.GUI.ITI * 5]); % exp(-5) = 0.0067
 end
+switch TaskParameters.GUIMeta.RiskType.String{TaskParameters.GUI.RiskType}
+    case 'CuedBlockITI'
+        if mod(TrialData.BlockNumber(iTrial), 2) == 0 % longer ITI
+            ITITimer = TaskParameters.GUI.ITI * 2;
+        end
+end
 sma = AddState(sma, 'Name', 'ITI',...
     'Timer', ITITimer,...
     'StateChangeConditions',{'Tup', 'exit'},...

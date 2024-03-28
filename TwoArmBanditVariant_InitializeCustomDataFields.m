@@ -115,6 +115,19 @@ switch TaskParameters.GUIMeta.FeedbackDelayDistribution.String{TaskParameters.GU
     case 'TruncExp'
         TrialData.FeedbackDelay(iTrial) = TruncatedExponential(TaskParameters.GUI.FeedbackDelayMin, TaskParameters.GUI.FeedbackDelayMax, TaskParameters.GUI.FeedbackDelayTau);
         
+        switch TaskParameters.GUIMeta.RiskType.String{TaskParameters.GUI.RiskType}
+            case 'CuedBlockTau'
+                if TrialData.BlockNumber(iTrial) > 1
+                    if mod(TrialData.BlockNumber(iTrial), 2) == 0 % longer ITI
+                        BlockFeedbackDelayTau = 2.5;
+                    else
+                        BlockFeedbackDelayTau = 1;
+                    end
+                    BlockFeedbackDelayMax = TaskParameters.GUI.FeedbackDelayMin + 5 * BlockFeedbackDelayTau; % exp(-5) < 0.01
+                    TrialData.FeedbackDelay(iTrial) = TruncatedExponential(TaskParameters.GUI.FeedbackDelayMin, BlockFeedbackDelayMax, BlockFeedbackDelayTau);
+                end
+        end
+
     case 'Beta'
         %% !!to be implemented!!
 end
@@ -315,6 +328,54 @@ switch TaskParameters.GUIMeta.RiskType.String{TaskParameters.GUI.RiskType}
         TrialData.RewardCueLeft(:,iTrial) = [TaskParameters.GUI.ToneRiskTable.ToneStartFreq(CueLeftIdx), TaskParameters.GUI.ToneRiskTable.ToneEndFreq(CueLeftIdx)]';
         TrialData.RewardCueRight(:,iTrial) = [TaskParameters.GUI.ToneRiskTable.ToneStartFreq(CueRightIdx), TaskParameters.GUI.ToneRiskTable.ToneEndFreq(CueRightIdx)]';
         TrialData.RewardProb(:,iTrial) = [TaskParameters.GUI.ToneRiskTable.ToneCuedRewardProbability(CueLeftIdx), TaskParameters.GUI.ToneRiskTable.ToneCuedRewardProbability(CueRightIdx)]';
+
+    case 'CuedBlockITI'
+        NoOfValidCue = min([size(TaskParameters.GUI.ToneRiskTable.ToneStartFreq, 1), size(TaskParameters.GUI.ToneRiskTable.ToneEndFreq, 1), size(TaskParameters.GUI.ToneRiskTable.ToneCuedRewardProbability, 1)]);
+        CueLeftIdx = randi(NoOfValidCue);
+        CueRightIdx = randi(NoOfValidCue);
+        TrialData.RewardCueLeft(:,iTrial) = [TaskParameters.GUI.ToneRiskTable.ToneStartFreq(CueLeftIdx), TaskParameters.GUI.ToneRiskTable.ToneEndFreq(CueLeftIdx)]';
+        TrialData.RewardCueRight(:,iTrial) = [TaskParameters.GUI.ToneRiskTable.ToneStartFreq(CueRightIdx), TaskParameters.GUI.ToneRiskTable.ToneEndFreq(CueRightIdx)]';
+        TrialData.RewardProb(:,iTrial) = [TaskParameters.GUI.ToneRiskTable.ToneCuedRewardProbability(CueLeftIdx), TaskParameters.GUI.ToneRiskTable.ToneCuedRewardProbability(CueRightIdx)]';
+        
+        if iTrial == 1
+            TrialData.BlockNumber(iTrial) = 1;
+            TrialData.BlockTrialNumber(iTrial) = 1;
+            TaskParameters.GUI.BlockLen = randi([TaskParameters.GUI.BlockLenMin, TaskParameters.GUI.BlockLenMax]);
+            TaskParameters.GUI.NextBlockTrialNumber = TaskParameters.GUI.BlockLen + 1;
+        else
+            TrialData.BlockNumber(iTrial) = TrialData.BlockNumber(iTrial-1);
+            TrialData.BlockTrialNumber(iTrial) = TrialData.BlockTrialNumber(iTrial-1) + 1;
+            if TrialData.BlockTrialNumber(iTrial) > TaskParameters.GUI.BlockLen
+                TrialData.BlockNumber(iTrial) = TrialData.BlockNumber(iTrial-1) + 1;
+                TrialData.BlockTrialNumber(iTrial) = 1;
+                TaskParameters.GUI.BlockLen = randi([TaskParameters.GUI.BlockLenMin, TaskParameters.GUI.BlockLenMax]);
+                TaskParameters.GUI.NextBlockTrialNumber = (iTrial-1) + TaskParameters.GUI.BlockLen + 1;
+            end
+        end
+
+    case 'CuedBlockTau'
+        NoOfValidCue = min([size(TaskParameters.GUI.ToneRiskTable.ToneStartFreq, 1), size(TaskParameters.GUI.ToneRiskTable.ToneEndFreq, 1), size(TaskParameters.GUI.ToneRiskTable.ToneCuedRewardProbability, 1)]);
+        CueLeftIdx = randi(NoOfValidCue);
+        CueRightIdx = randi(NoOfValidCue);
+        TrialData.RewardCueLeft(:,iTrial) = [TaskParameters.GUI.ToneRiskTable.ToneStartFreq(CueLeftIdx), TaskParameters.GUI.ToneRiskTable.ToneEndFreq(CueLeftIdx)]';
+        TrialData.RewardCueRight(:,iTrial) = [TaskParameters.GUI.ToneRiskTable.ToneStartFreq(CueRightIdx), TaskParameters.GUI.ToneRiskTable.ToneEndFreq(CueRightIdx)]';
+        TrialData.RewardProb(:,iTrial) = [TaskParameters.GUI.ToneRiskTable.ToneCuedRewardProbability(CueLeftIdx), TaskParameters.GUI.ToneRiskTable.ToneCuedRewardProbability(CueRightIdx)]';
+        
+        if iTrial == 1
+            TrialData.BlockNumber(iTrial) = 1;
+            TrialData.BlockTrialNumber(iTrial) = 1;
+            TaskParameters.GUI.BlockLen = randi([TaskParameters.GUI.BlockLenMin, TaskParameters.GUI.BlockLenMax]);
+            TaskParameters.GUI.NextBlockTrialNumber = TaskParameters.GUI.BlockLen + 1;
+        else
+            TrialData.BlockNumber(iTrial) = TrialData.BlockNumber(iTrial-1);
+            TrialData.BlockTrialNumber(iTrial) = TrialData.BlockTrialNumber(iTrial-1) + 1;
+            if TrialData.BlockTrialNumber(iTrial) > TaskParameters.GUI.BlockLen
+                TrialData.BlockNumber(iTrial) = TrialData.BlockNumber(iTrial-1) + 1;
+                TrialData.BlockTrialNumber(iTrial) = 1;
+                TaskParameters.GUI.BlockLen = randi([TaskParameters.GUI.BlockLenMin, TaskParameters.GUI.BlockLenMax]);
+                TaskParameters.GUI.NextBlockTrialNumber = (iTrial-1) + TaskParameters.GUI.BlockLen + 1;
+            end
+        end
 end
 
 TaskParameters.GUI.RewardProbActualLeft = TrialData.RewardProb(1,iTrial);
@@ -338,7 +399,7 @@ switch TaskParameters.GUIMeta.RiskType.String{TaskParameters.GUI.RiskType}
             end
         end
         
-    case 'BlockCued' % for 2-arm version, it has WithHolding as a guide for matching (not used at the moment)
+    case 'BlockCued' % for 2-arm version, it can has Holding as a guide for matching (not used at the moment)
         if ~TaskParameters.GUI.SingleSidePoke && TrialData.BlockTrialNumber(iTrial) ~= 1
             if isnan(TrialData.ChoiceLeft(iTrial-1))
                 TrialData.Baited(:, iTrial) = TrialData.AvailableReward(:, iTrial-1);

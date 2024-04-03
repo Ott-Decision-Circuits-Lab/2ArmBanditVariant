@@ -143,6 +143,28 @@ switch TaskParameters.GUIMeta.RiskType.String{TaskParameters.GUI.RiskType}
         else
             disp('Neither HiFi nor analog module is setup. No Sampling Cued is played.');
         end
+
+    case 'CuedBlockITI'
+        if isfield(BpodSystem.ModuleUSB, 'HiFi1')
+            SamplingAction = {'HiFi1', ['P' 7]};
+        elseif isfield(BpodSystem.ModuleUSB, 'WavePlayer1')
+            SamplingAction = {'WavePlayer1', ['P' 7]};
+        elseif BpodSystem.EmulatorMode
+            disp('BpodSystem is in EmulatorMode. No Sampling Cued is played.');
+        else
+            disp('Neither HiFi nor analog module is setup. No Sampling Cued is played.');
+        end
+
+    case 'CuedBlockTau'
+        if isfield(BpodSystem.ModuleUSB, 'HiFi1')
+            SamplingAction = {'HiFi1', ['P' 7]};
+        elseif isfield(BpodSystem.ModuleUSB, 'WavePlayer1')
+            SamplingAction = {'WavePlayer1', ['P' 7]};
+        elseif BpodSystem.EmulatorMode
+            disp('BpodSystem is in EmulatorMode. No Sampling Cued is played.');
+        else
+            disp('Neither HiFi nor analog module is setup. No Sampling Cued is played.');
+        end
 end
 sma = AddState(sma, 'Name', 'Sampling',...
     'Timer', TaskParameters.GUI.StimulusTime,...

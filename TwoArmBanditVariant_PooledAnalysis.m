@@ -1,4 +1,4 @@
-function TwoArmBanditVariant_GroupAnalysis(varargin)
+function TwoArmBanditVariant_PooledAnalysis(varargin)
 %{
 First create on 20230622 by Antonio Lee for AG Ott @HU Berlin
 With the file server architecture, this functions runs through the
@@ -20,7 +20,7 @@ addParameter(p, 'PeriodEndDate', {}, @iscell);
 parse(p, varargin{:});
 p = p.Results;
 
-FileServerDataFolderPath = '\\ottlabfs.bccn-berlin.pri\ottlab\data\';
+FileServerDataFolderPath = OttLabDataServerFolderPath();
 
 if isempty(p.Animal)
     AnimalDataFolderPath = uigetdir(FileServerDataFolderPath);

@@ -247,8 +247,8 @@ try
     SmoothedPredictedChoiceLeft = smooth(PredictedChoice, BinWidth, 'moving','omitnan');
     SmoothedPredictedChoicePlot = plot(BlockSwitchAxes, idxTrial, SmoothedPredictedChoiceLeft * 100, '-r', 'LineWidth', 0.2);
     
-    ExploringTrial = find(abs(ChoiceLeft - PredictedChoice') >= 0.5);
-    ExploitingTrial = find(abs(ChoiceLeft - PredictedChoice') < 0.5);
+    ExploringTrial = find(abs(ChoiceLeft - PredictedLeftChoiceProb') >= 0.5);
+    ExploitingTrial = find(abs(ChoiceLeft - PredictedLeftChoiceProb') < 0.5);
     PredictedExplorationChoicePlot = plot(BlockSwitchAxes, ExploringTrial, PredictedChoice(ExploringTrial) * 120 - 10,...
                                           'Color', 'none',...
                                           'Marker', '.',...

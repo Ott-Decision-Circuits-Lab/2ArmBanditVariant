@@ -1,5 +1,6 @@
-function AnalysisFigure = TwoArmBanditVariant_Matching_LauGlimcherGLM(DataFile)
+function AnalysisFigure = TwoArmBanditVariant_Matching_Omniscient(DataFile)
 % Matching Analysis Function
+% Omniscient = precise tracking of apparent reward prob
 % Developed by Antonio Lee @ BCCN Berlin
 % Version 2.0 ~ April 2024
 
@@ -159,7 +160,7 @@ set(FigureInfoAxes,...
     'XColor', 'w',...
     'YColor', 'w')
 
-FigureTitle = strcat(RatName, '_', SessionDateTime, '_Matching_LauGlimcherGLM');
+FigureTitle = strcat(RatName, '_', SessionDateTime, '_Matching_Omniscient');
 
 FigureTitleText = text(FigureInfoAxes, 0, 0,...
                        FigureTitle,...
@@ -214,40 +215,33 @@ if ~isempty(ChoiceLeft) && ~all(isnan(ChoiceLeft))
     % title('Block switching behaviour')
 end
 
-%% Lau Glimcher-model & Predicted Choice
+%% Omniscient-model & Predicted Choice
 try 
     % preparing the data for design matrix
-    Choices = ChoiceLeft';
-    Choices(Choices==0) = -1; %1 = left; -1 = right
-    Rewards = Rewarded'==1;
-    Rewards = Rewards .* Choices; % reward per choice +/-1   % 1 = left and rewarded; -1 = right and rewarded
-    Unrewards = Rewarded'==0;
-    Unrewards = Rewards .* Choices;
-
-    % build trial history kernels (n=5)
-    HistoryKernelSize = 5;
-    Choices = repmat(Choices, 1, HistoryKernelSize); % creates a matrix with each row representing the data from one trial
-    Rewards = repmat(Rewards, 1, HistoryKernelSize); % each column is one variable associated with the explanatory varible (Choices, Rewards)
-    Unrewards = repmat(Unrewards, 1, HistoryKernelSize);
-    for j = 1:HistoryKernelSize                      % in this case being the last 5 trials
-        Choices(:, j) = circshift(Choices(:, j), j);       
-        Choices(1:j, j) = 0;                       
-        Rewards(:, j) = circshift(Rewards(:, j), j);      
-        Rewards(1:j, j) = 0;
-        Unrewards(:, j) = circshift(Unrewards(:, j), j);      
-        Unrewards(1:j, j) = 0; 
+    LeftApparentRewardProb = zeros(size(idxTrial));
+    RightApparentRewardProb = zeros(size(idxTrial));
+    
+    for iTrial = idxTrial
+        if BlockTrialNumber(iTrial) == 1
+            LeftApparentRewardProb(iTrial) = RewardProbLeft(iTrial);
+            RightApparentRewardProb(iTrial) = RewardProbRight(iTrial);
+        elseif isnan(ChoiceLeft(iTrial-1))
+            LeftApparentRewardProb(iTrial) = LeftApparentRewardProb(iTrial-1);
+            RightApparentRewardProb(iTrial) = RightApparentRewardProb(iTrial-1);
+        else
+            if ChoiceLeft(iTrial-1) == 1
+                LeftApparentRewardProb(iTrial) = RewardProbLeft(iTrial);
+                RightApparentRewardProb(iTrial) = RewardProbRight(iTrial) + (1 - RewardProbRight(iTrial)) * RightApparentRewardProb(iTrial-1);
+            else
+                LeftApparentRewardProb(iTrial) = RewardProbLeft(iTrial) + (1 - RewardProbLeft(iTrial)) * LeftApparentRewardProb(iTrial-1);
+                RightApparentRewardProb(iTrial) = RewardProbRight(iTrial);
+            end
+        end
     end
     
-    % concatenate to build design matrix X
-    X = [Choices, Rewards];
-    X(isnan(X)) = 0;
-    
-    LauGlimcherGLM = fitglm(X, ChoiceLeft', 'distribution', 'binomial');
+    LogOdds = log(LeftApparentRewardProb' ./ RightApparentRewardProb');   %logodds for both: left and right
+    PredictedLeftChoiceProb = LeftApparentRewardProb' ./ (LeftApparentRewardProb' + RightApparentRewardProb');
 
-    % predict choices
-    PredictedLeftChoiceProb = LauGlimcherGLM.Fitted.Response;
-    LogOdds = LauGlimcherGLM.Fitted.LinearPredictor;   %logodds for both: left and right
-    
     PredictedChoice = double(PredictedLeftChoiceProb>=0.5);
     PredictedChoice(isnan(ChoiceLeft)) = nan;
     SmoothedPredictedChoiceLeft = smooth(PredictedChoice, BinWidth, 'moving','omitnan');
@@ -314,33 +308,12 @@ if model
     PsychometricGLM = fitglm(NotBaitedLogOdds, NotBaitedChoice(:), 'Distribution', 'binomial');
     PsychometricGLMPlot = plot(PsychometricAxes, xdata, predict(PsychometricGLM, xdata)*100, '-', 'Color', [.5,.5,.5], 'LineWidth', 0.5);
     
-    %% Coefficient of Lau-Glimcher GLM
-    ModelCoefficientAxes = axes(AnalysisFigure, 'Position', [0.04    0.56    0.15    0.11]);
-    hold(ModelCoefficientAxes, 'on');
-    
-    set(ModelCoefficientAxes, 'FontSize', 10)
-    xlabel(ModelCoefficientAxes, 'iTrial back');
-    ylabel(ModelCoefficientAxes, 'Coeff.');
-    title(ModelCoefficientAxes, 'GLM Fitted Coefficients')
-    
-    xdata = 1:HistoryKernelSize;
-    ydataChoice = LauGlimcherGLM.Coefficients.Estimate(2:1+HistoryKernelSize);
-    ydataReward = LauGlimcherGLM.Coefficients.Estimate(7:1+2*HistoryKernelSize);
-    intercept = LauGlimcherGLM.Coefficients.Estimate(1);
-
-    ChoiceHistoryCoefficientPlot = plot(ModelCoefficientAxes, xdata, ydataChoice', '-k');
-    RewardHistoryCoefficientPlot = plot(ModelCoefficientAxes, xdata, ydataReward', '--k');
-    InterceptPlot = plot(ModelCoefficientAxes, xdata, intercept.*ones(size(xdata)), '-.k');
-    
-    ModelCoefficientLegend = legend(ModelCoefficientAxes, {'Choice (L/R=±1)', 'Reward (L/R=±1)', 'Intercept'},...
-                                    'Position', [0.15    0.62    0.12    0.05],...
-                                    'NumColumns', 1,...
-                                    'Box', 'off');
-    
     %% Residual Histogram
+    Residuals = ChoiceLeft - PredictedLeftChoiceProb';
     ResidualHistogramAxes = axes(AnalysisFigure, 'Position', [0.04    0.36    0.15    0.11]);
-    ResidualHistogram = plotResiduals(LauGlimcherGLM, 'Histogram');
+    ResidualHistogram = histogram(ResidualHistogramAxes, Residuals, 'Normalization', 'pdf');
     
+    %{
     %% Residual Histogram
     ResidualLaggedAxes = axes(AnalysisFigure, 'Position', [0.23    0.36    0.15    0.11]);
     ResidualLagged = plotResiduals(LauGlimcherGLM, 'lagged', 'Marker', '.', 'MarkerSize', 1);
@@ -352,7 +325,8 @@ if model
     %% Residual Histogram
     ResidualProbabilityAxes = axes(AnalysisFigure, 'Position', [0.23    0.19    0.15    0.11]);
     ResidualProbability = plotResiduals(LauGlimcherGLM, 'Probability', 'Marker', '.', 'MarkerSize', 1);
-    
+    %}
+
     if ~all(isnan(FeedbackWaitingTime))
         %% Time Investment (TI) (only NotBaited Waiting Time) across session 
         TrialTIAxes = axes(AnalysisFigure, 'Position', [0.45    0.82    0.37    0.11]);
@@ -545,7 +519,7 @@ if model
         LRVevaiometricAxes = axes(AnalysisFigure, 'Position', [0.88    0.36    0.10    0.11]);
         hold(LRVevaiometricAxes, 'on')
         
-        AbsModelResiduals = abs(LauGlimcherGLM.Residuals.Raw);
+        AbsModelResiduals = abs(Residuals);
         
         LeftAbsResidual = AbsModelResiduals(LeftTITrial);
         RightAbsResidual = AbsModelResiduals(RightTITrial);
@@ -583,13 +557,13 @@ end
 
 DataFolder = OttLabDataServerFolderPath;
 RatName = SessionData.Info.Subject;
-% %%The following lines doesn't not work, as the timestamp documented
+% %%The following three lines doesn't not work, as the timestamp documented
 % in the SessionData may not be the same as the one being used for saving
 % SessionDate = string(datetime(SessionData.Info.SessionDate), 'yyyyMMdd')';
 % SessionTime = string(datetime(SessionData.Info.SessionStartTime_UTC), 'HHmmSS')';
 % SessionDateTime = strcat(SessionDate, '_', SessionTime);
 DataPath = strcat(DataFolder, RatName, '\bpod_session\', SessionDateTime, '\',...
-                  RatName, '_TwoArmBanditVariant_', SessionDateTime, '_Matching_LauGlimcherGLM.png');
-exportgraphics(AnalysisFigure, DataPath);
+                  RatName, '_TwoArmBanditVariant_', SessionDateTime, '_Matching_Omniscient.png');
+% exportgraphics(AnalysisFigure, DataPath);
 
 end % function

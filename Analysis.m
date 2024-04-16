@@ -14,9 +14,17 @@ if nargin < 1
         [~, name, ~] = fileparts(BpodSystem.Path.CurrentDataFile);
         SessionDateTime = name(end-14:end);
     end
-else
+elseif ischar(DataFile) || isstring(DataFile)
     load(DataFile);
     SessionDateTime = DataFile(end-18:end-4);
+elseif isstruct(DataFile)
+    SessionData = DataFile;
+
+    % mismatch in time saved in .mat and the time used as file name
+    SessionDateTime = strcat(datestr(SessionData.Info.SessionDate, 'yyyymmdd'), '_000000');
+else
+    disp('Error: Unknown input format. No further analysis can be performed.')
+    return
 end
 
 %% Load related data to local variabels
@@ -359,7 +367,7 @@ set(FeedbackWaitingTimeAxes,...
     'FontSize', 10);
 % title('NotBaited Invested Time', 'FontSize', 12)
 xlabel(FeedbackWaitingTimeAxes, 'Reward Prob', 'FontSize', 12, 'FontWeight', 'bold')
-ylabel(FeedbackWaitingTimeAxes, 'NotBaited Invested Time (s)', 'FontSize', 12, 'FontWeight', 'bold')
+ylabel(FeedbackWaitingTimeAxes, sprintf('NotBaited Waiting Time (s)'), 'FontSize', 12, 'FontWeight', 'bold')
 
 FeedbackWaitingTimeBoxchart = boxchart(FeedbackWaitingTimeAxes, NotBaitedTrialData.TrialRewardProb, NotBaitedTrialData.FeedbackWaitingTime);
 set(FeedbackWaitingTimeBoxchart,...
@@ -632,10 +640,10 @@ set(TrialLRMoveTimeAxes,...
     'YLim', [0, 1],...
     'YAxisLocation', 'right',...
     'FontSize', 10);
-ylabel('Move Time (s)')
+ylabel(TrialLRMoveTimeAxes, 'Move Time (s)')
 
 %% Trial Left-Right NotBaited Invested Time (TI)
-TrialLRTIAxes = axes(FigHandle, 'Position', [0.01    0.39    0.46    0.08]);
+TrialLRTIAxes = axes(FigHandle, 'Position', [0.01    0.36    0.46    0.08]);
 hold(TrialLRTIAxes, 'on');
 
 TrialLeftTILine = line(TrialLRTIAxes,...
@@ -660,10 +668,10 @@ set(TrialLRTIAxes,...
     'YLim', [0, max(1, SessionData.SettingsFile.GUI.FeedbackDelayMax * 1.5)],...
     'YAxisLocation', 'right',...
     'FontSize', 10);
-ylabel('NotBaited Invested Time (s)')
+ylabel(TrialLRTIAxes, sprintf('NotBaited\nInvested Time (s)'))
 
 %% Trial reward rate per trial
-TrialRewardRateAxes = axes(FigHandle, 'Position', [0.01    0.39    0.48    0.08]);
+TrialRewardRateAxes = axes(FigHandle, 'Position', [0.01    0.54    0.46    0.08]);
 hold(TrialRewardRateAxes, 'on');
 
 RewardMagnitude = SessionData.Custom.TrialData.RewardMagnitude(:, 1:nTrials);
@@ -682,10 +690,38 @@ set(TrialRewardRateAxes,...
     'Xlim', TrialOverviewAxes.XLim,...
     'XTickLabel', [],...
     'XAxisLocation', 'top',...
-    'YLim', [0, max(1, SessionData.SettingsFile.GUI.FeedbackDelayMax * 1.5)],...
     'YAxisLocation', 'right',...
     'FontSize', 10);
-ylabel('Reward Rate (\uL s^{-1})')
+ylabel(TrialRewardRateAxes, sprintf('Reward Rate\n(uL trial^{-1})'))
+
+%% Trial reward rate per trial
+TrialRewardRateInSAxes = axes(FigHandle, 'Position', [0.01    0.45    0.46    0.08]);
+hold(TrialRewardRateInSAxes, 'on');
+
+TrialStartTimestamp = SessionData.TrialStartTimestamp(:, 1:nTrials) - SessionData.TrialStartTimestamp(1);
+TrialTimeDuration = [0 diff(TrialStartTimestamp)];
+
+% Another way by finding the trials within 100 s, then look up how many
+% times been rewarded
+% a = TrialStartTimestamp <= (TrialStartTimestamp'+100) & TrialStartTimestamp > TrialStartTimestamp';
+% b = b = a * RewardedMagnitude';
+% ydata = smooth(b'./100)
+
+TrialRewardRateInSLine = line(TrialRewardRateInSAxes,...
+                              'xdata', idxTrial,...
+                              'ydata', smooth(movsum(RewardedMagnitude, [9 0])./movsum(TrialTimeDuration, [9 0])),...
+                              'LineStyle', '-',...
+                              'Marker', 'none',...
+                              'Color', azure);
+
+set(TrialRewardRateInSAxes,...
+    'TickDir', 'out',...
+    'Xlim', TrialOverviewAxes.XLim,...
+    'XTickLabel', [],...
+    'XAxisLocation', 'top',...
+    'YAxisLocation', 'right',...
+    'FontSize', 10);
+ylabel(TrialRewardRateInSAxes, sprintf('Reward Rate\n(uL s^{-1})'))
 
 disp('YOu aRE a bEAutIFul HUmaN BeiNG.')
 % title('Block switching behaviour')
@@ -703,14 +739,14 @@ switch SessionData.SettingsFile.GUIMeta.RiskType.String{SessionData.SettingsFile
 
     case 'BlockFixHolding'
         %% overview of events across session
-        title(TrialOverviewAxes, strcat(RatName, '\_', SessionDateTime, '\_Matching'))
+        title(TrialOverviewAxes, strcat(RatName, '_ ', SessionDateTime, '_Matching'), 'Interpreter', 'none')
     
         %% Dedicated Analysis script and figure saving for Matching
         AnalysisFigure = TwoArmBanditVariant_Matching_LauGlimcherGLM();
     
     case 'Cued' % currently only designed for 1-arm
         %% 
-        title(TrialOverviewAxes, strcat(RatName, '\_', SessionDateTime, '\_CuedRisk'))
+        title(TrialOverviewAxes, strcat(RatName, '_ ', SessionDateTime, '_CuedRisk'), 'Interpreter', 'none')
         
         %% sample time per cue
         SampleTimeAxes = axes(FigHandle, 'Position', [0.76    0.57    0.22    0.13]);
@@ -775,7 +811,7 @@ switch SessionData.SettingsFile.GUIMeta.RiskType.String{SessionData.SettingsFile
         
     case 'BlockCued' % currently only designed for 1-arm
         %% 
-        title(TrialOverviewAxes, strcat(RatName, '\_', SessionDateTime, '\_BlockCued'))
+        title(TrialOverviewAxes, strcat(RatName, '_', SessionDateTime, '_BlockCued', 'Interpreter', 'none'))
 
         %% sample time per cue
         SampleTimeAxes = axes(FigHandle, 'Position', [0.76    0.57    0.22    0.13]);
@@ -837,7 +873,7 @@ switch SessionData.SettingsFile.GUIMeta.RiskType.String{SessionData.SettingsFile
         
     case 'CuedBlockRatio' % currently only designed for 1-arm
         %% 
-        title(TrialOverviewAxes, strcat(RatName, '\_', SessionDateTime, '\_CuedBlockRatio'))
+        title(TrialOverviewAxes, strcat(RatName, '_', SessionDateTime, '_CuedBlockRatio', 'Interpreter', 'none'))
 
         %% sample time per cue
         SampleTimeAxes = axes(FigHandle, 'Position', [0.76    0.57    0.22    0.13]);
@@ -958,7 +994,7 @@ switch SessionData.SettingsFile.GUIMeta.RiskType.String{SessionData.SettingsFile
 
     case 'CuedBlockITI' % currently only designed for 1-arm
         %% 
-        title(TrialOverviewAxes, strcat(RatName, '\_', SessionDateTime, '\_CuedBlockITI'))
+        title(TrialOverviewAxes, strcat(RatName, '_', SessionDateTime, '_CuedBlockITI', 'Interpreter', 'none'))
 
         %% sample time per cue
         SampleTimeAxes = axes(FigHandle, 'Position', [0.76    0.57    0.22    0.13]);
@@ -1079,7 +1115,7 @@ switch SessionData.SettingsFile.GUIMeta.RiskType.String{SessionData.SettingsFile
 
     case 'CuedBlockTau' % currently only designed for 1-arm
         %% 
-        title(TrialOverviewAxes, strcat(RatName, '\_', SessionDateTime, '\_CuedBlockTau'))
+        title(TrialOverviewAxes, strcat(RatName, '_', SessionDateTime, '_CuedBlockTau', 'Interpreter', 'none'))
 
         %% sample time per cue
         SampleTimeAxes = axes(FigHandle, 'Position', [0.76    0.57    0.22    0.13]);

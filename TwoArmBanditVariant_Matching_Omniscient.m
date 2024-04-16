@@ -15,10 +15,18 @@ if nargin < 1
         [~, name, ~] = fileparts(BpodSystem.Path.CurrentDataFile);
         SessionDateTime = name(end-14:end);
     end
-else
+elseif ischar(DataFile) || isstring(DataFile)
     load(DataFile);
     SessionDateTime = DataFile(end-18:end-4);
-end  
+elseif isstruct(DataFile)
+    SessionData = DataFile;
+
+    % mismatch in time saved in .mat and the time used as file name
+    SessionDateTime = strcat(datestr(SessionData.Info.SessionDate, 'yyyymmdd'), '_000000');
+else
+    disp('Error: Unknown input format. No further analysis can be performed.')
+    return
+end
 
 if ~isfield(SessionData, 'SettingsFile')
     disp('Error: The selected file does not have the field "SettingsFile". No further Matching Analysis is performed.')

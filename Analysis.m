@@ -668,7 +668,7 @@ set(TrialLRTIAxes,...
     'YLim', [0, max(1, SessionData.SettingsFile.GUI.FeedbackDelayMax * 1.5)],...
     'YAxisLocation', 'right',...
     'FontSize', 10);
-ylabel(TrialLRTIAxes, sprintf('NotBaited\nInvested Time (s)'))
+ylabel(TrialLRTIAxes, sprintf('NotBaited\nWaiting Time (s)'))
 
 %% Trial reward rate per trial
 TrialRewardRateAxes = axes(FigHandle, 'Position', [0.01    0.54    0.46    0.08]);
@@ -694,7 +694,7 @@ set(TrialRewardRateAxes,...
     'FontSize', 10);
 ylabel(TrialRewardRateAxes, sprintf('Reward Rate\n(uL trial^{-1})'))
 
-%% Trial reward rate per trial
+%% Trial reward rate per second
 TrialRewardRateInSAxes = axes(FigHandle, 'Position', [0.01    0.45    0.46    0.08]);
 hold(TrialRewardRateInSAxes, 'on');
 

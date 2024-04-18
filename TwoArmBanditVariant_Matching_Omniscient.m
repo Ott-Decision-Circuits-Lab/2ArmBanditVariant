@@ -635,7 +635,7 @@ end
 
 DataFolder = OttLabDataServerFolderPath;
 RatName = SessionData.Info.Subject;
-% %%The following three lines doesn't not work, as the timestamp documented
+% %%The following lines doesn't not work, as the timestamp documented
 % in the SessionData may not be the same as the one being used for saving
 % SessionDate = string(datetime(SessionData.Info.SessionDate), 'yyyyMMdd')';
 % SessionTime = string(datetime(SessionData.Info.SessionStartTime_UTC), 'HHmmSS')';

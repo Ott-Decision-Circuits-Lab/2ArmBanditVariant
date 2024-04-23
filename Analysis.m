@@ -6,7 +6,8 @@ function FigHandle = Analysis(DataFile)
 if nargin < 1
     global BpodSystem
     if isempty(BpodSystem) || isempty(BpodSystem.Data)
-        [datafile, datapath] = uigetfile('\\ottlabfs.bccn-berlin.pri\ottlab\data\');
+        DataFolder = OttLabDataServerFolderPath;
+        [datafile, datapath] = uigetfile(DataFolder);
         load(fullfile(datapath, datafile));
         SessionDateTime = datapath(end-15:end-1);
     else
@@ -701,11 +702,11 @@ hold(TrialRewardRateInSAxes, 'on');
 TrialStartTimestamp = SessionData.TrialStartTimestamp(:, 1:nTrials) - SessionData.TrialStartTimestamp(1);
 TrialTimeDuration = [0 diff(TrialStartTimestamp)];
 
-% Another way by finding the trials within 100 s, then look up how many
+% Another way by finding the trials within 200 s, then look up how many
 % times been rewarded
-% a = TrialStartTimestamp <= (TrialStartTimestamp'+100) & TrialStartTimestamp > TrialStartTimestamp';
-% b = b = a * RewardedMagnitude';
-% ydata = smooth(b'./100)
+% a = TrialStartTimestamp <= (TrialStartTimestamp'+200) & TrialStartTimestamp > TrialStartTimestamp';
+% b = a * RewardedMagnitude';
+% ydata = smooth(b'./200)
 
 TrialRewardRateInSLine = line(TrialRewardRateInSAxes,...
                               'xdata', idxTrial,...
@@ -727,6 +728,10 @@ disp('YOu aRE a bEAutIFul HUmaN BeiNG.')
 % title('Block switching behaviour')
 
 %% Plot based on task design/ risk type
+datafileExistence = exist('datafile', 'var');
+DataFileExistence = exist('DataFile', 'var');
+DataFolder = OttLabDataServerFolderPath;
+
 switch SessionData.SettingsFile.GUIMeta.RiskType.String{SessionData.SettingsFile.GUI.RiskType}
     case 'Fix'
     % not yet implemented %
@@ -742,7 +747,33 @@ switch SessionData.SettingsFile.GUIMeta.RiskType.String{SessionData.SettingsFile
         title(TrialOverviewAxes, strcat(RatName, '_ ', SessionDateTime, '_Matching'), 'Interpreter', 'none')
     
         %% Dedicated Analysis script and figure saving for Matching
-        AnalysisFigure = TwoArmBanditVariant_Matching_LauGlimcherGLM();
+        if datafileExistence == 1
+            AnalysisFigure = TwoArmBanditVariant_Matching_LauGlimcherGLM(fullfile(datapath, datafile));
+            
+            DataPath = strcat(DataFolder, RatName, '\bpod_session\', SessionDateTime, '\',...
+                              RatName, '_TwoArmBanditVariant_', SessionDateTime, '_Analysis.png');
+            exportgraphics(FigHandle, DataPath);
+            
+            DataPath = strcat(DataFolder, RatName, '\bpod_graph\',...
+                              RatName, '_TwoArmBanditVariant_', SessionDateTime, '_Analysis.png');
+            exportgraphics(FigHandle, DataPath);
+            
+            close(FigHandle)
+        elseif DataFileExistence == 1 && (ischar(DataFile) | isstring(DataFile))
+            AnalysisFigure = TwoArmBanditVariant_Matching_LauGlimcherGLM(DataFile);
+
+            DataPath = strcat(DataFolder, RatName, '\bpod_session\', SessionDateTime, '\',...
+                              RatName, '_TwoArmBanditVariant_', SessionDateTime, '_Analysis.png');
+            exportgraphics(FigHandle, DataPath);
+            
+            DataPath = strcat(DataFolder, RatName, '\bpod_graph\',...
+                              RatName, '_TwoArmBanditVariant_', SessionDateTime, '_Analysis.png');
+            exportgraphics(FigHandle, DataPath);
+            
+            close(FigHandle)
+        else
+            AnalysisFigure = TwoArmBanditVariant_Matching_LauGlimcherGLM();
+        end
     
     case 'Cued' % currently only designed for 1-arm
         %% 

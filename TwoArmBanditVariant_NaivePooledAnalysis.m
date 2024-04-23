@@ -147,6 +147,10 @@ for iAnimal = 1:length(p.Animal)
     ConcatenatedTrialData.FeedbackWaitingTime = [];
     ConcatenatedTrialData.RewardProb = [];
     ConcatenatedTrialData.LightLeft = [];
+    
+    ConcatenatedTrialData.BlockNumber = [];
+    ConcatenatedTrialData.BlockTrialNumber = [];
+    ConcatenatedTrialData.RewardMagnitude = [];
 
     % for files before April 2023, no DrinkingTime is available
     ConcatenatedTrialData.DrinkingTime = [];
@@ -176,14 +180,18 @@ for iAnimal = 1:length(p.Animal)
         ConcatenatedTrialData.FeedbackWaitingTime = [ConcatenatedTrialData.FeedbackWaitingTime, TrialData.FeedbackWaitingTime(1:nTrials)];
         ConcatenatedTrialData.RewardProb = [ConcatenatedTrialData.RewardProb, TrialData.RewardProb(:, 1:nTrials)];
         ConcatenatedTrialData.LightLeft = [ConcatenatedTrialData.LightLeft, TrialData.LightLeft(1:nTrials)];
-
+        
+        ConcatenatedTrialData.BlockNumber = [ConcatenatedTrialData.BlockNumber, TrialData.BlockNumber(:, 1:nTrials)];
+        ConcatenatedTrialData.BlockTrialNumber = [ConcatenatedTrialData.BlockTrialNumber, TrialData.BlockTrialNumber(:, 1:nTrials)];
+        ConcatenatedTrialData.RewardMagnitude = [ConcatenatedTrialData.RewardMagnitude, TrialData.RewardMagnitude(:, 1:nTrials)];
+        
         % for files before April 2023, no DrinkingTime is available
         try
             ConcatenatedTrialData.DrinkingTime = [ConcatenatedTrialData.DrinkingTime, TrialData.DrinkingTime(1:nTrials)];
         catch
             ConcatenatedTrialData.DrinkingTime = [ConcatenatedTrialData.DrinkingTime, nan(1, nTrials)];
         end
-
+        
         ConcatenatedDataHolder.RawEvents.Trial = [ConcatenatedDataHolder.RawEvents.Trial, DataHolder{iSession}.RawEvents.Trial];
         ConcatenatedDataHolder.TrialStartTimestamp = [ConcatenatedDataHolder.TrialStartTimestamp, DataHolder{iSession}.TrialStartTimestamp(:,1:nTrials)];
         ConcatenatedDataHolder.TrialEndTimestamp = [ConcatenatedDataHolder.TrialEndTimestamp, DataHolder{iSession}.TrialEndTimestamp(:,1:nTrials)];
@@ -195,9 +203,9 @@ for iAnimal = 1:length(p.Animal)
     ConcatenatedDataFilePath = fullfile(SelectedDataFolderPath, 'Concatenated_Data.mat');
     save(ConcatenatedDataFilePath, 'SessionData')
 
-    FigHandle = Analysis(ConcatenatedDataFilePath);
-    saveas(FigHandle, fullfile(SelectedDataFolderPath, 'Analysis.fig'))
-    saveas(FigHandle, fullfile(SelectedDataFolderPath, 'Analysis.png'))
+    % FigHandle = Analysis(ConcatenatedDataFilePath);
+    % saveas(FigHandle, fullfile(SelectedDataFolderPath, 'Analysis.fig'))
+    % saveas(FigHandle, fullfile(SelectedDataFolderPath, 'Analysis.png'))
     
 end % iAnimal
 

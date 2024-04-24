@@ -741,8 +741,43 @@ switch SessionData.SettingsFile.GUIMeta.RiskType.String{SessionData.SettingsFile
     case 'BlockRand'
     % not yet implemented %
 
+    case 'BlockRandHolding'
+
     case 'BlockFix'
     % not yet implemented %
+        %% overview of events across session
+        title(TrialOverviewAxes, strcat(RatName, '_ ', SessionDateTime, '_BlockRandHolidng'), 'Interpreter', 'none')
+    
+        %% Dedicated Analysis script and figure saving for Matching
+        if datafileExistence == 1
+            AnalysisFigure = TwoArmBanditVariant_Matching_LauGlimcherGLM(fullfile(datapath, datafile));
+            
+            DataPath = strcat(DataFolder, RatName, '\bpod_session\', SessionDateTime, '\',...
+                              RatName, '_TwoArmBanditVariant_', SessionDateTime, '_Analysis.png');
+            exportgraphics(FigHandle, DataPath);
+            
+            DataPath = strcat(DataFolder, RatName, '\bpod_graph\',...
+                              RatName, '_TwoArmBanditVariant_', SessionDateTime, '_Analysis.png');
+            exportgraphics(FigHandle, DataPath);
+            
+            close(FigHandle)
+
+        elseif DataFileExistence == 1 && (ischar(DataFile) | isstring(DataFile))
+            AnalysisFigure = TwoArmBanditVariant_Matching_LauGlimcherGLM(DataFile);
+
+            DataPath = strcat(DataFolder, RatName, '\bpod_session\', SessionDateTime, '\',...
+                              RatName, '_TwoArmBanditVariant_', SessionDateTime, '_Analysis.png');
+            exportgraphics(FigHandle, DataPath);
+            
+            DataPath = strcat(DataFolder, RatName, '\bpod_graph\',...
+                              RatName, '_TwoArmBanditVariant_', SessionDateTime, '_Analysis.png');
+            exportgraphics(FigHandle, DataPath);
+            
+            close(FigHandle)
+
+        else
+            AnalysisFigure = TwoArmBanditVariant_Matching_LauGlimcherGLM();
+        end
 
     case 'BlockFixHolding'
         %% overview of events across session
@@ -761,6 +796,7 @@ switch SessionData.SettingsFile.GUIMeta.RiskType.String{SessionData.SettingsFile
             exportgraphics(FigHandle, DataPath);
             
             close(FigHandle)
+
         elseif DataFileExistence == 1 && (ischar(DataFile) | isstring(DataFile))
             AnalysisFigure = TwoArmBanditVariant_Matching_LauGlimcherGLM(DataFile);
 
@@ -773,6 +809,7 @@ switch SessionData.SettingsFile.GUIMeta.RiskType.String{SessionData.SettingsFile
             exportgraphics(FigHandle, DataPath);
             
             close(FigHandle)
+            
         else
             AnalysisFigure = TwoArmBanditVariant_Matching_LauGlimcherGLM();
         end

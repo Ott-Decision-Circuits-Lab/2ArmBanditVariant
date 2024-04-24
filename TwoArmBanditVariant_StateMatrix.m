@@ -106,6 +106,8 @@ switch TaskParameters.GUIMeta.RiskType.String{TaskParameters.GUI.RiskType}
     case 'Fix' % no adjustmnet needed
         
     case 'BlockRand' % no adjustmnet needed
+
+    case 'BlockRandHolding' % no adjustmnet needed
         
     case 'BlockFix' % no adjustmnet needed
      

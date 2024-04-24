@@ -701,16 +701,18 @@ hold(TrialRewardRateInSAxes, 'on');
 
 TrialStartTimestamp = SessionData.TrialStartTimestamp(:, 1:nTrials) - SessionData.TrialStartTimestamp(1);
 TrialTimeDuration = [0 diff(TrialStartTimestamp)];
+YData = smooth(movsum(RewardedMagnitude, [9 0])./movsum(TrialTimeDuration, [9 0]));
+YData(isinf(YData)) = nan;
 
 % Another way by finding the trials within 200 s, then look up how many
-% times been rewarded
+% times been rewarded (NOT WORKING WELL)
 % a = TrialStartTimestamp <= (TrialStartTimestamp'+200) & TrialStartTimestamp > TrialStartTimestamp';
 % b = a * RewardedMagnitude';
-% ydata = smooth(b'./200)
+% ydata = smooth(b'./200);
 
 TrialRewardRateInSLine = line(TrialRewardRateInSAxes,...
                               'xdata', idxTrial,...
-                              'ydata', smooth(movsum(RewardedMagnitude, [9 0])./movsum(TrialTimeDuration, [9 0])),...
+                              'ydata', YData,...
                               'LineStyle', '-',...
                               'Marker', 'none',...
                               'Color', azure);

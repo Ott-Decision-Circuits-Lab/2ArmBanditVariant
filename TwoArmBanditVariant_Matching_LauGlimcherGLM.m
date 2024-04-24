@@ -442,7 +442,7 @@ if model
         hold(TISortedPsychometricAxes, 'on')
         
         TI = FeedbackWaitingTime(NotBaited);
-        TImed = median(TI, "omitmissing");
+        TImed = median(TI, "omitnan");
         HighTITrial = FeedbackWaitingTime>TImed & NotBaited;
         LowTITrial = FeedbackWaitingTime<=TImed & NotBaited;
         

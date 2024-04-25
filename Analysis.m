@@ -614,7 +614,6 @@ set(ITIAxes,...
     'FontSize', 10);
 ylabel(ITIAxes, 'System ITI (s)', 'FontSize', 12, 'FontWeight', 'bold')
 
-
 %% Trial Left-Right Move Time
 TrialLRMoveTimeAxes = axes(FigHandle, 'Position', [0.01    0.63    0.46    0.08]);
 hold(TrialLRMoveTimeAxes, 'on');
@@ -726,6 +725,27 @@ set(TrialRewardRateInSAxes,...
     'FontSize', 10);
 ylabel(TrialRewardRateInSAxes, sprintf('Reward Rate\n(uL s^{-1})'))
 
+%% Trial Length
+TrialLengthAxes = axes(FigHandle, 'Position', [0.24    0.09    0.05    0.13]);
+
+TrialLength = SessionData.TrialEndTimestamp(:, 1:nTrials) - SessionData.TrialStartTimestamp(:, 1:nTrials);
+
+TrialLengthSwarmchart = swarmchart(TrialLengthAxes,...
+                                   ones(size(TrialLength(~NoTrialStart))), TrialLength(~NoTrialStart),...
+                                   'Marker', '.',...
+                                   'MarkerEdgeColor', 'k',...
+                                   'XJitter', 'density',...
+                                   'XJitterWidth', 0.8);
+
+set(TrialLengthAxes,...
+    'TickDir', 'out',...
+    'XLim', [0.5, 1.5],...
+    'XTick', 1,...
+    'XTickLabel', [],...
+    'YLim', [0, 30],...
+    'FontSize', 10);
+ylabel(TrialLengthAxes, 'Trial Length (s)', 'FontSize', 12, 'FontWeight', 'bold')
+
 disp('YOu aRE a bEAutIFul HUmaN BeiNG.')
 % title('Block switching behaviour')
 
@@ -740,11 +760,11 @@ switch SessionData.SettingsFile.GUIMeta.RiskType.String{SessionData.SettingsFile
 
     case 'BlockRand'
     % not yet implemented %
-
-    case 'BlockRandHolding'
-
+        
     case 'BlockFix'
     % not yet implemented %
+
+    case 'BlockRandHolding'
         %% overview of events across session
         title(TrialOverviewAxes, strcat(RatName, '_ ', SessionDateTime, '_BlockRandHolidng'), 'Interpreter', 'none')
     

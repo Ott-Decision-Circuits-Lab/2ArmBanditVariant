@@ -178,12 +178,13 @@ switch TaskParameters.GUIMeta.RiskType.String{TaskParameters.GUI.RiskType}
         end
 
     case 'BlockRandHolding'
+        RewardProbCategories = [0.1, 0.2, 0.4];
         if iTrial == 1
             TrialData.BlockNumber(iTrial) = 1;
             TrialData.BlockTrialNumber(iTrial) = 1;
             TaskParameters.GUI.BlockLen = randi([TaskParameters.GUI.BlockLenMin, TaskParameters.GUI.BlockLenMax]);
             TaskParameters.GUI.NextBlockTrialNumber = TaskParameters.GUI.BlockLen + 1;
-            TrialData.RewardProb(:,iTrial) = rand(2,1) ./2;
+            TrialData.RewardProb(:,iTrial) = RewardProbCategories(randi([1, 3], 2, 1));
         else
             TrialData.BlockNumber(iTrial) = TrialData.BlockNumber(iTrial-1);
             TrialData.BlockTrialNumber(iTrial) = TrialData.BlockTrialNumber(iTrial-1) + 1;
@@ -193,7 +194,7 @@ switch TaskParameters.GUIMeta.RiskType.String{TaskParameters.GUI.RiskType}
                 TrialData.BlockTrialNumber(iTrial) = 1;
                 TaskParameters.GUI.BlockLen = randi([TaskParameters.GUI.BlockLenMin, TaskParameters.GUI.BlockLenMax]);
                 TaskParameters.GUI.NextBlockTrialNumber = (iTrial-1) + TaskParameters.GUI.BlockLen + 1;
-                TrialData.RewardProb(:, iTrial) = rand(2,1) ./2;
+                TrialData.RewardProb(:, iTrial) = RewardProbCategories(randi([1, 3], 2, 1));
             end
         end
 

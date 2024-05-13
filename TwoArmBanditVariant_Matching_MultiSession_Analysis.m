@@ -1,4 +1,4 @@
-function TwoArmBanditVariant_MultiSessionAnalysis(varargin)
+function TwoArmBanditVariant_Matching_MultiSession_Analysis(varargin)
 %{
 First create on 20230622 by Antonio Lee for AG Ott @HU Berlin
 With the file server architecture, this functions runs through the

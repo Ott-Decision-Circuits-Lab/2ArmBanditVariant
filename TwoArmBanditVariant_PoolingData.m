@@ -116,8 +116,8 @@ for iAnimal = 1:length(p.Animal)
         end
     end
     
-    SelectedDataFolderPath = [FileServerDataFolderPath, num2str(RatID), '\bpod_session_group_analysis\',...
-                              num2str(RatID), '_TwoArmBandit_', p.PeriodStartDate{iAnimal}, '_', p.PeriodEndDate{iAnimal}, '\'];
+    SelectedDataFolderPath = [FileServerDataFolderPath, num2str(RatID), '\bpod_session_pooled_analysis\',...
+                              num2str(RatID), '_TwoArmBanditVariant_', p.PeriodStartDate{iAnimal}, '_', p.PeriodEndDate{iAnimal}, '\'];
     
     if ~isfolder(SelectedDataFolderPath)
         mkdir(SelectedDataFolderPath)

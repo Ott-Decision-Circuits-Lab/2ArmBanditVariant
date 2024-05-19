@@ -746,7 +746,7 @@ set(TrialLengthAxes,...
     'FontSize', 10);
 ylabel(TrialLengthAxes, 'Trial Length (s)', 'FontSize', 12, 'FontWeight', 'bold')
 
-disp('YOu aRE a bEAutIFul HUmaN BeiNG.')
+disp('YOu aRE a bEAutIFul HUmaN BeiNG, saID anTOniO.')
 % title('Block switching behaviour')
 
 %% Plot based on task design/ risk type
@@ -1077,7 +1077,7 @@ switch SessionData.SettingsFile.GUIMeta.RiskType.String{SessionData.SettingsFile
                     'YAxisLocation', 'right',...
                     'FontSize', 10);
                 ylabel('Invested Time (s)')
-                disp('YOu aRE a bEAutIFul HUmaN BeiNG.')
+                disp('YOu aRE a bEAutIFul HUmaN BeiNG, saID anTOniO.')
                 % title('Block switching behaviour')
             end
         end
@@ -1198,7 +1198,7 @@ switch SessionData.SettingsFile.GUIMeta.RiskType.String{SessionData.SettingsFile
                     'YAxisLocation', 'right',...
                     'FontSize', 10);
                 ylabel('Invested Time (s)')
-                disp('YOu aRE a bEAutIFul HUmaN BeiNG.')
+                disp('YOu aRE a bEAutIFul HUmaN BeiNG, saID anTOniO.')
                 % title('Block switching behaviour')
             end
         end
@@ -1319,7 +1319,7 @@ switch SessionData.SettingsFile.GUIMeta.RiskType.String{SessionData.SettingsFile
                     'YAxisLocation', 'right',...
                     'FontSize', 10);
                 ylabel('Invested Time (s)')
-                disp('YOu aRE a bEAutIFul HUmaN BeiNG.')
+                disp('YOu aRE a bEAutIFul HUmaN BeiNG, saID anTOniO.')
                 % title('Block switching behaviour')
             end
         end

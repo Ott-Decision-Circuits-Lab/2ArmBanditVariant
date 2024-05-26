@@ -336,9 +336,9 @@ if model
     ydataReward = LauGlimcherGLM.Coefficients.Estimate(7:1+2*HistoryKernelSize);
     intercept = LauGlimcherGLM.Coefficients.Estimate(1);
 
-    ChoiceHistoryCoefficientPlot = plot(ModelCoefficientAxes, xdata, ydataChoice', '-k');
-    RewardHistoryCoefficientPlot = plot(ModelCoefficientAxes, xdata, ydataReward', '--k');
-    InterceptPlot = plot(ModelCoefficientAxes, xdata, intercept.*ones(size(xdata)), '-.k');
+    ChoiceHistoryCoefficientPlot = plot(ModelCoefficientAxes, xdata, ydataChoice', '--k');
+    RewardHistoryCoefficientPlot = plot(ModelCoefficientAxes, xdata, ydataReward', '-k');
+    InterceptPlot = plot(ModelCoefficientAxes, xdata, intercept.*ones(size(xdata)), ':k');
     
     ModelCoefficientLegend = legend(ModelCoefficientAxes, {'Choice (L/R=±1)', 'Reward (L/R=±1)', 'Intercept'},...
                                     'Position', [0.15    0.62    0.12    0.05],...

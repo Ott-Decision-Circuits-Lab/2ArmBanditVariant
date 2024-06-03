@@ -388,18 +388,18 @@ hold(AngleAxes, 'on');
 for iAngle = 1:length(Coefficients)-1
     v1 = Coefficients(:, iAngle);
     v2 = Coefficients(:, iAngle + 1);
-    Angles(iAngle) = acos(dot(v1 / norm(v1), v2 / norm(v2)));
+    CosAngles(iAngle) = dot(v1 / norm(v1), v2 / norm(v2));
 end
 
-AnglePlot = plot(AngleAxes, smooth(Angles));
+CosAnglePlot = plot(AngleAxes, smooth(CosAngles));
 
 set(AngleAxes,...
     'FontSize', 10,...
     'XLim', BlockSwitchAxes.XLim,...
     'XTickLabel', [],...
-    'YLim', [0 0.1],...
+    'YLim', [0.99 1],...
     'YAxisLocation', 'right')
-ylabel(AngleAxes, '\theta');
+ylabel(AngleAxes, 'cos\theta');
 
 %% Changes in angle between coefficients
 MagnitudeAxes = axes(AnalysisFigure, 'Position', [0.01    0.05    0.37    0.06]);

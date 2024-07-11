@@ -285,10 +285,7 @@ try
                                'NumColumns', 3);
     set(BlockSwitchLegend,...
         'Interpreter', 'latex');
-    pause(0.5)
-
-    warning('on', 'MATLAB:handle_graphics:exceptions:SceneNode')
-
+    
     model = true;
         
 catch

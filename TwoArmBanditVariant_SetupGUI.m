@@ -12,7 +12,9 @@ if isempty(fieldnames(TaskParameters))
     
     TaskParameters.GUI.Ports_LMR = '123'; % bpod port number for poke connection
     TaskParameters.GUI.EphysSession = false;
+    TaskParameters.GUI.PharmacologyOn = false;
     TaskParameters.GUIMeta.EphysSession.Style = 'checkbox';
+    TaskParameters.GUIMeta.PharmacologyOn.Style = 'checkbox';
     TaskParameters.GUI.Wire1VideoTrigger = 1;
     TaskParameters.GUIMeta.Wire1VideoTrigger.Style = 'popupmenu';
     TaskParameters.GUIMeta.Wire1VideoTrigger.String = {'None', 'Investment', 'All'};
@@ -46,7 +48,7 @@ if isempty(fieldnames(TaskParameters))
     TaskParameters.GUI.VI = false; % exprnd based on ITI
     TaskParameters.GUIMeta.VI.Style = 'checkbox';
     
-    TaskParameters.GUIPanels.General = {'SessionDescription', 'Ports_LMR', 'EphysSession',...
+    TaskParameters.GUIPanels.General = {'SessionDescription', 'Ports_LMR', 'EphysSession', 'PharmacologyOn',...
                                         'Wire1VideoTrigger',...
                                         'PreITI', 'WaitCInMax', 'ChoiceDeadline',...
                                         'NoDecisionTimeOut', 'NoDecisionFeedback',...

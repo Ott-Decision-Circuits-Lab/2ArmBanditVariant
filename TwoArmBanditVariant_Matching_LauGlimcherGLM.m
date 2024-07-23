@@ -52,6 +52,18 @@ RatName = num2str(RatID);
 % in the SessionData may not be the same as the one being used for saving
 % Date = datestr(SessionData.Info.SessionDate, 'yyyymmdd');
 
+try
+    if isstruct(SessionData.Custom.Pharmacology)
+        drugName = SessionData.Custom.Pharmacology{1};
+        drugDosage = SessionData.Custom.Pharmacology{2};
+        % String manipulation for figure and filename
+        treatmentConditionString = strcat(drugName, " ", drugDosage); % For figure
+        treatmentConditionString = strrep(treatmentConditionString, " ", "_");
+    end
+catch
+    treatmentConditionString = "no_pharmacology";
+end
+
 nTrials = SessionData.nTrials;
 if nTrials < 50
     disp('nTrial < 50. Impossible for analysis.')
@@ -148,7 +160,7 @@ CuedPalette = ((1 - RewardProbCategories) * [128 128 128] + 127)/255;
 % create figure
 AnalysisFigure = figure('Position', [   0    0 1191  842],... % DIN A3, 72 ppi (window will crop it to _ x 1024, same as disp resolution)
                         'NumberTitle', 'off',...
-                        'Name', strcat(RatName, '_', SessionDateTime, '_Matching'),...
+                        'Name', strcat(RatName, '_', SessionDateTime, '_Matching', '_', treatmentConditionString),...
                         'MenuBar', 'none',...
                         'Resize', 'off');
 
@@ -167,7 +179,7 @@ set(FigureInfoAxes,...
     'XColor', 'w',...
     'YColor', 'w')
 
-FigureTitle = strcat(RatName, '_', SessionDateTime, '_Matching_LauGlimcherGLM');
+FigureTitle = strcat(RatName, '_', SessionDateTime, '_Matching_LauGlimcherGLM', '_', treatmentConditionString);
 
 FigureTitleText = text(FigureInfoAxes, 0, 0,...
                        FigureTitle,...

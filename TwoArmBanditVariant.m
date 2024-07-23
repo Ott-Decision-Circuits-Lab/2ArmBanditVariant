@@ -96,7 +96,12 @@ while RunSession
         BpodSystem.Data = AddTrialEvents(BpodSystem.Data, RawEvents);
         TwoArmBanditVariant_InsertSessionDescription(iTrial);
         TwoArmBanditVariant_UpdateCustomDataFields(iTrial);
-        SaveBpodSessionData();
+        try
+            SaveBpodSessionData();
+        catch
+            SaveBpodSessionData();
+            warning("Save error. Continuing.")
+        end
     end
     
     %% handle pause condition

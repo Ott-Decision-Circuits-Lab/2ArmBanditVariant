@@ -42,6 +42,16 @@ if TaskParameters.GUI.Photometry
     [FigNidaq1, FigNidaq2] = InitializeNidaq();
 end
 
+%% set up pharmacology
+if TaskParameters.GUI.PharmacologyOn
+    prompt = {'Drug name:','Dosage:'};
+    dlgtitle = 'Pharmacology';
+    dims = [1 35];
+    definput = {'1x PBS','1 ml/kg i.p.'};
+    drugInfo = inputdlg(prompt,dlgtitle,dims,definput);
+    BpodSystem.Data.Custom.Pharmacology = drugInfo;
+end
+
 % --------------------------Main loop------------------------------ %
 RunSession = true;
 iTrial = 1;

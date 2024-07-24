@@ -75,15 +75,6 @@ while RunSession
     if TaskParameters.GUI.Photometry
         Nidaq_photometry('WaitToStart');
     end
-
-    if TaskParameters.GUI.PharmacologyOn
-        prompt = {'Drug name:','Dosage:'};
-        dlgtitle = 'Pharmacology';
-        dims = [1 35];
-        definput = {'1x PBS','1 ml/kg i.p.'};
-        drugInfo = inputdlg(prompt,dlgtitle,dims,definput);
-        BpodSystem.Data.Custom.Pharmacology = drugInfo;
-    end
     
     %% run trial
     RawEvents = RunStateMatrix;

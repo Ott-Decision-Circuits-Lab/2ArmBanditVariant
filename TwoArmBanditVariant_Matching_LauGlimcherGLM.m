@@ -53,13 +53,11 @@ RatName = num2str(RatID);
 % Date = datestr(SessionData.Info.SessionDate, 'yyyymmdd');
 
 try
-    if isstruct(SessionData.Custom.Pharmacology)
-        drugName = SessionData.Custom.Pharmacology{1};
-        drugDosage = SessionData.Custom.Pharmacology{2};
-        % String manipulation for figure and filename
-        treatmentConditionString = strcat(drugName, " ", drugDosage); % For figure
-        treatmentConditionString = strrep(treatmentConditionString, " ", "_");
-    end
+    drugName = SessionData.Custom.Pharmacology{1};
+    drugDosage = SessionData.Custom.Pharmacology{2};
+    % String manipulation for figure and filename
+    treatmentConditionString = strcat(drugName, " ", drugDosage); % For figure
+    treatmentConditionString = strrep(treatmentConditionString, " ", "_");
 catch
     treatmentConditionString = "no_pharmacology";
 end

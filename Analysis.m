@@ -40,9 +40,10 @@ RatName = num2str(RatID);
 
 try
     drugName = SessionData.Custom.Pharmacology{1};
-    drugDosage = SessionData.Custom.Pharmacology{2};
+    drugDose = SessionData.Custom.Pharmacology{2};
+    drugDosageUnit = SessionData.Custom.Pharmacology{3};
     % String manipulation for figure and filename
-    treatmentConditionString = strcat(drugName, " ", drugDosage); % For figure
+    treatmentConditionString = strcat(drugName, " ", drugDose, " ", drugDosageUnit); % For figure
     treatmentConditionString = strrep(treatmentConditionString, " ", "_");
 catch
     treatmentConditionString = "no_pharmacology";

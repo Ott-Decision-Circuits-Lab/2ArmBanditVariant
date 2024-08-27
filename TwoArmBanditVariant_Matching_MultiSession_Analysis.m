@@ -30,14 +30,18 @@ catch
     return
 end
 
-SessionDateRange = DataFolderPath(end-16:end);
-[~, RatName] = fileparts(fileparts(fileparts(DataFolderPath)));
+SessionDateRange = {};
+SessionDateRange{1} = DataHolder{1}.Info.SessionDate;
+SessionDateRange{end+1} = DataHolder{end}.Info.SessionDate;
+RatName = DataHolder{1}.Info.Subject;
 
 RatID = str2double(RatName);
 if isnan(RatID)
     RatID = -1;
 end
 RatName = num2str(RatID);
+
+treatmentConditionString = strcat(DataHolder{1}.Custom.Pharmacology{1}, " ", num2str(DataHolder{1}.Custom.Pharmacology{2}), " ", DataHolder{1}.Custom.Pharmacology{3});
 
 AnalysisName = 'Matching_MultiSession_Analysis';
 
@@ -98,7 +102,7 @@ end
 % create figure
 AnalysisFigure = figure('Position', [   0       0    1191     842],... % DIN A3, 72 ppi
                         'NumberTitle', 'off',...
-                        'Name', strcat(RatName, '_', SessionDateRange, '_', AnalysisName),...
+                        'Name', strcat(RatName, '_', SessionDateRange{1}, '-', SessionDateRange{end}, '_', AnalysisName),...
                         'MenuBar', 'none',...
                         'Resize', 'off');
 
@@ -738,9 +742,9 @@ RightBlock4TransitionLine = line(Block4TransitionAxes,...
                                  'Color', turquoise);
 
 % SkippedBaited Rate across session
-set(SkippedBaitedAxes,...
-    'XTickLabel', SessionDateLabel(SkippedBaitedAxes.XTick),...
-    'XTickLabelRotation', 90);
+% set(SkippedBaitedAxes,...
+%     'XTickLabel', SessionDateLabel(SkippedBaitedAxes.XTick),...
+%     'XTickLabelRotation', 90);
 
 disp('YOu aRE a bEAutIFul HUmaN BeiNG, saID anTOniO.')
 

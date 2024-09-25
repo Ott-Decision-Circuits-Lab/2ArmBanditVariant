@@ -399,8 +399,8 @@ for iSession = 1:length(DataHolder)
     SessionData = DataHolder{iSession};
     
     nTrials = SessionData.nTrials;
-    if nTrials < 50
-        disp(['Session ', num2char(iSession), ' has nTrial < 50. Impossible for analysis.'])
+    if nTrials < 200
+        disp(['Session ', num2str(iSession), ' has nTrial < 200. Impossible for analysis.'])
         continue
     end
     

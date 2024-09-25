@@ -897,11 +897,11 @@ switch SessionData.SettingsFile.GUIMeta.RiskType.String{SessionData.SettingsFile
                                         'HorizontalAlignment', 'right');
         
         %% Dedicated Analysis script and figure saving for Matching
-        AnalysisFigure = TwoArmBanditVariant_Cued();
+        % AnalysisFigure = TwoArmBanditVariant_Cued();
         
     case 'BlockCued' % currently only designed for 1-arm
         %% 
-        title(TrialOverviewAxes, strcat(RatName, '_', SessionDateTime, '_BlockCued', 'Interpreter', 'none'))
+        title(TrialOverviewAxes, strcat(RatName, '_', SessionDateTime, '_BlockCued'), 'Interpreter', 'none')
 
         %% sample time per cue
         SampleTimeAxes = axes(FigHandle, 'Position', [0.76    0.57    0.22    0.13]);
@@ -961,9 +961,12 @@ switch SessionData.SettingsFile.GUIMeta.RiskType.String{SessionData.SettingsFile
                                         'FontSize', 10,...
                                         'HorizontalAlignment', 'right');
         
+        %% Dedicated Analysis script and figure saving for BlockCued
+        % AnalysisFigure = TwoArmBanditVariant_BlockCued();
+
     case 'CuedBlockRatio' % currently only designed for 1-arm
         %% 
-        title(TrialOverviewAxes, strcat(RatName, '_', SessionDateTime, '_CuedBlockRatio', 'Interpreter', 'none'))
+        title(TrialOverviewAxes, strcat(RatName, '_', SessionDateTime, '_CuedBlockRatio'), 'Interpreter', 'none')
 
         %% sample time per cue
         SampleTimeAxes = axes(FigHandle, 'Position', [0.76    0.57    0.22    0.13]);
@@ -1022,7 +1025,11 @@ switch SessionData.SettingsFile.GUIMeta.RiskType.String{SessionData.SettingsFile
                                         sprintf('Count\nMean\nStd'),...
                                         'FontSize', 10,...
                                         'HorizontalAlignment', 'right');
-
+        
+        %% Dedicated Analysis script and figure saving for CuedBlockRatio
+        % AnalysisFigure = TwoArmBanditVariant_CuedBlockRatio();
+        
+        %{
         %% Single-session analysis
         if nTrials <= 2500 && nTrials >= 200
             %% Invested time per cue across session
@@ -1081,10 +1088,11 @@ switch SessionData.SettingsFile.GUIMeta.RiskType.String{SessionData.SettingsFile
                 % title('Block switching behaviour')
             end
         end
+        %}
 
     case 'CuedBlockITI' % currently only designed for 1-arm
         %% 
-        title(TrialOverviewAxes, strcat(RatName, '_', SessionDateTime, '_CuedBlockITI', 'Interpreter', 'none'))
+        title(TrialOverviewAxes, strcat(RatName, '_', SessionDateTime, '_CuedBlockITI'), 'Interpreter', 'none')
 
         %% sample time per cue
         SampleTimeAxes = axes(FigHandle, 'Position', [0.76    0.57    0.22    0.13]);
@@ -1144,6 +1152,9 @@ switch SessionData.SettingsFile.GUIMeta.RiskType.String{SessionData.SettingsFile
                                         'FontSize', 10,...
                                         'HorizontalAlignment', 'right');
 
+        %% Dedicated Analysis script and figure saving for CuedBlockITI
+        % AnalysisFigure = TwoArmBanditVariant_CuedBlockITI();
+        %{
         %% Single-session analysis
         if nTrials <= 2500 && nTrials >= 200
             %% Invested time per cue across session
@@ -1202,10 +1213,10 @@ switch SessionData.SettingsFile.GUIMeta.RiskType.String{SessionData.SettingsFile
                 % title('Block switching behaviour')
             end
         end
-
+        %}
     case 'CuedBlockTau' % currently only designed for 1-arm
         %% 
-        title(TrialOverviewAxes, strcat(RatName, '_', SessionDateTime, '_CuedBlockTau', 'Interpreter', 'none'))
+        title(TrialOverviewAxes, strcat(RatName, '_', SessionDateTime, '_CuedBlockTau'), 'Interpreter', 'none')
 
         %% sample time per cue
         SampleTimeAxes = axes(FigHandle, 'Position', [0.76    0.57    0.22    0.13]);
@@ -1264,7 +1275,9 @@ switch SessionData.SettingsFile.GUIMeta.RiskType.String{SessionData.SettingsFile
                                         sprintf('Count\nMean\nStd'),...
                                         'FontSize', 10,...
                                         'HorizontalAlignment', 'right');
-
+        %% Dedicated Analysis script and figure saving for CuedBlockTau
+        % AnalysisFigure = TwoArmBanditVariant_CuedBlockTau();
+        %{
         %% Single-session analysis
         if nTrials <= 2500 && nTrials >= 200
             %% Invested time per cue across session
@@ -1323,4 +1336,5 @@ switch SessionData.SettingsFile.GUIMeta.RiskType.String{SessionData.SettingsFile
                 % title('Block switching behaviour')
             end
         end
+        %}
 end

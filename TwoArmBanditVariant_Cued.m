@@ -35,10 +35,10 @@ elseif ~isfield(SessionData.SettingsFile.GUIMeta, 'RiskType')
     disp('Error: The selected SessionFile may not be a TwoArmBanditVariant session. No further Matching Analysis is performed.')
     AnalysisFigure = [];
     return
-elseif ~strcmpi(SessionData.SettingsFile.GUIMeta.RiskType.String{SessionData.SettingsFile.GUI.RiskType}, 'Cued')
-    disp('Error: The selected SessionData is not a Cued session. No further Cued Analysis is performed.')
-    AnalysisFigure = [];
-    return
+% elseif ~strcmpi(SessionData.SettingsFile.GUIMeta.RiskType.String{SessionData.SettingsFile.GUI.RiskType}, 'Cued')
+%     disp('Error: The selected SessionData is not a Cued session. No further Cued Analysis is performed.')
+%     AnalysisFigure = [];
+%     return
 end
 
 %% Load related data to local variabels
@@ -142,7 +142,7 @@ violet = [93, 58, 155]/255; % exploit
 % colour palette for cues: (1- P(r)) * 128 + 127
 % P(0) = white; P(1) = smoky gray
 RewardProbCategories = unique(RewardProb);
-CuedPalette = ((1 - RewardProbCategories) * [128 128 128] + 127)/255;
+CuedPalette = ((1 - RewardProbCategories) * [128 128 128])/255;
 
 % create figure
 AnalysisFigure = figure('Position', [   0    0 1191  842],... % DIN A3, 72 ppi (window will crop it to _ x 1024, same as disp resolution)
@@ -232,10 +232,137 @@ if ~isempty(ChoiceLeft) && ~all(isnan(ChoiceLeft))
     % title('Block switching behaviour')
 end
 
-%% Cued-sorted TI against background reward rate (trial^-1)
+%% L-R Cued TI
+LRCueTIAxes = axes(AnalysisFigure, 'Position', [0.46    0.82    0.11    0.11]);
+hold(LRCueTIAxes, 'on')
 
+for i = 1:length(RewardProbCategories)
+    CueSortedNotBaitedIdx = TrialTIPlot(i).XData;
+    LeftCueSortedIdx = CueSortedNotBaitedIdx(ChoiceLeft(CueSortedNotBaitedIdx) == 1);
+    LeftCueSortedTI = FeedbackWaitingTime(LeftCueSortedIdx);
+    
+    RightCueSortedIdx = CueSortedNotBaitedIdx(ChoiceLeft(CueSortedNotBaitedIdx) == 0);
+    RightCueSortedTI = FeedbackWaitingTime(RightCueSortedIdx);
+
+    LeftCueSortedTISwarmchart(i) = swarmchart(LRCueTIAxes,...
+                                              -0.05 + RewardProbCategories(i) * ones(size(LeftCueSortedTI)),...
+                                              LeftCueSortedTI,...
+                                              'Marker', '.',...
+                                              'MarkerEdgeColor', sand,...
+                                              'XJitter', 'density',...
+                                              'XJitterWidth', 0.1);
+
+    RightCueSortedTISwarmchart(i) = swarmchart(LRCueTIAxes,...
+                                               0.05 + RewardProbCategories(i) * ones(size(RightCueSortedTI)),...
+                                               RightCueSortedTI,...
+                                               'Marker', '.',...
+                                               'MarkerEdgeColor', turquoise,...
+                                               'XJitter', 'density',...
+                                               'XJitterWidth', 0.1);
+end
+
+set(LRCueTIAxes,...
+    'TickDir', 'out',...
+    'FontSize', 10);
+xlabel(LRCueTIAxes, 'Reward Probability')
+
+%% Reward rate decay rate (Tau) estimation using low reward prob (more data points)
+RewardMagnitude = SessionData.Custom.TrialData.RewardMagnitude(:, 1:nTrials);
+RewardedMagnitude = sum(RewardMagnitude .* ChoiceLeftRight) .* Rewarded;
+RewardedMagnitude(isnan(RewardedMagnitude)) = 0;
+
+TrialStartTimestamp = SessionData.TrialStartTimestamp(:, 1:nTrials) - SessionData.TrialStartTimestamp(1);
+TrialTimeDuration = [0 diff(TrialStartTimestamp)];
+
+TimeReward = nan(1, nTrials);
+for iTrial = 1:nTrials
+    statetimes = SessionData.RawEvents.Trial{iTrial}.States;
+    if ChoiceLeft(iTrial) == 1
+        TimeReward(iTrial) = statetimes.WaterL(1,1);
+    elseif ChoiceLeft(iTrial) == 0
+        TimeReward(iTrial) = statetimes.WaterR(1,1);
+    end
+end
+
+AbsTimeReward = TrialStartTimestamp + TimeReward;
+
+TimeDiffFromLast20Rewards = [];
+RewardedHistory = [];
+for iTrialBack = 1:20
+    TimeDiffFromLast20Rewards(iTrialBack, :) = TrialStartTimestamp(21:nTrials) - AbsTimeReward(21-iTrialBack:nTrials-iTrialBack);
+    RewardedHistory(iTrialBack, :) = Rewarded(21-iTrialBack:nTrials-iTrialBack);
+end
+
+LowRewardProbTITrial = NotBaited & TrialRewardProb == RewardProbCategories(1);
+ValidTrial = LowRewardProbTITrial;
+ValidTrial(1:20) = false;
+
+Tau = 5:5:100;
+LowRewardProbTI = FeedbackWaitingTime(ValidTrial);
+RValue = [];
+PValue = [];
+for iTau = 1:length(Tau)
+    DiscountedReward = RewardedHistory .* exp(-TimeDiffFromLast20Rewards/Tau(iTau));
+    DiscountedReward(isnan(DiscountedReward)) = 0;
+    EstimatedRewardRate = sum(DiscountedReward, 1);
+    [R,P] = corrcoef(EstimatedRewardRate(ValidTrial(21:end)), LowRewardProbTI);
+    RValue(iTau) = R(1, 2);
+    PValue(iTau) = P(1, 2);
+end
+
+TITauEstimationAxes = axes(AnalysisFigure, 'Position', [0.01    0.53    0.17    0.15]);
+hold(TITauEstimationAxes, 'on')
+
+TITauRValueLine = line(TITauEstimationAxes,...
+                       'XData', Tau,...
+                       'YData', RValue,...
+                       'Color', [1, 1, 1] * 0.8,...
+                       'LineStyle', '-');
+
+TITauPValueLine = line(TITauEstimationAxes,...
+                       'XData', Tau(PValue<0.05),...
+                       'YData', RValue(PValue<0.05),...
+                       'Color', [1, 1, 1] * 0,...
+                       'LineStyle', 'none',...
+                       'Marker', '*');
+
+set(TITauEstimationAxes,...
+    'TickDir', 'out',...
+    'YAxisLocation', 'right',...
+    'FontSize', 10)
+xlabel(TITauEstimationAxes, '\tau (s)')
+ylabel(TITauEstimationAxes, 'R Value')
+title(TITauEstimationAxes, 'NotBaited Waiting Time')
+
+%% Cued-sorted TI against background reward rate (trial^-1)
+RewardedHistory = 0;
+for iTrial = 1:nTrials-1
+    RewardedHistory(iTrial+1) = RewardedHistory(iTrial) * exp(-TrialTimeDuration(iTrial+1)/Tau(9)) + RewardedMagnitude(iTrial);
+end
+
+TIRewardRateAxes = axes(AnalysisFigure, 'Position', [0.01    0.32    0.17    0.15]);
+hold(TIRewardRateAxes, 'on')
+
+for iRewardProb = 1:length(RewardProbCategories)
+    TITrial = NotBaited & TrialRewardProb == RewardProbCategories(iRewardProb);
+    
+    TIRewardRateScatter{iRewardProb} = scatter(TIRewardRateAxes,...
+                                               RewardedHistory(TITrial),...
+                                               FeedbackWaitingTime(TITrial),...
+                                               'Marker', '.',...
+                                               'MarkerEdgeColor', CuedPalette(iRewardProb, :),...
+                                               'SizeData', 8);
+end
+
+set(TIRewardRateAxes,...
+    'TickDir', 'out',...
+    'YAxisLocation', 'right',...
+    'FontSize', 10)
+xlabel(TIRewardRateAxes, 'Reward Rate')
+ylabel(TIRewardRateAxes, 'NotBaited Waiting Time (s)')
 
 %% Model prediction of NotBaited Invested Time
+%{
 PredictedNotBaitedInvestedTimeAxes = axes(AnalysisFigure, 'Position', [0.09    0.09    0.18    0.16]);
 hold(PredictedNotBaitedInvestedTimeAxes, 'on');
 
@@ -298,6 +425,8 @@ if ~isempty(ChoiceLeft) && ~all(isnan(ChoiceLeft))
         'LineWidth', 0.2);
     
     disp('YOu aRE fuNNy.')
+%}
+
 %                 FeedbackWaitingTimeStats = grpstats(NotBaitedTrialData,...
 %                                                     'TrialRewardProb', {'mean', 'std'},...
 %                                                     'DataVars', 'FeedbackWaitingTime',...
@@ -395,6 +524,7 @@ ylabel('NotBaited Invested Time(s)', 'FontSize', 12, 'FontWeight', 'bold')
 disp('YOu aRE fuNNy.')
 %}
 
+%{
 if model
     %% psychometric
     PsychometricAxes = axes(AnalysisFigure, 'Position', [0.23    0.56    0.15    0.11]);
@@ -712,3 +842,4 @@ exportgraphics(AnalysisFigure, DataPath);
 close(AnalysisFigure)
 
 end % function
+%}

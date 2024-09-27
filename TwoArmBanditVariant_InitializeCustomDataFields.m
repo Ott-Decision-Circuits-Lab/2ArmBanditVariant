@@ -337,9 +337,9 @@ switch TaskParameters.GUIMeta.RiskType.String{TaskParameters.GUI.RiskType}
                 TaskParameters.GUI.BlockLen = randi([TaskParameters.GUI.BlockLenMin, TaskParameters.GUI.BlockLenMax]);
                 TaskParameters.GUI.NextBlockTrialNumber = (iTrial-1) + TaskParameters.GUI.BlockLen + 1;
                 if mod(TrialData.BlockNumber(iTrial), 2) == 1
-                    TrialData.CueRatio(iTrial) = 0.25; % more Cue 2 (usually P_{low} = 0.1)
+                    TrialData.CueRatio(iTrial) = 0.35; % more Cue 2 (usually P_{low} = 0.1)
                 else
-                    TrialData.CueRatio(iTrial) = 0.75; % more Cue 1 (usually P_{high} = 0.8)
+                    TrialData.CueRatio(iTrial) = 0.65; % more Cue 1 (usually P_{high} = 0.8)
                 end
             end
         end

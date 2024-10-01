@@ -505,7 +505,7 @@ end
 switch TaskParameters.GUIMeta.RiskType.String{TaskParameters.GUI.RiskType}
     case 'CuedBlockITI'
         if mod(TrialData.BlockNumber(iTrial), 2) == 0 % longer ITI
-            ITITimer = TaskParameters.GUI.ITI * 2;
+            ITITimer = TaskParameters.GUI.ITI * 1.5;
         end
 end
 sma = AddState(sma, 'Name', 'ITI',...

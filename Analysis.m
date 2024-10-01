@@ -897,7 +897,7 @@ switch SessionData.SettingsFile.GUIMeta.RiskType.String{SessionData.SettingsFile
                                         'HorizontalAlignment', 'right');
         
         %% Dedicated Analysis script and figure saving for Matching
-        % AnalysisFigure = TwoArmBanditVariant_Cued();
+        AnalysisFigure = TwoArmBanditVariant_Cued();
         
     case 'BlockCued' % currently only designed for 1-arm
         %% 
@@ -1029,67 +1029,6 @@ switch SessionData.SettingsFile.GUIMeta.RiskType.String{SessionData.SettingsFile
         %% Dedicated Analysis script and figure saving for CuedBlockRatio
         % AnalysisFigure = TwoArmBanditVariant_CuedBlockRatio();
         
-        %{
-        %% Single-session analysis
-        if nTrials <= 2500 && nTrials >= 200
-            %% Invested time per cue across session
-            TrialInvestedTimeAxes = axes(FigHandle, 'Position', [0.01    0.60    0.48    0.11]);
-            hold(TrialInvestedTimeAxes, 'on');
-            if ~isempty(ChoiceLeft) && ~all(isnan(ChoiceLeft))
-                for i = 1:length(RewardProbCategories)
-                    % NotBaited invested time per cue across session
-                    CueSortedNotBaitedIdx = find(TrialDataTable.NotBaited & TrialDataTable.TrialRewardProb == RewardProbCategories(i));
-                    TrialNotBaitedInvestedTimePlot(i) = plot(TrialInvestedTimeAxes, CueSortedNotBaitedIdx, TrialDataTable.FeedbackWaitingTime(CueSortedNotBaitedIdx),...
-                                                             'Marker', '.',...
-                                                             'MarkerSize', 4,...
-                                                             'MarkerEdgeColor', 1-CuedPalette(i,:),...
-                                                             'Color', CuedPalette(i,:));
-                    
-                    Label{i} = sprintf('P(r) = %3.1f',...
-                                       RewardProbCategories(i));
-                    % [RValue, PValue] = corrcoef(TrialNotBaitedInvestedTimePlot(i).XData, TrialNotBaitedInvestedTimePlot(i).YData);
-                    % CueSortedNotBaitedRvalue(i) = RValue(1, 2);
-                    % CueSortedNotBaitedPValue(i) = PValue(1, 2);
-                    % 
-                    % Label{i} = sprintf('P(r) = %3.1f\nR = %5.2f\np = %6.3f',...
-                    %                    RewardProbCategories(i),...
-                    %                    CueSortedNotBaitedRvalue(i),...
-                    %                    CueSortedNotBaitedPValue(i));
-                end
-
-                for i = 1:length(RewardProbCategories) % plot all NotBaited first for legend
-                    % Incorrect invested time per Trial RewardProb (not Choice RewardProb) across session
-                    CueSortedIncorrectChoiceIdx = find(TrialDataTable.IncorrectChoice == 1 & TrialDataTable.TrialRewardProb == RewardProbCategories(i));
-                    if isempty(CueSortedIncorrectChoiceIdx)
-                        continue
-                    end
-                    TrialIncorrectChoiceInvestedTimePlot(i) = plot(TrialInvestedTimeAxes, CueSortedIncorrectChoiceIdx, TrialDataTable.FeedbackWaitingTime(CueSortedIncorrectChoiceIdx),...
-                                                                   'Marker', '.',...
-                                                                   'MarkerSize', 4,...
-                                                                   'MarkerEdgeColor', scarlet .* CuedPalette(i,:),...
-                                                                   'LineStyle', 'none');
-                    
-                end
-                
-                TrialInvestedTimeLegend = legend(TrialInvestedTimeAxes, Label,...
-                                                 'Position', [0.01    0.58    0.28    0.02],...
-                                                 'NumColumns', 2);
-
-                set(TrialInvestedTimeAxes,...
-                    'TickDir', 'out',...
-                    'Xlim', TrialOverviewAxes.XLim,...
-                    'XTickLabel', [],...
-                    'XAxisLocation', 'top',...
-                    'YLim', [0, max(1, SessionData.SettingsFile.GUI.FeedbackDelayMax * 1.5)],...
-                    'YAxisLocation', 'right',...
-                    'FontSize', 10);
-                ylabel('Invested Time (s)')
-                disp('YOu aRE a bEAutIFul HUmaN BeiNG, saID anTOniO.')
-                % title('Block switching behaviour')
-            end
-        end
-        %}
-
     case 'CuedBlockITI' % currently only designed for 1-arm
         %% 
         title(TrialOverviewAxes, strcat(RatName, '_', SessionDateTime, '_CuedBlockITI'), 'Interpreter', 'none')
@@ -1154,66 +1093,7 @@ switch SessionData.SettingsFile.GUIMeta.RiskType.String{SessionData.SettingsFile
 
         %% Dedicated Analysis script and figure saving for CuedBlockITI
         % AnalysisFigure = TwoArmBanditVariant_CuedBlockITI();
-        %{
-        %% Single-session analysis
-        if nTrials <= 2500 && nTrials >= 200
-            %% Invested time per cue across session
-            TrialInvestedTimeAxes = axes(FigHandle, 'Position', [0.01    0.60    0.48    0.11]);
-            hold(TrialInvestedTimeAxes, 'on');
-            if ~isempty(ChoiceLeft) && ~all(isnan(ChoiceLeft))
-                for i = 1:length(RewardProbCategories)
-                    % NotBaited invested time per cue across session
-                    CueSortedNotBaitedIdx = find(TrialDataTable.NotBaited & TrialDataTable.TrialRewardProb == RewardProbCategories(i));
-                    TrialNotBaitedInvestedTimePlot(i) = plot(TrialInvestedTimeAxes, CueSortedNotBaitedIdx, TrialDataTable.FeedbackWaitingTime(CueSortedNotBaitedIdx),...
-                                                             'Marker', '.',...
-                                                             'MarkerSize', 4,...
-                                                             'MarkerEdgeColor', 1-CuedPalette(i,:),...
-                                                             'Color', CuedPalette(i,:));
-                    
-                    Label{i} = sprintf('P(r) = %3.1f',...
-                                       RewardProbCategories(i));
-                    % [RValue, PValue] = corrcoef(TrialNotBaitedInvestedTimePlot(i).XData, TrialNotBaitedInvestedTimePlot(i).YData);
-                    % CueSortedNotBaitedRvalue(i) = RValue(1, 2);
-                    % CueSortedNotBaitedPValue(i) = PValue(1, 2);
-                    % 
-                    % Label{i} = sprintf('P(r) = %3.1f\nR = %5.2f\np = %6.3f',...
-                    %                    RewardProbCategories(i),...
-                    %                    CueSortedNotBaitedRvalue(i),...
-                    %                    CueSortedNotBaitedPValue(i));
-                end
-
-                for i = 1:length(RewardProbCategories) % plot all NotBaited first for legend
-                    % Incorrect invested time per Trial RewardProb (not Choice RewardProb) across session
-                    CueSortedIncorrectChoiceIdx = find(TrialDataTable.IncorrectChoice == 1 & TrialDataTable.TrialRewardProb == RewardProbCategories(i));
-                    if isempty(CueSortedIncorrectChoiceIdx)
-                        continue
-                    end
-                    TrialIncorrectChoiceInvestedTimePlot(i) = plot(TrialInvestedTimeAxes, CueSortedIncorrectChoiceIdx, TrialDataTable.FeedbackWaitingTime(CueSortedIncorrectChoiceIdx),...
-                                                                   'Marker', '.',...
-                                                                   'MarkerSize', 4,...
-                                                                   'MarkerEdgeColor', scarlet .* CuedPalette(i,:),...
-                                                                   'LineStyle', 'none');
-                    
-                end
-                
-                TrialInvestedTimeLegend = legend(TrialInvestedTimeAxes, Label,...
-                                                 'Position', [0.01    0.58    0.28    0.02],...
-                                                 'NumColumns', 2);
-
-                set(TrialInvestedTimeAxes,...
-                    'TickDir', 'out',...
-                    'Xlim', TrialOverviewAxes.XLim,...
-                    'XTickLabel', [],...
-                    'XAxisLocation', 'top',...
-                    'YLim', [0, max(1, SessionData.SettingsFile.GUI.FeedbackDelayMax * 1.5)],...
-                    'YAxisLocation', 'right',...
-                    'FontSize', 10);
-                ylabel('Invested Time (s)')
-                disp('YOu aRE a bEAutIFul HUmaN BeiNG, saID anTOniO.')
-                % title('Block switching behaviour')
-            end
-        end
-        %}
+        
     case 'CuedBlockTau' % currently only designed for 1-arm
         %% 
         title(TrialOverviewAxes, strcat(RatName, '_', SessionDateTime, '_CuedBlockTau'), 'Interpreter', 'none')
@@ -1277,64 +1157,5 @@ switch SessionData.SettingsFile.GUIMeta.RiskType.String{SessionData.SettingsFile
                                         'HorizontalAlignment', 'right');
         %% Dedicated Analysis script and figure saving for CuedBlockTau
         % AnalysisFigure = TwoArmBanditVariant_CuedBlockTau();
-        %{
-        %% Single-session analysis
-        if nTrials <= 2500 && nTrials >= 200
-            %% Invested time per cue across session
-            TrialInvestedTimeAxes = axes(FigHandle, 'Position', [0.01    0.60    0.48    0.11]);
-            hold(TrialInvestedTimeAxes, 'on');
-            if ~isempty(ChoiceLeft) && ~all(isnan(ChoiceLeft))
-                for i = 1:length(RewardProbCategories)
-                    % NotBaited invested time per cue across session
-                    CueSortedNotBaitedIdx = find(TrialDataTable.NotBaited & TrialDataTable.TrialRewardProb == RewardProbCategories(i));
-                    TrialNotBaitedInvestedTimePlot(i) = plot(TrialInvestedTimeAxes, CueSortedNotBaitedIdx, TrialDataTable.FeedbackWaitingTime(CueSortedNotBaitedIdx),...
-                                                             'Marker', '.',...
-                                                             'MarkerSize', 4,...
-                                                             'MarkerEdgeColor', 1-CuedPalette(i,:),...
-                                                             'Color', CuedPalette(i,:));
-                    
-                    Label{i} = sprintf('P(r) = %3.1f',...
-                                       RewardProbCategories(i));
-                    % [RValue, PValue] = corrcoef(TrialNotBaitedInvestedTimePlot(i).XData, TrialNotBaitedInvestedTimePlot(i).YData);
-                    % CueSortedNotBaitedRvalue(i) = RValue(1, 2);
-                    % CueSortedNotBaitedPValue(i) = PValue(1, 2);
-                    % 
-                    % Label{i} = sprintf('P(r) = %3.1f\nR = %5.2f\np = %6.3f',...
-                    %                    RewardProbCategories(i),...
-                    %                    CueSortedNotBaitedRvalue(i),...
-                    %                    CueSortedNotBaitedPValue(i));
-                end
-
-                for i = 1:length(RewardProbCategories) % plot all NotBaited first for legend
-                    % Incorrect invested time per Trial RewardProb (not Choice RewardProb) across session
-                    CueSortedIncorrectChoiceIdx = find(TrialDataTable.IncorrectChoice == 1 & TrialDataTable.TrialRewardProb == RewardProbCategories(i));
-                    if isempty(CueSortedIncorrectChoiceIdx)
-                        continue
-                    end
-                    TrialIncorrectChoiceInvestedTimePlot(i) = plot(TrialInvestedTimeAxes, CueSortedIncorrectChoiceIdx, TrialDataTable.FeedbackWaitingTime(CueSortedIncorrectChoiceIdx),...
-                                                                   'Marker', '.',...
-                                                                   'MarkerSize', 4,...
-                                                                   'MarkerEdgeColor', scarlet .* CuedPalette(i,:),...
-                                                                   'LineStyle', 'none');
-                    
-                end
-                
-                TrialInvestedTimeLegend = legend(TrialInvestedTimeAxes, Label,...
-                                                 'Position', [0.01    0.58    0.28    0.02],...
-                                                 'NumColumns', 2);
-
-                set(TrialInvestedTimeAxes,...
-                    'TickDir', 'out',...
-                    'Xlim', TrialOverviewAxes.XLim,...
-                    'XTickLabel', [],...
-                    'XAxisLocation', 'top',...
-                    'YLim', [0, max(1, SessionData.SettingsFile.GUI.FeedbackDelayMax * 1.5)],...
-                    'YAxisLocation', 'right',...
-                    'FontSize', 10);
-                ylabel('Invested Time (s)')
-                disp('YOu aRE a bEAutIFul HUmaN BeiNG, saID anTOniO.')
-                % title('Block switching behaviour')
-            end
-        end
-        %}
+        
 end

@@ -6,7 +6,7 @@ function AnalysisFigure = TwoArmBanditVariant_Matching_LauGlimcherGLM(DataFile)
 if nargin < 1
     global BpodSystem
     if isempty(BpodSystem) || isempty(BpodSystem.Data)
-        [datafile, datapath] = uigetfile('\\ottlabfs.bccn-berlin.pri\ottlab\data\');
+        [datafile, datapath] = uigetfile(OttLabDataServerFolderPath());
         load(fullfile(datapath, datafile));
         SessionDateTime = datapath(end-15:end-1);
     else
@@ -53,12 +53,19 @@ RatName = num2str(RatID);
 % Date = datestr(SessionData.Info.SessionDate, 'yyyymmdd');
 
 nTrials = SessionData.nTrials;
-if nTrials < 50
-    disp('nTrial < 50. Impossible for analysis.')
+if nTrials < 200
+    disp('nTrial < 200. Impossible for analysis.')
     AnalysisFigure = [];
     return
 end
+
 ChoiceLeft = SessionData.Custom.TrialData.ChoiceLeft(1:nTrials);
+if isempty(ChoiceLeft) || all(isnan(ChoiceLeft))
+    disp('No choice made. Impossible for analysis.')
+    AnalysisFigure = [];
+    return
+end
+
 Baited = SessionData.Custom.TrialData.Baited(:, 1:nTrials);
 IncorrectChoice = SessionData.Custom.TrialData.IncorrectChoice(1:nTrials);
 NoDecision = SessionData.Custom.TrialData.NoDecision(1:nTrials);

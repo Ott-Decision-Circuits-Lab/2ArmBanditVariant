@@ -44,7 +44,14 @@ if nTrials < 50
     FigHandle = [];
     return
 end
+
 ChoiceLeft = SessionData.Custom.TrialData.ChoiceLeft(1:nTrials);
+if isempty(ChoiceLeft) || all(isnan(ChoiceLeft))
+    disp('No choice made. Impossible for analysis.')
+    FigHandle = [];
+    return
+end
+
 Baited = SessionData.Custom.TrialData.Baited(:, 1:nTrials);
 IncorrectChoice = SessionData.Custom.TrialData.IncorrectChoice(1:nTrials);
 NoDecision = SessionData.Custom.TrialData.NoDecision(1:nTrials);

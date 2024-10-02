@@ -13,7 +13,7 @@ plots of how the coefficients evolve during the sessions are made.
 %}
 
 if nargin < 1
-    DataFolderPath = uigetdir('\\ottlabfs.bccn-berlin.pri\ottlab\data\');
+    DataFolderPath = uigetdir(OttLabDataServerFolderPath());
 elseif ~ischar(DataFolderPath) && ~isstring(DataFolderPath)
     disp('Error: Unknown input format. No further analysis can be performed.')
     return

@@ -1,12 +1,12 @@
 function AnalysisFigure = TwoArmBanditVariant_Cued(DataFile)
-% Matching Analysis Function
+% Cued Analysis Function
 % Developed by Antonio Lee @ BCCN Berlin
 % Version 2.0 ~ April 2024
 
 if nargin < 1
     global BpodSystem
     if isempty(BpodSystem) || isempty(BpodSystem.Data)
-        [datafile, datapath] = uigetfile('\\ottlabfs.bccn-berlin.pri\ottlab\data\');
+        [datafile, datapath] = uigetfile(OttLabDataServerFolderPath());
         load(fullfile(datapath, datafile));
         SessionDateTime = datapath(end-15:end-1);
     else
@@ -30,11 +30,11 @@ end
 AnalysisName = 'Cued';
 
 if ~isfield(SessionData, 'SettingsFile')
-    disp('Error: The selected file does not have the field "SettingsFile". No further Matching Analysis is performed.')
+    disp('Error: The selected file does not have the field "SettingsFile". No further Cued Analysis is performed.')
     AnalysisFigure = [];
     return
 elseif ~isfield(SessionData.SettingsFile.GUIMeta, 'RiskType')
-    disp('Error: The selected SessionFile may not be a TwoArmBanditVariant session. No further Matching Analysis is performed.')
+    disp('Error: The selected SessionFile may not be a TwoArmBanditVariant session. No further Cued Analysis is performed.')
     AnalysisFigure = [];
     return
 % elseif ~strcmpi(SessionData.SettingsFile.GUIMeta.RiskType.String{SessionData.SettingsFile.GUI.RiskType}, 'Cued')

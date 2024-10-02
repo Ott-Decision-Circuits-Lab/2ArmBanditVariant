@@ -16,7 +16,7 @@ some trials are not comparable with the others (head and tail)
 %}
 
 if nargin < 1
-    DataFolderPath = uigetdir('\\ottlabfs.bccn-berlin.pri\ottlab\data\');
+    DataFolderPath = uigetdir(OttLabDataServerFolderPath());
 elseif ~ischar(DataFolderPath) && ~isstring(DataFolderPath)
     disp('Error: Unknown input format. No further analysis can be performed.')
     return

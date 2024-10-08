@@ -1,32 +1,40 @@
 function TwoArmBanditVariant_PoolingData_Modified()
 
 dataFolder = 'C:\Users\emlon\Documents\ConsolidatedDocuments\Academic\Charité and ECN classes\Ott Lab\Ott Lab local data folder\Psilocybin vs PBS files TwoArmBandit\52\PBS';
-sessionFiles = dir(strcat(dataFolder, '\*.mat'));
+sessionFiles = dir(strcat(dataFolder, '\*.mat')); % Struct with filename, folder, date, bytes, isdir, datenum
 
 %% start looping to select SessionData as a cell array
-DataHolder = {};
+DataHolder = {}; % Unprocessed cell that will lump together all individual SessionData
 
-for sessionIdx = 1:length(sessionFiles)
+for iSession = 1:length(sessionFiles)
 
-    sessionFileName = sessionFiles(sessionIdx).name;
+    sessionFileName = sessionFiles(iSession).name;
     sessionFullPath = fullfile(dataFolder, sessionFileName);
     
     load(sessionFullPath); % variable name will be 'SessionData'
     RatID = SessionData.Info.Subject;
-    if SessionData.nTrials >= 50 && SessionData.SettingsFile.GUI.CatchTrial && SessionData.SettingsFile.GUI.FeedbackDelayGrace >= 0.2 && SessionData.SettingsFile.GUI.FeedbackDelayMax == 8
-        DataHolder{end+1} = SessionData;
+
+    if SessionData.nTrials >= 50 && SessionData.SettingsFile.GUI.CatchTrial && SessionData.SettingsFile.GUI.FeedbackDelayGrace >= 0.2 && SessionData.SettingsFile.GUI.FeedbackDelayMax == 8 % Ensure that the session is valid (has many trials, and has the final settings of feedback delay)
+        DataHolder{end+1} = SessionData; % Add session to DataHolder cell (1 x nSessions cell)
     end
 
 end
 
-dataHolderFilePath = fullfile(dataFolder, '\Selected_Data.mat');
-save(dataHolderFilePath, 'DataHolder')
+dataHolderFilePath = fullfile(dataFolder, '\Selected_Data.mat'); % Create a filepath to ... 
+save(dataHolderFilePath, 'DataHolder') % ... DataHolder cell
     
 %% Concatenate SessionData into one single file
+
+% ConcatenatedDataHolder is the struct to be analyzed
 ConcatenatedDataHolder.Info.Subject = num2str(RatID);
 ConcatenatedDataHolder.Info.SessionDate = datetime('20000101', 'InputFormat', 'yyyyMMdd'); % temporary entry, later corrected
 ConcatenatedDataHolder.nTrials = 0;
 
+ConcatenatedDataHolder.RawEvents.Trial = {};
+ConcatenatedDataHolder.TrialStartTimestamp = [];
+ConcatenatedDataHolder.TrialEndTimestamp = [];
+
+% ConcatenatedTrialData is a struct with trial data, will be put into ConcatenatedDataHolder
 ConcatenatedTrialData.ChoiceLeft = [];
 ConcatenatedTrialData.Baited = [];
 ConcatenatedTrialData.IncorrectChoice = [];
@@ -51,14 +59,12 @@ ConcatenatedTrialData.RewardMagnitude = [];
 % for files before April 2023, no DrinkingTime is available
 ConcatenatedTrialData.DrinkingTime = [];
 
-ConcatenatedDataHolder.RawEvents.Trial = {};
-ConcatenatedDataHolder.TrialStartTimestamp = [];
-ConcatenatedDataHolder.TrialEndTimestamp = [];
-
+% Fill pre-allocated fields, one session at a time
 for iSession = 1:length(DataHolder)
+
+    % Assign trial data for this iteration
     nTrials = DataHolder{iSession}.nTrials;
     ConcatenatedDataHolder.nTrials = ConcatenatedDataHolder.nTrials + nTrials;
-    
     TrialData = DataHolder{iSession}.Custom.TrialData;
     
     ConcatenatedTrialData.ChoiceLeft = [ConcatenatedTrialData.ChoiceLeft, TrialData.ChoiceLeft(1:nTrials)];
@@ -90,10 +96,10 @@ for iSession = 1:length(DataHolder)
     end
     
     ConcatenatedDataHolder.RawEvents.Trial = [ConcatenatedDataHolder.RawEvents.Trial, DataHolder{iSession}.RawEvents.Trial];
-    ConcatenatedDataHolder.TrialStartTimestamp = [ConcatenatedDataHolder.TrialStartTimestamp, DataHolder{iSession}.TrialStartTimestamp(:,1:nTrials)];
-    ConcatenatedDataHolder.TrialEndTimestamp = [ConcatenatedDataHolder.TrialEndTimestamp, DataHolder{iSession}.TrialEndTimestamp(:,1:nTrials)];
+    ConcatenatedDataHolder.TrialStartTimestamp = [ConcatenatedDataHolder.TrialStartTimestamp, DataHolder{iSession}.TrialStartTimestamp(:, 1:nTrials)];
+    ConcatenatedDataHolder.TrialEndTimestamp = [ConcatenatedDataHolder.TrialEndTimestamp, DataHolder{iSession}.TrialEndTimestamp(:, 1:nTrials)];
 end
-ConcatenatedDataHolder.Custom.TrialData = ConcatenatedTrialData;
+ConcatenatedDataHolder.Custom.TrialData = ConcatenatedTrialData; % Add concatenated trial data to ConcatenatedDataHolder
 ConcatenatedDataHolder.SettingsFile = DataHolder{iSession}.SettingsFile;
 
 SessionData = ConcatenatedDataHolder;

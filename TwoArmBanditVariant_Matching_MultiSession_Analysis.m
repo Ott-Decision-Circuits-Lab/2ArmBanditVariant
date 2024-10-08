@@ -23,8 +23,8 @@ elseif ~ischar(DataFolderPath) && ~isstring(DataFolderPath)
 end
 
 try
-    load(fullfile(DataFolderPath, '\Selected_Data.mat'));
-    load(fullfile(DataFolderPath, '\Concatenated_Data.mat'));
+    load(fullfile(DataFolderPath, '\Selected_Data.mat')); % Loads DataHolder (unprocessed cell that lumps together all individual SessionData)
+    load(fullfile(DataFolderPath, '\Concatenated_Data.mat')); % Loads pooled SessionData, processed to have a struct that's identical to individual SessionData
 catch
     disp('Error: Selected DataFolderPath does not contain the required .mat for further steps.')
     return
@@ -70,7 +70,7 @@ end
     
 %% Common plots regardless of task design/ risk type
 % colour palette for events (suitable for most colourblind people)
-scarlet = [254, 60, 60]/255; % for incorrect sign, contracting with azure
+scarlet = [254, 60, 60]/255; % for incorrect sign, contrasting with azure
 denim = [31, 54, 104]/255; % mainly for unsuccessful trials
 azure = [0, 162, 254]/255; % for rewarded sign
 
@@ -103,8 +103,8 @@ end
 AnalysisFigure = figure('Position', [   0       0    1191     842],... % DIN A3, 72 ppi
                         'NumberTitle', 'off',...
                         'Name', strcat(RatName, '_', SessionDateRange{1}, '-', SessionDateRange{end}, '_', AnalysisName),...
-                        'MenuBar', 'none',...
-                        'Resize', 'off');
+                        'MenuBar', 'figure',...
+                        'Resize', 'on');
 
 % spacer for correct saving dimension
 FrameAxes = axes(AnalysisFigure, 'Position', [0 0 1 1]);

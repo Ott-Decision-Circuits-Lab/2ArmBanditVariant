@@ -25,7 +25,7 @@ save(dataHolderFilePath, 'DataHolder') % ... DataHolder cell
     
 %% Concatenate SessionData into one single file
 
-% ConcatenatedDataHolder is the struct to be analyzed
+% ConcatenatedDataHolder is the pooled struct to be analyzed as 'SessionData'
 ConcatenatedDataHolder.Info.Subject = num2str(RatID);
 ConcatenatedDataHolder.Info.SessionDate = datetime('20000101', 'InputFormat', 'yyyyMMdd'); % temporary entry, later corrected
 ConcatenatedDataHolder.nTrials = 0;

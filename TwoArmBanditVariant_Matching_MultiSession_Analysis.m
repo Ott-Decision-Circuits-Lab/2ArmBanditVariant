@@ -30,11 +30,14 @@ catch
     return
 end
 
+% Session dates
 SessionDateRange = {};
 SessionDateRange{1} = DataHolder{1}.Info.SessionDate;
 SessionDateRange{end+1} = DataHolder{end}.Info.SessionDate;
-RatName = DataHolder{1}.Info.Subject;
+SessionDateRangeString = strcat(string(datetime(SessionDateRange{1}, 'format', 'dd-MMM-yyyy'))," - " , string(datetime(SessionDateRange{end}, 'format', 'dd-MMM-yyyy')));
 
+% Rat ID
+RatName = DataHolder{1}.Info.Subject;
 RatID = str2double(RatName);
 if isnan(RatID)
     RatID = -1;
@@ -122,7 +125,7 @@ set(FigureInfoAxes,...
     'XColor', 'w',...
     'YColor', 'w')
 
-FigureTitle = strcat(RatName, '_', SessionDateRange, '_', AnalysisName);
+FigureTitle = strcat(RatName, '_', SessionDateRangeString, '_', treatmentConditionString, '_', AnalysisName);
 
 FigureTitleText = text(FigureInfoAxes, 0, 0,...
                        FigureTitle,...

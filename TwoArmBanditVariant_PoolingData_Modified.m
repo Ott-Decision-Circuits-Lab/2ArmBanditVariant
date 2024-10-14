@@ -1,6 +1,6 @@
 function TwoArmBanditVariant_PoolingData_Modified()
 
-dataFolder = 'C:\Users\emlon\Documents\ConsolidatedDocuments\Academic\Charité and ECN classes\Ott Lab\Ott Lab local data folder\Psilocybin vs PBS files TwoArmBandit\52\PBS';
+dataFolder = 'C:\Users\emlon\Documents\ConsolidatedDocuments\Academic\Charité and ECN classes\Ott Lab\Ott Lab local data folder\Psilocybin vs PBS files TwoArmBandit\53\Psilocybin';
 sessionFiles = dir(strcat(dataFolder, '\*.mat')); % Struct with filename, folder, date, bytes, isdir, datenum
 
 %% start looping to select SessionData as a cell array

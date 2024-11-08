@@ -721,13 +721,13 @@ for iSession = 1:length(DataHolder)
 
     % Block 3 transition (3rd -> 4th)
     BlockTransitionIdx = find(BlockTrialNumber == 1 & BlockNumber == 4);
-    if ~isempty(BlockTransitionIdx)
+    if ~isempty(BlockTransitionIdx) & BlockTransitionIdx + 50 <= nTrials
         Block3TransitionYData(iSession, :) = AbsModelResiduals(BlockTransitionIdx - 10:BlockTransitionIdx + 50) >= 0.5;
     end
 
     % Block 4 transition (4th -> 5th)
     BlockTransitionIdx = find(BlockTrialNumber == 1 & BlockNumber == 5);
-    if ~isempty(BlockTransitionIdx)
+    if ~isempty(BlockTransitionIdx) & BlockTransitionIdx + 50 <= nTrials
         Block4TransitionYData(iSession, :) = AbsModelResiduals(BlockTransitionIdx - 10:BlockTransitionIdx + 50) >= 0.5;
     end
 
